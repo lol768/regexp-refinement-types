@@ -436,7 +436,7 @@ public class VisitorListener extends PocLangBaseListener {
                 return new BinaryOperationExpression(BinaryOperationType.STRING_CONCAT, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
             }
         } else if (exprCtx.function_call() != null) {
-            PocLang.Function_callContext ctx = (PocLang.Function_callContext) exprCtx.function_call();
+            PocLang.Function_callContext ctx = exprCtx.function_call();
             return getAstExpressionForFunctionCall(ctx);
         } else if (exprCtx.value_ref() != null) {
             PocLang.Value_refContext value_refContext = exprCtx.value_ref();
