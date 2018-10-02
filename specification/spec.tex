@@ -1,0 +1,193 @@
+\documentclass[a4paper]{article}
+\usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=0.5cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
+\usepackage{amsmath}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{float}
+\usepackage{fontawesome}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc}
+\usepackage{shellesc}
+\usepackage{minted}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage[osfigures]{opensans}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{bm}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[round]{natbib}
+\usepackage{environ}
+\usepackage{varwidth}
+\usepackage{mathtools}
+\usepackage{pagecolor}
+\usepackage{wrapfig}
+\usepackage{csquotes}
+\usepackage[super]{nth}
+\newlength{\MyMdframedWidthTweak}%
+\NewEnviron{MyMdframed}[1][]{%
+    \setlength{\MyMdframedWidthTweak}{\dimexpr%
+        +\mdflength{innerleftmargin}
+        +\mdflength{innerrightmargin}
+        +\mdflength{leftmargin}
+        +\mdflength{rightmargin}
+    }%
+    \savebox0{%
+        \begin{varwidth}{\dimexpr\linewidth-\MyMdframedWidthTweak\relax}%
+            \BODY
+        \end{varwidth}%
+    }%
+    \begin{mdframed}[
+        backgroundcolor=lightgrey,
+        topline=true,
+        rightline=false,
+        leftline=false,
+        linecolor=id7-aubergine,
+        userdefinedwidth=\dimexpr\wd0+\MyMdframedWidthTweak\relax, 
+        #1]
+        \usebox0
+    \end{mdframed}
+}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\title{}
+\author{}
+\definecolor{infogreen}{rgb}{0.153, 0.682, 0.376}
+\definecolor{id7-aubergine}{HTML}{5B3069}
+\definecolor{id7-gray}{HTML}{3F4246}
+\definecolor{body-text}{HTML}{333333}
+\definecolor{id7-gold}{HTML}{886C11}
+\definecolor{id7-burnt-orange}{HTML}{A14418}
+\definecolor{id7-ruby-red}{HTML}{89102C}
+\definecolor{id7-emerald-green}{HTML}{797906}
+\definecolor{id7-sky-blue}{HTML}{204F79}
+\definecolor{id7-sky-blue-tint}{HTML}{bccad7}
+\definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+\definecolor{todocolor}{rgb}{0.688,0.8176,0.93137}
+\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{lightbulb-o} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\readbox}[1] {\colorbox{infogreen}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\textcolor{white}{\faicon{book} \textbf{#1}\vspace{.75\baselineskip}}}}}}
+\def\labelitemi{\textcolor{id7-aubergine}{\textbullet}}
+\def\labelitemii{\textcolor{id7-aubergine}{\circ}}
+\def\labelitemiii{\textcolor{id7-aubergine}{--}}
+\definecolor{infogreenlight}{rgb}{0.75,1,0.75}
+
+\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\widthboxedfigure}[3]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=#3\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\infoinlineicon}[1] {\colorbox{infogreenlight}{\faicon{info-circle} #1}}
+
+\newcommand{\infoinline}[1] {\colorbox{infogreenlight}{#1}}
+
+\definecolor{orange}{rgb}{0.9529,0.85176,0.5070588}
+
+\newcommand{\warnbox}[1] {\colorbox{orange}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{exclamation-triangle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\warninlineicon}[1] {\colorbox{orange}{\faicon{exclamation-triangle} #1}}
+
+\newcommand{\warninline}[1] {\colorbox{orange}{#1}}
+
+\titleformat{\section}
+{\normalfont\sffamily\huge\color{id7-aubergine}}
+{\thesection}{0em}{}
+
+\titleformat{\subsection}
+{\normalfont\Large\sffamily\color{id7-aubergine}}
+{\thesection}{0em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\large\sffamily\color{id7-aubergine}}
+{\thesection}{0em}{}
+\fancyhf{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{\textcolor{grey}{Adam Williams}}
+\rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
+
+\renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{divider}}}
+
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+\definecolor{lightgrey}{rgb}{0.96,0.96,0.96}
+
+\def \spacedrule {\textcolor{id7-aubergine}{\hrule}\vspace{1em}}
+\def \thedate {\today}
+\lhead{\textcolor{grey}{\thedate}}
+\rhead{\textcolor{grey}{Project Specification}}
+% ======================
+
+\begin{document}
+    
+ % \begin{tikzpicture}
+ % \filldraw[draw=id7-ruby-red,fill=id7-ruby-red]%  (0,0) 
+ %  -- (0.57,-1) 
+ %  -- (0.994,-0.215)
+ %  -- (1.418, -1)
+ %  -- (1.988,0) ;
+ %  \end{tikzpicture}
+    
+    \section*{Introduction}
+    
+    Within information security, entire classes of application vulnerabilities arise due to problematic user input handling \citep{christey2007vulnerability}. This covers cross-site scripting (XSS), injection (SQL, LDAP, etc), insecure
+    deserialisation and file inclusion vulnerabilities -- all of which are regularly discovered in major software products.
+    
+    There are many existing products that aim to detect security issues within an application. \citeauthor{Sadowski:2018:LBS:3200906.3188720} describe the benefits of SAST (Static Application Security Testing) tooling deployed within Google which allow checks to be performed as part of the compilation process \citeyearpar{Sadowski:2018:LBS:3200906.3188720}. The authors explain one of the main challenges with developer adoption as \emph{trustworthiness} ``users do not trust to results due to, say, false positives`` and highlight the importance of reporting issues early: ``survey participants deemed 74\% of the issues flagged at compile time as real problems, compared to 21\% of those found in checked-in code''. 
+    
+    The main objective of this project is to explore the use of regular expressions as refinement types applied to user input. By considering data flow of `tainted' user input, it will be possible to make inferences about potential vulnerabilities present in a codebase. Use of refinement types provides for a more informed evaluation of a particular risk than base types alone and should therefore enable reporting of fewer false positive issues.
+    
+    \section*{Objectives}
+    
+    Text text text
+    
+    \section*{Schedule}
+    
+    Table \ref{schedule} provides a breakdown of the project time into periods for each fortnight, along with the expected work to be completed.
+    
+    A supervisor meeting will be scheduled for eadch
+    
+    \arrayrulecolor{white} % <---
+    \def\arraystretch{1.5}%  1 is the default, change whatever you need
+    \begin{table}[H]
+        
+        \centering
+        \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
+        \begin{tabular}[t]{|p{5.5cm}|p{10cm}|}
+            \hline
+            \rowcolor{id7-sky-blue}
+            {\color[HTML]{FFFFFF} \sffamily \textbf{Time Window}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Work}} \\ \hline
+            October \nth{1} -- October \nth{14} & Specification, exploration of prior related works. \\ \hline
+            October \nth{15} -- October \nth{28} & TODO \\ \hline
+            October \nth{29} -- November \nth{11} & TODO \\ \hline
+            November \nth{12} -- November \nth{25} & Completion of progress report \\ \hline
+            November \nth{26} -- December \nth{9} & TODO \\ \hline
+            January \nth{7} -- January \nth{20} & TODO \\ \hline
+            January \nth{21} -- February \nth{3} & TODO \\ \hline
+            February \nth{4} -- February \nth{17} & Report work, project presentation preparation \\ \hline
+            February \nth{18} -- March \nth{3} & Project presentation preparation, report work \\ \hline
+            March \nth{4} -- March \nth{17} & Project presentation delivery \\ \hline
+        \end{tabular}
+        \caption{Breakdown of projected work by time period.}
+        \label{schedule}
+    \end{table}
+
+    \section*{Legal, social, ethical and professional issues}
+    
+    
+
+\bibliographystyle{agsm}
+\bibliography{references}
+\end{document}
