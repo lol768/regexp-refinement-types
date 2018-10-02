@@ -1,19 +1,191 @@
-\documentclass[]{article}
+\documentclass[a4paper]{article}
+\usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=0.5cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
+\usepackage{amsmath}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{float}
+\usepackage{fontawesome}
+\usepackage{ragged2e}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc}
+\usepackage{shellesc}
+\usepackage{minted}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage[osfigures]{opensans}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{bm}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[round]{natbib}
+\usepackage{environ}
+\usepackage{varwidth}
+\usepackage{mathtools}
+\usepackage{pagecolor}
+\usepackage{wrapfig}
+\usepackage{nameref}
+\makeatletter
+\newcommand*{\currentname}{\@currentlabelname}
+\makeatother
+\usepackage{csquotes}
+\usepackage[super]{nth}
+\newlength{\MyMdframedWidthTweak}%
+\NewEnviron{MyMdframed}[1][]{%
+    \setlength{\MyMdframedWidthTweak}{\dimexpr%
+        +\mdflength{innerleftmargin}
+        +\mdflength{innerrightmargin}
+        +\mdflength{leftmargin}
+        +\mdflength{rightmargin}
+    }%
+    \savebox0{%
+        \begin{varwidth}{\dimexpr\linewidth-\MyMdframedWidthTweak\relax}%
+            \BODY
+        \end{varwidth}%
+    }%
+    \begin{mdframed}[
+        backgroundcolor=lightgrey,
+        topline=true,
+        rightline=false,
+        leftline=false,
+        linecolor=id7-aubergine,
+        userdefinedwidth=\dimexpr\wd0+\MyMdframedWidthTweak\relax, 
+        #1]
+        \usebox0
+    \end{mdframed}
+}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\title{}
+\author{}
+\definecolor{infogreen}{rgb}{0.153, 0.682, 0.376}
+\definecolor{id7-aubergine}{HTML}{5B3069}
+\definecolor{id7-gray}{HTML}{3F4246}
+\definecolor{body-text}{HTML}{333333}
+\definecolor{id7-gold}{HTML}{886C11}
+\definecolor{id7-burnt-orange}{HTML}{A14418}
+\definecolor{id7-ruby-red}{HTML}{89102C}
+\definecolor{id7-emerald-green}{HTML}{797906}
+\definecolor{id7-sky-blue}{HTML}{204F79}
+\definecolor{id7-sky-blue-tint}{HTML}{bccad7}
+\definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+\definecolor{todocolor}{rgb}{0.688,0.8176,0.93137}
+\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{lightbulb-o} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\readbox}[1] {\colorbox{infogreen}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\textcolor{white}{\faicon{book} \textbf{#1}\vspace{.75\baselineskip}}}}}}
+\def\labelitemi{\textcolor{id7-aubergine}{\textbullet}}
+\def\labelitemii{\textcolor{id7-aubergine}{\circ}}
+\def\labelitemiii{\textcolor{id7-aubergine}{--}}
+\definecolor{infogreenlight}{rgb}{0.75,1,0.75}
 
-%opening
-\title{Test Document for Repo}
-\author{Adam Williams}
+\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\widthboxedfigure}[3]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=#3\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\infoinlineicon}[1] {\colorbox{infogreenlight}{\faicon{info-circle} #1}}
+
+\newcommand{\infoinline}[1] {\colorbox{infogreenlight}{#1}}
+
+\definecolor{orange}{rgb}{0.9529,0.85176,0.5070588}
+
+\newcommand{\warnbox}[1] {\colorbox{orange}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{exclamation-triangle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\warninlineicon}[1] {\colorbox{orange}{\faicon{exclamation-triangle} #1}}
+
+\makeatletter
+\let\old@rule\@rule
+\def\@rule[#1]#2#3{\textcolor{lightgrey}{\old@rule[#1]{#2}{#3}}}
+\makeatother
+
+\newcommand{\warninline}[1] {\colorbox{orange}{#1}}
+
+\titleformat{\section}
+{\normalfont\sffamily\huge\color{id7-aubergine}}
+{\thesection}{0em}{. }
+
+\titleformat{\subsection}
+{\normalfont\Large\sffamily\color{id7-aubergine}}
+{\thesubsection}{0em}{. }
+
+\titleformat{\subsubsection}
+{\normalfont\large\sffamily\color{id7-aubergine}}
+{\thesubsubsection}{0em}{. }
+\fancyhf{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{\textcolor{grey}{Adam Williams}}
+\rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
+
+\renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{divider}}}
+
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+\definecolor{lightgrey}{rgb}{0.96,0.96,0.96}
+
+\def \spacedrule {\textcolor{id7-aubergine}{\hrule}\vspace{1em}}
+\def \thedate {\today}
+\lhead{\textcolor{grey}{\thedate}}
+\rhead{\textcolor{grey}{\currentname}}
+% ======================
 
 \begin{document}
 
-\maketitle
+\newgeometry{margin=0in}
+\begin{titlepage}
+     
+    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{bg_title_page}};
+        \vspace{0.666\textheight} % height of the devil
+    
+    {\hspace{0pt}\vspace{0pt}\begin{tikzpicture}[scale=\paperwidth/1cm, overlay]
+        \filldraw[draw=none,fill=white]
+        (0, 0)
+        -- (0.65838,0) 
+        -- (0.71534285714,-0.1) 
+        -- (0.7577,-0.0215)
+        -- (0.8001, -0.1)
+        -- (0.8571,0)
+        -- (1, 0)
+        -- (1, -0.45)
+        -- (0, -0.45);
+        \filldraw[draw=lightgrey,fill=id7-gray] (0.55714, 0)
+        -- (0.55714, -0.45); % exclusion zone
+        \node[opacity=1,inner sep=0pt] at (0.7577, -0.15){\includegraphics[width=6cm]{logotype}};
+        \node[text width=15cm] at (0.39,-0.15) {\sffamily\fontsize{40}{10}\selectfont\textcolor{id7-aubergine}{Regular Expression\\\vspace{0.2cm}Refinement Types}};
+        \end{tikzpicture}}
+   
+    {\par}
+    \vspace{1.25cm}
+    \vspace{3.5cm}
+    {\hspace{0.8cm}\huge\sffamily{Adam Williams}}
+    \vfill
+    \hspace{0pt}\todobox{Pick a better cover image which represents the topic}
+    \vfill
+\end{titlepage}
+\restoregeometry
+\restorepagecolor
+
+\renewenvironment{abstract}{\centering{\normalfont\Large\sffamily\color{id7-aubergine}Abstract}\vspace{0.3cm}\\
+    \hfill\begin{minipage}{0.95\textwidth}
+        \rule{\textwidth}{1pt}}
+    {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
 
 \begin{abstract}
-    Abstract
+    foobar goes here
 \end{abstract}
 
-\section{Section title}
+\section{Introduction}
 
-Content.
+
 
 \end{document}
