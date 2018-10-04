@@ -78,7 +78,7 @@
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
 
-\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\infobox}[1] {\colorbox{id7-sky-blue-tint}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} \sffamily#1\vspace{.75\baselineskip}}}}}
 
 \newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
             \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
@@ -151,13 +151,20 @@
     
     \section*{Objectives}
     
-    \infobox{Primary objectives are expected to be completed during the lifetime of the project. Additional objectives are potential areas for going beyond the original scope of the project, if time permits.}
+    \infobox{Primary objectives are expected to be completed during the lifetime of the project. Additional objectives are identified as potential goals to pursue beyond the original scope of the project, if time permits.}
     
     \subsubsection*{Primary Objectives}
     
     \begin{itemize}
         \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).
+       
+        \begin{itemize}
+            \item At minimum, this should allow for simple functions to be declared that can safely accept a particular regular expression input\footnote{As a simplified example, an \texttt{unsafe\_shell\_exec} function might safely be able to accept any input that matches \texttt{\textasciicircum{}[\textasciicircum{}\textasciigrave{}]\textdollar{}}}.
+            
         \item Explore the consequences of typical string operations (e.g. concatenation) and define the type of their return value when applied to elements of the regular expression type.
+
+        \end{itemize}
+        
         \item Implement such a type system built against a simplified proof-of-concept language that can ensure type safety. Test the implementation against a variety of test cases.
     \end{itemize}
 
@@ -200,7 +207,7 @@
 
     \section*{Legal, social, ethical and professional issues}
     
-    As a project with some security motivation, it is possible that legal, social, ethical and professional issues will arise. In particular, evaluation of existing static analysis tooling must be performed with care to ensure that use of any particular external test cases is permitted by the Copyright, Designs and Patents Act 1988 within the UK.
+    As a project with some security motivation, it is possible that legal, social, ethical and professional issues will arise. In particular, evaluation of existing static analysis tooling must be performed with care to ensure that use of any particular external test cases is permitted by the \emph{Copyright, Designs and Patents Act 1988} within the UK.
     
     Additionally, in order to comply with the \emph{Computer Misuse Act 1988}, any static analysis of external code should only be conducted with permission.  Discovered issues should be disclosed responsibly.
     
