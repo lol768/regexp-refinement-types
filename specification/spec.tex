@@ -147,7 +147,7 @@
     
     There are many existing products that aim to detect security issues within an application. \citeauthor{Sadowski:2018:LBS:3200906.3188720} describe the benefits of SAST (Static Application Security Testing) tooling deployed within Google which allow checks to be performed as part of the compilation process \citeyearpar{Sadowski:2018:LBS:3200906.3188720}. The authors explain one of the main challenges with developer adoption as \emph{trustworthiness} ``users do not trust to results due to, say, false positives`` and highlight the importance of reporting issues early: ``survey participants deemed 74\% of the issues flagged at compile time as real problems, compared to 21\% of those found in checked-in code''. 
     
-    The main objective of this project is to explore the use of regular expressions as refinement types applied to user input. By considering data flow of `tainted' user input, it will be possible to make inferences about potential vulnerabilities present in a codebase. Use of refinement types provides for a more informed evaluation of a particular risk than base types alone and should therefore enable reporting of fewer false positive issues.
+    The main objective of this project is to explore the use of a type system which uses regular-expression based refinement types applied to user input. By considering data flow of this user input, it will be possible to make inferences about potential vulnerabilities present in a codebase. Use of refinement types provides for a more informed evaluation of a particular risk than base types alone and should therefore enable reporting of fewer false positive issues.
     
     \section*{Objectives}
     
@@ -157,7 +157,7 @@
     
     Table \ref{schedule} provides a breakdown of the project time into periods for each fortnight, along with the expected work to be completed.
     
-    A supervisor meeting will be scheduled for eadch
+    A supervisor meeting will be scheduled for each week to discuss progress and any road-blocks that arise.
     
     \arrayrulecolor{white} % <---
     \def\arraystretch{1.5}%  1 is the default, change whatever you need
@@ -185,6 +185,10 @@
     \end{table}
 
     \section*{Legal, social, ethical and professional issues}
+    
+    As a project with some security motivation, it is possible that legal, social, ethical and professional issues will arise. In particular, evaluation of existing static analysis tooling must be performed with care to ensure that use of any particular external test cases is permitted by the Copyright, Designs and Patents Act 1988 within the UK.
+    
+    Additionally, in order to comply with the \emph{Computer Misuse Act 1988}, any static analysis of external code should only be conducted with permission.  Discovered issues should be disclosed responsibly.
     
     
 
