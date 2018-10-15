@@ -113,15 +113,15 @@
 
 \titleformat{\section}
 {\normalfont\sffamily\huge\color{id7-aubergine}}
-{\thesection}{0em}{. }
+{\thesection. }{0em}{}
 
 \titleformat{\subsection}
 {\normalfont\Large\sffamily\color{id7-aubergine}}
-{\thesubsection}{0em}{. }
+{\thesubsection. }{0em}{}
 
 \titleformat{\subsubsection}
 {\normalfont\large\sffamily\color{id7-aubergine}}
-{\thesubsubsection}{0em}{. }
+{\thesubsubsection. }{0em}{}
 \fancyhf{}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
@@ -140,12 +140,12 @@
 % ======================
 
 \begin{document}
-
+  
 \newgeometry{margin=0in}
 \begin{titlepage}
-     
+    
     \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{bg_title_page}};
-        \vspace{0.666\textheight} % height of the devil
+    \vspace{0.666\textheight} % height of the devil
     
     {\hspace{0pt}\vspace{0pt}\begin{tikzpicture}[scale=\paperwidth/1cm, overlay]
         \filldraw[draw=none,fill=white]
@@ -158,22 +158,26 @@
         -- (1, 0)
         -- (1, -0.45)
         -- (0, -0.45);
-        \filldraw[draw=lightgrey,fill=id7-gray] (0.55714, 0)
-        -- (0.55714, -0.45); % exclusion zone
+        
         \node[opacity=1,inner sep=0pt] at (0.7577, -0.15){\includegraphics[width=6cm]{logotype}};
         \node[text width=15cm] at (0.39,-0.15) {\sffamily\fontsize{40}{10}\selectfont\textcolor{id7-aubergine}{Regular Expression\\\vspace{0.2cm}Refinement Types}};
         \end{tikzpicture}}
-   
+    
     {\par}
     \vspace{1.25cm}
     \vspace{3.5cm}
-    {\hspace{0.8cm}\huge\sffamily{Adam Williams}}
-    \vfill
-    \hspace{0pt}\todobox{Pick a better cover image which represents the topic}
+    {\hspace{0.75cm}\Huge \sffamily Project Report}
+    \vspace{0.16cm}
+    {\par}
+    {\hspace{0.75cm}\large \sffamily Adam Williams}
     \vfill
 \end{titlepage}
 \restoregeometry
 \restorepagecolor
+
+\pagebreak[5]
+\tableofcontents
+\pagebreak[5]
 
 \renewenvironment{abstract}{\centering{\normalfont\Large\sffamily\color{id7-aubergine}Abstract}\vspace{0.3cm}\\
     \hfill\begin{minipage}{0.95\textwidth}
@@ -181,11 +185,18 @@
     {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
 
 \begin{abstract}
-    foobar goes here
+    Entire classes of modern web application vulnerabilities arise due to problematic user input handling. This includes cross-site scripting (XSS), \emph{injection} issues (SQL, LDAP, etc), insecure
+    deserialisation and file inclusion vulnerabilities – all of which are encountered by information
+    security firms on a regular basis in application assessments. This project explores the use of regular expressions as refinement types for constrained data in order to model user input validation. We
+    normalise the type system of such a language and implement it. We then compare our system to and evaluate it against other, existing approaches by considering false positive and negative rates with a
+    series of test cases. 
 \end{abstract}
 
 \section{Introduction}
 
+Lorem ipsum \citep{benjaminpierce2002}
 
+\bibliographystyle{agsm}
+\bibliography{bibliography}
 
 \end{document}
