@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'antlr'
+    id 'application'
+}
+
+group 'eu.adamwilliams' // yet another problem with Brexit
+version '1.0-SNAPSHOT'
+mainClassName = 'eu.adamwilliams.reftypes.prototype.Application'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    antlr "org.antlr:antlr4:4.7.1"
+}
+
+generateGrammarSource {
+    arguments += ["-package", "eu.adamwilliams.reftypes.prototype.parser"]
+}
+
+run {
+    standardInput = System.in
+}

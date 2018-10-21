@@ -1,0 +1,6 @@
+function LookupUserById(id: uint[> 1]): uint {
+    IDoNotExist(1*1)
+}
+function LookupUserById(id: uint[> 1]): uint {
+    1*1
+}
