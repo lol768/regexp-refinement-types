@@ -1,4 +1,8 @@
 # https://tex.stackexchange.com/a/398831
+before_install:
+ - sudo apt update
+ - sudo apt-get install -y fonts-font-awesome
+
 install:
   # Silent install from conda docs
   # https://conda.io/docs/user-guide/install/macos.html#install-macos-silent
