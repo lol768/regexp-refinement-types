@@ -1,5 +1,6 @@
 package eu.adamwilliams.reftypes.prototype.tests;
 
+import eu.adamwilliams.reftypes.prototype.Application;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangLexer;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.*;
@@ -15,13 +16,38 @@ public class ParsingTests {
 
     @Test
     public void testBasicProgram() {
-        String basicProgram = "function LookupUserById(id: uint[> 1]): uint {\n" +
-                "    1*1\n" +
+        String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+                "    return 1+1\n" +
                 "}";
 
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
     }
+
+    @Test
+    public void testFunctionRedeclaration() {
+        String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+                "    return 1+1\n" +
+                "}\n" + "function LookupUserById(id: uint[> 1]): uint {\n" +
+                "    return 1+1\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Redeclaration"))));
+    }
+
+    @Test
+    public void testMissingReturnCall() {
+        String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint {\n" +
+                "    CallToUnrelatedFunction(1+1)\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("No return statement"))));
+    }
+
 
     private ParseTree getParseTree(String basicProgram) {
         PocLangLexer lexer = new PocLangLexer(CharStreams.fromString(basicProgram));
@@ -48,7 +74,7 @@ public class ParsingTests {
 
             }
         });
-        return parser.function();
+        return parser.program();
     }
 
 }

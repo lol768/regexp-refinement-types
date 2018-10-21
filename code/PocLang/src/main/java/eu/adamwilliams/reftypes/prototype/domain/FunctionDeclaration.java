@@ -1,8 +1,11 @@
 package eu.adamwilliams.reftypes.prototype.domain;
 
+import java.util.Map;
+
 public class FunctionDeclaration {
     private String identifier;
-    private Type returnType;
+    private TypeContainer returnType;
+    private Map<String, TypeContainer> arguments;
     private int lineNo;
     private int colNo;
 
@@ -10,7 +13,7 @@ public class FunctionDeclaration {
         return identifier;
     }
 
-    public Type getReturnType() {
+    public TypeContainer getReturnType() {
         return returnType;
     }
 
@@ -22,10 +25,11 @@ public class FunctionDeclaration {
         return colNo;
     }
 
-    public FunctionDeclaration(String identifier, Type returnType, int lineNo, int colNo) {
+    public FunctionDeclaration(String identifier, TypeContainer returnType, Map<String, TypeContainer> arguments, int lineNo, int colNo) {
         this.identifier = identifier;
         this.returnType = returnType;
         this.lineNo = lineNo;
         this.colNo = colNo;
+        this.arguments = arguments;
     }
 }

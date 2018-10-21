@@ -5,7 +5,6 @@ import eu.adamwilliams.reftypes.prototype.parser.PocLangLexer;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -47,7 +46,7 @@ public class Application {
         }
     }
 
-    private ErrorReporter doTypeChecks(ParseTree tree) {
+    public ErrorReporter doTypeChecks(ParseTree tree) {
         ParseTreeWalker walker = new ParseTreeWalker();
 
         FunctionTable tableForProgram = new FunctionTable();
@@ -58,7 +57,7 @@ public class Application {
         walker.walk(listener, tree);
 
         // Now that our function table is populated we can check the function calls
-        listener.setPhase(VisitorPhase.CHECKING_FUNCTION_CALLS);
+        listener.setPhase(VisitorPhase.CHECKING_TYPES);
         walker.walk(listener, tree);
         return reporter;
     }
