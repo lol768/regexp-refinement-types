@@ -1,13 +1,12 @@
 package eu.adamwilliams.reftypes.prototype;
 
+import eu.adamwilliams.reftypes.prototype.domain.*;
 import eu.adamwilliams.reftypes.prototype.domain.FunctionDeclaration;
-import eu.adamwilliams.reftypes.prototype.domain.Type;
-import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
-import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.fusesource.jansi.Ansi;
 import org.sosy_lab.java_smt.api.*;
 
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class VisitorListener extends PocLangBaseListener {
     private ErrorReporter reporter;
     private SolverContext context;
     private VisitorPhase phase = VisitorPhase.COLLECTING_FUNCTIONS;
-    private Map<String, TypeContainer> typesCurrentlyInScope = new HashMap<>();
+    private Map<String, StackEntry> typesCurrentlyInScope = new HashMap<>();
     private IntegerFormulaManager ifm;
     private NumeralFormula.IntegerFormula x;
 
@@ -69,7 +68,10 @@ public class VisitorListener extends PocLangBaseListener {
             this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
 
         } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.typesCurrentlyInScope.putAll(this.table.getFunctionByIdentifier(idText).getArguments());
+            LinkedHashMap<String, TypeContainer> arguments = this.table.getFunctionByIdentifier(idText).getArguments();
+            for (Map.Entry<String, TypeContainer> entry : arguments.entrySet()) {
+                this.typesCurrentlyInScope.put(entry.getKey(), new StackEntry(entry.getValue(), StackEntryType.ARGUMENT));
+            }
         }
     }
 
@@ -124,14 +126,14 @@ public class VisitorListener extends PocLangBaseListener {
         if (!this.typesCurrentlyInScope.containsKey(variableId)) {
             throw new IllegalArgumentException("Reference to variable " + variableId + " which isn't in scope");
         }
-        return this.typesCurrentlyInScope.get(variableId);
+        return this.typesCurrentlyInScope.get(variableId).getType();
     }
 
 
     @Override
     public void enterVar_decl(PocLangParser.Var_declContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), mapTypeFromParsed(ctx.type()));
+            this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), new StackEntry(mapTypeFromParsed(ctx.type()), StackEntryType.LOCAL));
         }
     }
 
@@ -172,9 +174,20 @@ public class VisitorListener extends PocLangBaseListener {
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
             if (!this.checkTypes(expected, functionByIdentifier.getReturnType())) {
-                reporter.reportError(new ErrorReport(symbol, "Return type of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected.getType()));
+                reporter.reportError(new ErrorReport(symbol, "Return type " + functionByIdentifier.getReturnType() + " of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected));
             }
         }
+    }
+
+    @Override
+    public void enterVar_assignment(PocLangParser.Var_assignmentContext ctx) {
+        String variableId = ctx.IDENTIFIER().getText();
+
+        if (!this.typesCurrentlyInScope.containsKey(variableId)) {
+            this.reporter.reportError(new ErrorReport(ctx.getStart(), "Assignment to variable " + variableId + " which isn't in scope"));
+            return; // bail, we can't check types at this point
+        }
+        this.checkExprType(ctx.expr(), this.typesCurrentlyInScope.get(variableId).getType(), ctx.getStart(), this.reporter);
     }
 
     private boolean checkTypes(TypeContainer expected, TypeContainer actual) {
@@ -198,7 +211,7 @@ public class VisitorListener extends PocLangBaseListener {
                 return false;
             }
             try (Model model = prover.getModel()) {
-                System.out.printf("SAT with  = %s", model.evaluate(x));
+                System.out.printf(Ansi.ansi().fg(Ansi.Color.CYAN)+"// Solved SAT with  = %s%n", model.evaluate(x));
             }
         } catch (InterruptedException | SolverException e) {
             e.printStackTrace();
@@ -223,8 +236,12 @@ public class VisitorListener extends PocLangBaseListener {
     @Override
     public void exitBody(PocLangParser.BodyContext ctx) {
         List<PocLangParser.Body_lineContext> lines = ctx.body_line();
-        if (!lines.stream().flatMap(bl -> bl.children.stream()).anyMatch(line -> line instanceof PocLangParser.Return_stmtContext) && this.phase == VisitorPhase.COLLECTING_FUNCTIONS) {
-            String owningFunctionId = ((PocLangParser.Function_sigContext) ctx.getParent().children.get(0)).IDENTIFIER().getText();
+        boolean hasAtLeastOneReturn = lines.stream().flatMap(bl -> bl.children.stream()).anyMatch(line -> line instanceof PocLangParser.Return_stmtContext);
+        PocLangParser.Function_sigContext functionSignature = (PocLangParser.Function_sigContext) ctx.getParent().children.get(0);
+        FunctionDeclaration functionDeclaration = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
+
+        if (!hasAtLeastOneReturn && this.phase == VisitorPhase.COLLECTING_FUNCTIONS && functionDeclaration.getReturnType().getType() != Type.VOID) {
+            String owningFunctionId = functionDeclaration.getIdentifier();
             this.reporter.reportError(new ErrorReport(lines.get(lines.size() - 1).getStart(), "No return statement in function " + owningFunctionId));
             return;
         }

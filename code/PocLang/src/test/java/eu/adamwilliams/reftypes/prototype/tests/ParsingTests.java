@@ -26,7 +26,7 @@ public class ParsingTests {
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
         Application app = new Application();
-        Assert.assertEquals(0, app.doTypeChecks(tree).getReports());
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
     }
 
     @Test
@@ -56,6 +56,17 @@ public class ParsingTests {
     }
 
     @Test
+    public void testAssignmentToVariableThatViolatesConstraint() throws InvalidConfigurationException {
+        String moreAdvancedProgram = "function LookupUserById(id: uint): void {\n" +
+                "    return 1+1\n" +
+                "}\n";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
+    }
+
+    @Test
     public void testMissingReturnCall() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint {\n" +
                 "    CallToUnrelatedFunction(1+1)\n" +
@@ -72,6 +83,19 @@ public class ParsingTests {
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
                 "    return LookupUserById(\"5\")\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
+    }
+
+    @Test
+    public void testMightViolateConstraint() throws InvalidConfigurationException {
+        String moreAdvancedProgram = "function LookupUserById(id: uint[> 5]): uint {\n" +
+                "    return 1+1\n" +
+                "}\n" + "function Main(a: uint[> 1]): void {\n" +
+                "    LookupUserById(a)\n" +
                 "}";
 
         ParseTree tree = getParseTree(moreAdvancedProgram);

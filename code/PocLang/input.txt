@@ -1,6 +1,8 @@
-function LookupUserById(id: uint[> 1]): void {
-    return 1+1
+function LookupUserById(id: uint): uint[< 4] {
+    // A simple function declaration, returns an int less than 4
+    return 3
 }
-function LookupUserById(id: uint[> 1]): uint {
-    Foobar(1+1)
+function StackOne(): uint[> 5] {
+    // This function must return an unsigned int greater than 5
+    return LookupUserById(1)
 }

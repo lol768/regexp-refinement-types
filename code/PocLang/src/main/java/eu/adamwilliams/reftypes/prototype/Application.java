@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 import org.sosy_lab.java_smt.SolverContextFactory;
 import org.sosy_lab.java_smt.api.*;
@@ -18,7 +20,8 @@ import java.util.stream.Collectors;
 public class Application {
 
     public static void main(String[] args) throws InterruptedException, SolverException, InvalidConfigurationException {
-        System.out.println("Reading program from stdin (use Ctrl+D when finished)...");
+        AnsiConsole.systemInstall();
+        System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN)+"Reading program from stdin (use Ctrl+D when finished)..." + Ansi.ansi().fg(Ansi.Color.RED));
         Application instance = new Application();
         instance.handleProgram();
     }
@@ -33,7 +36,7 @@ public class Application {
         if (parser.getNumberOfSyntaxErrors() > 0) {
             // ANTLR is pretty forgiving, but generally we want to give up
             // if we get a syntactically invalid program for this prototype
-            System.err.printf("%d syntax error(s) need to be resolved.%n", parser.getNumberOfSyntaxErrors());
+            System.err.printf(Ansi.ansi().fg(Ansi.Color.RED)+"%d syntax error(s) need to be resolved.%n", parser.getNumberOfSyntaxErrors());
             System.exit(-1);
         }
 
@@ -47,11 +50,11 @@ public class Application {
 
         // Print out any and all errors
         for (ErrorReport report : errorReporter.getReports()) {
-            System.err.println("L" + report.getToken().getLine() + ":" + report.getToken().getCharPositionInLine() + " " + report.getMsg());
+            System.err.println(Ansi.ansi().fg(Ansi.Color.RED)+"L" + report.getToken().getLine() + ":" + report.getToken().getCharPositionInLine() + " " + report.getMsg());
         }
 
         if (errorReporter.getReports().size() == 0) {
-            System.out.println("No errors to report");
+            System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN)+"No errors to report");
         }
     }
 
@@ -80,27 +83,4 @@ public class Application {
                 .lines().collect(Collectors.joining("\n"));
     }
 
-    public void smtTest() throws SolverException, InterruptedException, InvalidConfigurationException {
-        // Instantiate JavaSMT with SMTInterpol as backend (for dependencies cf. documentation)
-
-
-        /*
-                    IntegerFormulaManager imgr = context.getFormulaManager().getIntegerFormulaManager();
-
-            // Create formula "a = b" with two integer variables
-            NumeralFormula.IntegerFormula a = imgr.makeVariable("a");
-            NumeralFormula.IntegerFormula b = imgr.makeVariable("b");
-            BooleanFormula f = imgr.greaterThan(a, b);
-            // Solve formula, get model, and print variable assignment
-            try (ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS)) {
-                prover.addConstraint(f);
-                boolean isUnsat = prover.isUnsat();
-                assert !isUnsat;
-                try (Model model = prover.getModel()) {
-                    System.out.printf("SAT with a = %s, b = %s", model.evaluate(a), model.evaluate(b));
-                }
-            }
-
-         */
-    }
 }

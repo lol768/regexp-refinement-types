@@ -5,7 +5,7 @@ Example of syntax:
 
 ```
 function LookupUserById(id: uint[> 1]): uint {
-    1*1
+    return 1*1
 }
 ```
 
