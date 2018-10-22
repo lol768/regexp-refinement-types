@@ -9,6 +9,7 @@ import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.Token;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,11 +48,21 @@ public class VisitorListener extends PocLangBaseListener {
                 this.reporter.reportError(new ErrorReport(symbol, msg));
                 return;
             }
-        } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            Map<String, TypeContainer> collect = ctx.argument_decl().stream().collect(Collectors.toMap(ad -> ad.IDENTIFIER().getText(), ad -> mapTypeFromParsed(ad.type())));
+
+            LinkedHashMap<String, TypeContainer> collect = ctx.argument_decl().stream().collect(
+                    Collectors.toMap(
+                            ad -> ad.IDENTIFIER().getText(),
+                            ad -> mapTypeFromParsed(ad.type()),
+                            (u, v) -> {
+                                throw new IllegalStateException(String.format("Duplicate key %s", u));
+                            },
+                            LinkedHashMap::new
+                    )
+            );
             this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
 
-            this.typesCurrentlyInScope.putAll(collect);
+        } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            this.typesCurrentlyInScope.putAll(this.table.getFunctionByIdentifier(idText).getArguments());
         }
     }
 
@@ -94,6 +105,29 @@ public class VisitorListener extends PocLangBaseListener {
             }
 
             // check types of arguments
+            for (int i = 0; i < ctx.expr().size(); i++) {
+                PocLangParser.ExprContext expr = ctx.expr(i);
+                checkExprType(expr, this.table.getFunctionByIdentifier(idText).getNthArgument(i).getValue(), symbol, reporter);
+
+            }
+        }
+    }
+
+    private void checkExprType(PocLangParser.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
+        PocLangParser.Value_refContext value_refContext = expr.value_ref();
+        if (value_refContext != null) {
+            if (value_refContext.identifier_ref() == null) {
+                boolean valid = (value_refContext.INT() != null && expected.getType() == Type.UNSIGNED_INTEGER) ||
+                        (value_refContext.STRING_LITERAL() != null && expected.getType() == Type.STRING);
+                if (!valid) {
+                    reporter.reportError(new ErrorReport(symbol, "Invalid type usage in function call (need " + expected.getType() + ")"));
+                }
+            } else {
+                String variableId = value_refContext.identifier_ref().getText();
+                if (!this.typesCurrentlyInScope.containsKey(variableId)) {
+                    reporter.reportError(new ErrorReport(symbol, "Reference to variable " + variableId + " which isn't in scope"));
+                }
+            }
         }
     }
 
