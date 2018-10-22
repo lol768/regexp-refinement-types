@@ -1,6 +1,7 @@
 package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
+import eu.adamwilliams.reftypes.prototype.ErrorReport;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangLexer;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.*;
@@ -12,17 +13,33 @@ import org.junit.Test;
 import org.sosy_lab.common.configuration.InvalidConfigurationException;
 
 import java.util.BitSet;
+import java.util.List;
 
 public class ParsingTests {
 
     @Test
-    public void testBasicProgram() {
+    public void testBasicProgram() throws InvalidConfigurationException {
         String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}";
 
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports());
+    }
+
+    @Test
+    public void testBasicProgramWithViolatedUintConstraint() throws InvalidConfigurationException {
+        String basicProgram = "function LookupUserById(id: uint[< 5]): void {\n" +
+                "    return 5\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        List<ErrorReport> reports = app.doTypeChecks(tree).getReports();
+        Assert.assertTrue(reports.stream().anyMatch(p -> p.getMsg().contains("didn't satisfy")));
     }
 
     @Test

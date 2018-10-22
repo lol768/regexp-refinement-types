@@ -6,6 +6,7 @@ import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
 import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.sosy_lab.java_smt.api.*;
 
@@ -43,7 +44,6 @@ public class VisitorListener extends PocLangBaseListener {
 
     @Override
     public void enterFunction_sig(PocLangParser.Function_sigContext ctx) {
-        super.enterFunction_sig(ctx);
         String idText = ctx.IDENTIFIER().getText();
         Token symbol = ctx.IDENTIFIER().getSymbol();
 
@@ -95,15 +95,15 @@ public class VisitorListener extends PocLangBaseListener {
                 bf = ifm.greaterThan(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanConstraintContext) {
-                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                String val = ((PocLangParser.LessThanConstraintContext) ctx.int_constraint()).INT().getText();
                 bf = ifm.lessThan(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.GreaterThanEqualsConstraintContext) {
-                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                String val = ((PocLangParser.GreaterThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
                 bf = ifm.greaterOrEquals(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanEqualsConstraintContext) {
-                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                String val = ((PocLangParser.LessThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
                 bf = ifm.lessOrEquals(x, ifm.makeNumber(val));
             }
         }
@@ -128,9 +128,8 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
 
-        @Override
+    @Override
     public void enterVar_decl(PocLangParser.Var_declContext ctx) {
-        super.enterVar_decl(ctx);
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), mapTypeFromParsed(ctx.type()));
         }
@@ -138,7 +137,6 @@ public class VisitorListener extends PocLangBaseListener {
 
     @Override
     public void enterFunction_call(PocLangParser.Function_callContext ctx) {
-        super.enterFunction_call(ctx);
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             String idText = ctx.IDENTIFIER().getText();
             Token symbol = ctx.IDENTIFIER().getSymbol();
@@ -207,6 +205,19 @@ public class VisitorListener extends PocLangBaseListener {
             System.exit(-1); // can't do anything useful here
         }
         return true;
+    }
+
+    @Override
+    public void enterReturn_stmt(PocLangParser.Return_stmtContext ctx) {
+        // this is horribly ugly, but we need to grab the enclosing function somehow
+        ParserRuleContext bodyLineCtx = ctx.getParent();
+        PocLangParser.BodyContext bodyCtx = (PocLangParser.BodyContext) bodyLineCtx.getParent();
+        PocLangParser.FunctionContext function = (PocLangParser.FunctionContext) bodyCtx.getParent();
+        PocLangParser.Function_sigContext functionSignature = function.function_sig();
+        if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            FunctionDeclaration decl = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
+            this.checkExprType(ctx.expr(), decl.getReturnType(), ctx.getStart(), this.reporter);
+        }
     }
 
     @Override
