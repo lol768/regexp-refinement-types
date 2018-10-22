@@ -126,6 +126,8 @@ public class VisitorListener extends PocLangBaseListener {
                 String variableId = value_refContext.identifier_ref().getText();
                 if (!this.typesCurrentlyInScope.containsKey(variableId)) {
                     reporter.reportError(new ErrorReport(symbol, "Reference to variable " + variableId + " which isn't in scope"));
+                } else if (this.typesCurrentlyInScope.get(variableId).getType() != expected.getType()) {
+                    reporter.reportError(new ErrorReport(symbol, "Use of variable " + variableId + " which is not of required type " + expected.getType()));
                 }
             }
         }

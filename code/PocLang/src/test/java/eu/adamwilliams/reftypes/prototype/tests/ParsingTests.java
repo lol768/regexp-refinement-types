@@ -61,6 +61,20 @@ public class ParsingTests {
         Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Invalid type usage"))));
     }
 
+    @Test
+    public void testFunctionCallTypesUsingVariable() {
+        String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+                "    return 1+1\n" +
+                "}\n" + "function Main(id: uint[> 1]): uint {\n" +
+                "    var a: string\n" +
+                "    return LookupUserById(a)\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Use of variable"))));
+    }
+
     private ParseTree getParseTree(String basicProgram) {
         PocLangLexer lexer = new PocLangLexer(CharStreams.fromString(basicProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
