@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
+import org.sosy_lab.common.configuration.InvalidConfigurationException;
 
 import java.util.BitSet;
 
@@ -25,7 +26,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testFunctionRedeclaration() {
+    public void testFunctionRedeclaration() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function LookupUserById(id: uint[> 1]): uint {\n" +
@@ -38,7 +39,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testMissingReturnCall() {
+    public void testMissingReturnCall() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint {\n" +
                 "    CallToUnrelatedFunction(1+1)\n" +
                 "}";
@@ -49,7 +50,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testFunctionCallTypes() {
+    public void testFunctionCallTypes() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -58,11 +59,11 @@ public class ParsingTests {
 
         ParseTree tree = getParseTree(moreAdvancedProgram);
         Application app = new Application();
-        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Invalid type usage"))));
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
     }
 
     @Test
-    public void testFunctionCallTypesUsingVariable() {
+    public void testFunctionCallTypesUsingVariable() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -72,11 +73,11 @@ public class ParsingTests {
 
         ParseTree tree = getParseTree(moreAdvancedProgram);
         Application app = new Application();
-        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Use of variable"))));
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
     }
 
     @Test
-    public void testNestedFunctionCalls() {
+    public void testNestedFunctionCalls() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -87,7 +88,7 @@ public class ParsingTests {
 
         ParseTree tree = getParseTree(moreAdvancedProgram);
         Application app = new Application();
-        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("is not compatible with"))));
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
     }
 
     private ParseTree getParseTree(String basicProgram) {

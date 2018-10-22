@@ -7,6 +7,7 @@ import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.Token;
+import org.sosy_lab.java_smt.api.*;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,12 +22,18 @@ import java.util.stream.Collectors;
 public class VisitorListener extends PocLangBaseListener {
     private FunctionTable table;
     private ErrorReporter reporter;
+    private SolverContext context;
     private VisitorPhase phase = VisitorPhase.COLLECTING_FUNCTIONS;
     private Map<String, TypeContainer> typesCurrentlyInScope = new HashMap<>();
+    private IntegerFormulaManager ifm;
+    private NumeralFormula.IntegerFormula x;
 
-    public VisitorListener(FunctionTable table, ErrorReporter reporter) {
+    public VisitorListener(FunctionTable table, ErrorReporter reporter, SolverContext context) {
         this.table = table;
         this.reporter = reporter;
+        this.context = context;
+        this.ifm = context.getFormulaManager().getIntegerFormulaManager();
+        this.x = ifm.makeVariable("x");
     }
 
     public void setPhase(VisitorPhase phase) {
@@ -79,11 +86,49 @@ public class VisitorListener extends PocLangBaseListener {
             throw new IllegalArgumentException("Unexpected type " + keyword.getClass().getName());
         }
 
-        return new TypeContainer(type, ctx.int_constraint() != null ? ctx.int_constraint().getText() : null);
 
+        BooleanFormula bf = null;
+
+        if (ctx.int_constraint() != null) {
+            if (ctx.int_constraint() instanceof PocLangParser.GreaterThanConstraintContext) {
+                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                bf = ifm.greaterThan(x, ifm.makeNumber(val));
+            }
+            if (ctx.int_constraint() instanceof PocLangParser.LessThanConstraintContext) {
+                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                bf = ifm.lessThan(x, ifm.makeNumber(val));
+            }
+            if (ctx.int_constraint() instanceof PocLangParser.GreaterThanEqualsConstraintContext) {
+                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                bf = ifm.greaterOrEquals(x, ifm.makeNumber(val));
+            }
+            if (ctx.int_constraint() instanceof PocLangParser.LessThanEqualsConstraintContext) {
+                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+                bf = ifm.lessOrEquals(x, ifm.makeNumber(val));
+            }
+        }
+        return new TypeContainer(type, bf);
     }
 
-    @Override
+    private TypeContainer inferTypeFromValue(PocLangParser.Value_refContext value_refContext) {
+        if (value_refContext.identifier_ref() == null) {
+            Type type = value_refContext.INT() != null ? Type.UNSIGNED_INTEGER : Type.STRING; // FIXME: Do this better
+
+            if (value_refContext.INT() != null) {
+                return new TypeContainer(type, ifm.equal(x, ifm.makeNumber(value_refContext.INT().getText())));
+            }
+            return new TypeContainer(type, null);
+        }
+
+        String variableId = value_refContext.identifier_ref().getText();
+        if (!this.typesCurrentlyInScope.containsKey(variableId)) {
+            throw new IllegalArgumentException("Reference to variable " + variableId + " which isn't in scope");
+        }
+        return this.typesCurrentlyInScope.get(variableId);
+    }
+
+
+        @Override
     public void enterVar_decl(PocLangParser.Var_declContext ctx) {
         super.enterVar_decl(ctx);
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
@@ -108,7 +153,6 @@ public class VisitorListener extends PocLangBaseListener {
             for (int i = 0; i < ctx.expr().size(); i++) {
                 PocLangParser.ExprContext expr = ctx.expr(i);
                 checkExprType(expr, this.table.getFunctionByIdentifier(idText).getNthArgument(i).getValue(), symbol, reporter);
-
             }
         }
     }
@@ -116,29 +160,53 @@ public class VisitorListener extends PocLangBaseListener {
     private void checkExprType(PocLangParser.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
         PocLangParser.Value_refContext value_refContext = expr.value_ref();
         if (value_refContext != null) {
-            if (value_refContext.identifier_ref() == null) {
-                boolean valid = (value_refContext.INT() != null && expected.getType() == Type.UNSIGNED_INTEGER) ||
-                        (value_refContext.STRING_LITERAL() != null && expected.getType() == Type.STRING);
-                if (!valid) {
-                    reporter.reportError(new ErrorReport(symbol, "Invalid type usage in function call (need " + expected.getType() + ")"));
+            try {
+                TypeContainer tc = this.inferTypeFromValue(value_refContext);
+                if (!this.checkTypes(expected, tc)) {
+                    reporter.reportError(new ErrorReport(symbol, tc + " didn't satisfy " + expected));
                 }
-            } else {
-                String variableId = value_refContext.identifier_ref().getText();
-                if (!this.typesCurrentlyInScope.containsKey(variableId)) {
-                    reporter.reportError(new ErrorReport(symbol, "Reference to variable " + variableId + " which isn't in scope"));
-                } else if (this.typesCurrentlyInScope.get(variableId).getType() != expected.getType()) {
-                    reporter.reportError(new ErrorReport(symbol, "Use of variable " + variableId + " which is not of required type " + expected.getType()));
-                }
+            } catch (IllegalArgumentException ex) {
+                reporter.reportError(new ErrorReport(symbol, ex.getMessage()));
             }
         }
 
         PocLangParser.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
-            if (functionByIdentifier.getReturnType().getType() != expected.getType()) {
-                reporter.reportError(new ErrorReport(symbol, "Return type of function " + functionByIdentifier.getIdentifier() + " is not compatible with " + expected.getType()));
+            if (!this.checkTypes(expected, functionByIdentifier.getReturnType())) {
+                reporter.reportError(new ErrorReport(symbol, "Return type of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected.getType()));
             }
         }
+    }
+
+    private boolean checkTypes(TypeContainer expected, TypeContainer actual) {
+        if (expected.getType() != actual.getType()) {
+            return false; // fail fast
+        }
+
+        if (expected.getRefinement() == null) {
+            return true;
+        }
+
+        // Solve formula, get model, and print variable assignment
+        try (ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS)) {
+            if (actual.getRefinement() != null) {
+                prover.addConstraint(actual.getRefinement());
+            }
+
+            prover.addConstraint(expected.getRefinement());
+            boolean isUnsat = prover.isUnsat();
+            if (isUnsat) {
+                return false;
+            }
+            try (Model model = prover.getModel()) {
+                System.out.printf("SAT with  = %s", model.evaluate(x));
+            }
+        } catch (InterruptedException | SolverException e) {
+            e.printStackTrace();
+            System.exit(-1); // can't do anything useful here
+        }
+        return true;
     }
 
     @Override

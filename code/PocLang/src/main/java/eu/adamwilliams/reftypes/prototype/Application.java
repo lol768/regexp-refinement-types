@@ -7,6 +7,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.sosy_lab.common.configuration.InvalidConfigurationException;
+import org.sosy_lab.java_smt.SolverContextFactory;
+import org.sosy_lab.java_smt.api.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, SolverException, InvalidConfigurationException {
         System.out.println("Reading program from stdin (use Ctrl+D when finished)...");
         Application instance = new Application();
         instance.handleProgram();
@@ -34,7 +37,13 @@ public class Application {
             System.exit(-1);
         }
 
-        ErrorReporter errorReporter = this.doTypeChecks(tree);
+        ErrorReporter errorReporter = null;
+        try {
+            errorReporter = this.doTypeChecks(tree);
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
         // Print out any and all errors
         for (ErrorReport report : errorReporter.getReports()) {
@@ -46,19 +55,22 @@ public class Application {
         }
     }
 
-    public ErrorReporter doTypeChecks(ParseTree tree) {
+    public ErrorReporter doTypeChecks(ParseTree tree) throws InvalidConfigurationException {
         ParseTreeWalker walker = new ParseTreeWalker();
 
         FunctionTable tableForProgram = new FunctionTable();
         ErrorReporter reporter = new ErrorReporterImpl();
-        VisitorListener listener = new VisitorListener(tableForProgram, reporter);
+        try (SolverContext context = SolverContextFactory.createSolverContext(SolverContextFactory.Solvers.SMTINTERPOL)) {
+            VisitorListener listener = new VisitorListener(tableForProgram, reporter, context);
+            walker.walk(listener, tree);
+
+            // Now that our function table is populated we can check the function calls
+            listener.setPhase(VisitorPhase.CHECKING_TYPES);
+            walker.walk(listener, tree);
+        }
         // We walk the parse tree in two passes
         // In the first phase, we're simply making a note of all of the declared functions in the function table
-        walker.walk(listener, tree);
 
-        // Now that our function table is populated we can check the function calls
-        listener.setPhase(VisitorPhase.CHECKING_TYPES);
-        walker.walk(listener, tree);
         return reporter;
     }
 
@@ -66,5 +78,29 @@ public class Application {
     private String readStdIn() {
         return new BufferedReader(new InputStreamReader(System.in))
                 .lines().collect(Collectors.joining("\n"));
+    }
+
+    public void smtTest() throws SolverException, InterruptedException, InvalidConfigurationException {
+        // Instantiate JavaSMT with SMTInterpol as backend (for dependencies cf. documentation)
+
+
+        /*
+                    IntegerFormulaManager imgr = context.getFormulaManager().getIntegerFormulaManager();
+
+            // Create formula "a = b" with two integer variables
+            NumeralFormula.IntegerFormula a = imgr.makeVariable("a");
+            NumeralFormula.IntegerFormula b = imgr.makeVariable("b");
+            BooleanFormula f = imgr.greaterThan(a, b);
+            // Solve formula, get model, and print variable assignment
+            try (ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS)) {
+                prover.addConstraint(f);
+                boolean isUnsat = prover.isUnsat();
+                assert !isUnsat;
+                try (Model model = prover.getModel()) {
+                    System.out.printf("SAT with a = %s, b = %s", model.evaluate(a), model.evaluate(b));
+                }
+            }
+
+         */
     }
 }
