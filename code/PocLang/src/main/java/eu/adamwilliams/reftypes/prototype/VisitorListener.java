@@ -131,6 +131,14 @@ public class VisitorListener extends PocLangBaseListener {
                 }
             }
         }
+
+        PocLangParser.Function_callContext function_callContext = expr.function_call();
+        if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
+            FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
+            if (functionByIdentifier.getReturnType().getType() != expected.getType()) {
+                reporter.reportError(new ErrorReport(symbol, "Return type of function " + functionByIdentifier.getIdentifier() + " is not compatible with " + expected.getType()));
+            }
+        }
     }
 
     @Override
