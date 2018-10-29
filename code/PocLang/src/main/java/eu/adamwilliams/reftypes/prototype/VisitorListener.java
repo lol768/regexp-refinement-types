@@ -91,22 +91,23 @@ public class VisitorListener extends PocLangBaseListener {
 
         BooleanFormula bf = null;
 
+        // we use the inverse in our boolean formulae
         if (ctx.int_constraint() != null) {
             if (ctx.int_constraint() instanceof PocLangParser.GreaterThanConstraintContext) {
                 String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.greaterThan(x, ifm.makeNumber(val));
+                bf = ifm.lessOrEquals(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanConstraintContext) {
                 String val = ((PocLangParser.LessThanConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.lessThan(x, ifm.makeNumber(val));
+                bf = ifm.greaterOrEquals(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.GreaterThanEqualsConstraintContext) {
                 String val = ((PocLangParser.GreaterThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.greaterOrEquals(x, ifm.makeNumber(val));
+                bf = ifm.lessThan(x, ifm.makeNumber(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanEqualsConstraintContext) {
                 String val = ((PocLangParser.LessThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.lessOrEquals(x, ifm.makeNumber(val));
+                bf = ifm.greaterThan(x, ifm.makeNumber(val));
             }
         }
         return new TypeContainer(type, bf);
@@ -208,16 +209,16 @@ public class VisitorListener extends PocLangBaseListener {
             prover.addConstraint(expected.getRefinement());
             boolean isUnsat = prover.isUnsat();
             if (isUnsat) {
-                return false;
+                return true;
             }
             try (Model model = prover.getModel()) {
-                System.out.printf(Ansi.ansi().fg(Ansi.Color.CYAN)+"// Solved SAT with  = %s%n", model.evaluate(x));
+                System.out.printf(Ansi.ansi().fg(Ansi.Color.RED)+"// Solved SAT with  = %s%n", model.evaluate(x));
             }
         } catch (InterruptedException | SolverException e) {
             e.printStackTrace();
             System.exit(-1); // can't do anything useful here
         }
-        return true;
+        return false;
     }
 
     @Override

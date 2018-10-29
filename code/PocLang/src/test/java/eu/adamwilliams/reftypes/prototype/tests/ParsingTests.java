@@ -56,9 +56,9 @@ public class ParsingTests {
     }
 
     @Test
-    public void testAssignmentToVariableThatViolatesConstraint() throws InvalidConfigurationException {
+    public void testReturnFromVoid() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint): void {\n" +
-                "    return 1+1\n" +
+                "    return 1\n" +
                 "}\n";
 
         ParseTree tree = getParseTree(moreAdvancedProgram);
