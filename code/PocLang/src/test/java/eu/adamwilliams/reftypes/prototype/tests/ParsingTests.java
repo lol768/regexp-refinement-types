@@ -91,6 +91,19 @@ public class ParsingTests {
     }
 
     @Test
+    public void testNestedFunctionCallTypes() throws InvalidConfigurationException {
+        String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint[> 1] {\n" +
+                "    return 1+1\n" +
+                "}\n" + "function Main(): uint[< 5] {\n" +
+                "    return LookupUserById(LookupUserById(2))\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
+    }
+
+    @Test
     public void testMightViolateConstraint() throws InvalidConfigurationException {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 5]): uint {\n" +
                 "    return 1+1\n" +
