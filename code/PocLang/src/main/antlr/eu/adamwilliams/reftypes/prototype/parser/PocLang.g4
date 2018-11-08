@@ -28,7 +28,7 @@ expr              : expr ('*'|'/') expr
 var_assignment    : IDENTIFIER WS? '=' expr;
 value_ref         : INT | STRING_LITERAL | identifier_ref ;
 identifier_ref    : IDENTIFIER ;
-function_call     : IDENTIFIER '(' (expr | expr ARG_SEP)* ')' ;
+function_call     : IDENTIFIER '(' (expr (ARG_SEP expr)*)? ')' ;
 
 IDENTIFIER        : [A-Za-z_][A-Za-z_0-9]* ;
 WS                : (' ' | '\t')+ -> channel(HIDDEN);
