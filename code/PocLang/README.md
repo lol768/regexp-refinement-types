@@ -30,4 +30,13 @@ used). For the sake of access to some string functionality, this dependency is b
 
 Unfortunately, the Z3 Java bindings are not maintained on Maven Central. Thus, it is necessary to build Z3 manually.
 
-See https://github.com/Z3Prover/z3/tree/cc312d2f688f4b6b4742fca12faedb1cb39e97b9#java for more information.
+See https://github.com/Z3Prover/z3/tree/cc312d2f688f4b6b4742fca12faedb1cb39e97b9#java for more information, but on Linux:
+
+```
+python scripts/mk_make.py --java
+cd build
+make
+mvn install:install-file -DgroupId=eu.adamwilliams.z3 -DartifactId=vendor-z3 -Dversion=1.0.0 -Dfile=com.microsoft.z3.jar -DgeneratePom=true -Dpackaging=jar
+```
+
+This will take longer to build than _Tabula_, so make a coffee or two.
