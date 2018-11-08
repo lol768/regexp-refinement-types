@@ -20,7 +20,19 @@ public class ParsingTests {
     @Test
     public void testBasicProgram() throws InvalidConfigurationException {
         String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
-                "    return 1+1\n" +
+                "    return\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
+    public void testParseRegex() throws InvalidConfigurationException {
+        String basicProgram = "function LookupUserById(str: string[/[A-Z+]/]): void {\n" +
+                "    return\n" +
                 "}";
 
         ParseTree tree = getParseTree(basicProgram);
@@ -63,7 +75,7 @@ public class ParsingTests {
 
         ParseTree tree = getParseTree(moreAdvancedProgram);
         Application app = new Application();
-        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Attempt to return value from void function"))));
     }
 
     @Test
@@ -132,7 +144,7 @@ public class ParsingTests {
 
     @Test
     public void testNestedFunctionCalls() throws InvalidConfigurationException {
-        String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+        String nestedFunctionCalls = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
                 "    return LookupUserById(GetString())\n" +
@@ -140,9 +152,20 @@ public class ParsingTests {
                 "    return \"a\"\n" +
                 "}";
 
-        ParseTree tree = getParseTree(moreAdvancedProgram);
+        ParseTree tree = getParseTree(nestedFunctionCalls);
         Application app = new Application();
         Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("didn't satisfy"))));
+    }
+
+    @Test
+    public void testIllegalConstraintApplication() throws InvalidConfigurationException {
+        String illegalConstraint = "function LookupUserById(id: string[> 1]): void {\n" +
+                "    return 1+1\n" +
+                "}\n";
+
+        ParseTree tree = getParseTree(illegalConstraint);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Attempt to apply int constraint to string type"))));
     }
 
     private ParseTree getParseTree(String basicProgram) {

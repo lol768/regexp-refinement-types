@@ -88,6 +88,10 @@ public class VisitorListener extends PocLangBaseListener {
             throw new IllegalArgumentException("Unexpected type " + keyword.getClass().getName());
         }
 
+        if (!this.ensureApplicableConstraint(ctx, type)) {
+            // we just ignore the constraint and continue, the error is logged
+            return new TypeContainer(type, null);
+        }
 
         BooleanFormula bf = null;
 
@@ -111,6 +115,26 @@ public class VisitorListener extends PocLangBaseListener {
             }
         }
         return new TypeContainer(type, bf);
+    }
+
+    private boolean ensureApplicableConstraint(PocLangParser.TypeContext ctx, Type type) {
+        switch(type) {
+            case UNSIGNED_INTEGER:
+                if (ctx.string_constraint() != null) {
+                    this.reporter.reportError(new ErrorReport(ctx.type_keyword().start, "Attempt to apply string constraint to uint type."));
+                    return false;
+                }
+                break;
+            case STRING:
+                if (ctx.int_constraint() != null) {
+                    this.reporter.reportError(new ErrorReport(ctx.type_keyword().start, "Attempt to apply int constraint to string type."));
+                    return false;
+                }
+                break;
+            case VOID:
+                break;
+        }
+        return true;
     }
 
     private TypeContainer inferTypeFromValue(PocLangParser.Value_refContext value_refContext) {
@@ -230,6 +254,11 @@ public class VisitorListener extends PocLangBaseListener {
         PocLangParser.Function_sigContext functionSignature = function.function_sig();
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             FunctionDeclaration decl = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
+            if (ctx.expr() == null && decl.getReturnType().getType() == Type.VOID) {
+                return;
+            } else if (decl.getReturnType().getType() == Type.VOID) {
+                this.reporter.reportError(new ErrorReport(ctx.expr().start, "Attempt to return value from void function " + functionSignature.IDENTIFIER().getText()));
+            }
             this.checkExprType(ctx.expr(), decl.getReturnType(), ctx.getStart(), this.reporter);
         }
     }
@@ -250,4 +279,6 @@ public class VisitorListener extends PocLangBaseListener {
             this.typesCurrentlyInScope.clear();
         }
     }
+
+
 }
