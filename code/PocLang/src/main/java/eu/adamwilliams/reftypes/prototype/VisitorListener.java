@@ -1,13 +1,12 @@
 package eu.adamwilliams.reftypes.prototype;
 
+import com.microsoft.z3.*;
 import eu.adamwilliams.reftypes.prototype.domain.*;
 import eu.adamwilliams.reftypes.prototype.domain.FunctionDeclaration;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.fusesource.jansi.Ansi;
-import org.sosy_lab.java_smt.api.*;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,18 +21,18 @@ import java.util.stream.Collectors;
 public class VisitorListener extends PocLangBaseListener {
     private FunctionTable table;
     private ErrorReporter reporter;
-    private SolverContext context;
+    private final Context z3Ctx;
     private VisitorPhase phase = VisitorPhase.COLLECTING_FUNCTIONS;
     private Map<String, StackEntry> typesCurrentlyInScope = new HashMap<>();
-    private IntegerFormulaManager ifm;
-    private NumeralFormula.IntegerFormula x;
+    private IntExpr x; // represents unknown int
+    private SeqExpr y; // represents unknown string
 
-    public VisitorListener(FunctionTable table, ErrorReporter reporter, SolverContext context) {
+    public VisitorListener(FunctionTable table, ErrorReporter reporter, Context z3Ctx) {
         this.table = table;
         this.reporter = reporter;
-        this.context = context;
-        this.ifm = context.getFormulaManager().getIntegerFormulaManager();
-        this.x = ifm.makeVariable("x");
+        this.z3Ctx = z3Ctx;
+        this.x = z3Ctx.mkIntConst("x");
+        this.y = (SeqExpr) z3Ctx.mkConst(z3Ctx.mkSymbol("x"), z3Ctx.getStringSort());
     }
 
     public void setPhase(VisitorPhase phase) {
@@ -93,32 +92,39 @@ public class VisitorListener extends PocLangBaseListener {
             return new TypeContainer(type, null);
         }
 
-        BooleanFormula bf = null;
+        BoolExpr bf = null;
 
-        // we use the inverse in our boolean formulae
         if (ctx.int_constraint() != null) {
             if (ctx.int_constraint() instanceof PocLangParser.GreaterThanConstraintContext) {
                 String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.lessOrEquals(x, ifm.makeNumber(val));
+                bf = z3Ctx.mkGt(x, z3Ctx.mkInt(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanConstraintContext) {
                 String val = ((PocLangParser.LessThanConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.greaterOrEquals(x, ifm.makeNumber(val));
+                bf = z3Ctx.mkLt(x, z3Ctx.mkInt(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.GreaterThanEqualsConstraintContext) {
                 String val = ((PocLangParser.GreaterThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.lessThan(x, ifm.makeNumber(val));
+                bf = z3Ctx.mkGe(x, z3Ctx.mkInt(val));
             }
             if (ctx.int_constraint() instanceof PocLangParser.LessThanEqualsConstraintContext) {
                 String val = ((PocLangParser.LessThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
-                bf = ifm.greaterThan(x, ifm.makeNumber(val));
+                bf = z3Ctx.mkLe(x, z3Ctx.mkInt(val));
             }
+        } else if (ctx.string_constraint() != null) {
+            bf = z3Ctx.mkInRe(y, z3Ctx.mkToRe(z3Ctx.mkString("parseTODO")));
         }
+        if (bf == null) {
+            // type is unconstrained
+            return new TypeContainer(type, null);
+        }
+
+        bf = z3Ctx.mkNot(bf); // we want to find violations
         return new TypeContainer(type, bf);
     }
 
     private boolean ensureApplicableConstraint(PocLangParser.TypeContext ctx, Type type) {
-        switch(type) {
+        switch (type) {
             case UNSIGNED_INTEGER:
                 if (ctx.string_constraint() != null) {
                     this.reporter.reportError(new ErrorReport(ctx.type_keyword().start, "Attempt to apply string constraint to uint type."));
@@ -142,7 +148,8 @@ public class VisitorListener extends PocLangBaseListener {
             Type type = value_refContext.INT() != null ? Type.UNSIGNED_INTEGER : Type.STRING; // FIXME: Do this better
 
             if (value_refContext.INT() != null) {
-                return new TypeContainer(type, ifm.equal(x, ifm.makeNumber(value_refContext.INT().getText())));
+                BoolExpr eqExpr = z3Ctx.mkEq(x, z3Ctx.mkInt(value_refContext.INT().getText()));
+                return new TypeContainer(type, eqExpr);
             }
             return new TypeContainer(type, null);
         }
@@ -225,23 +232,21 @@ public class VisitorListener extends PocLangBaseListener {
         }
 
         // Solve formula, get model, and print variable assignment
-        try (ProverEnvironment prover = context.newProverEnvironment(SolverContext.ProverOptions.GENERATE_MODELS)) {
-            if (actual.getRefinement() != null) {
-                prover.addConstraint(actual.getRefinement());
-            }
-
-            prover.addConstraint(expected.getRefinement());
-            boolean isUnsat = prover.isUnsat();
-            if (isUnsat) {
-                return true;
-            }
-            try (Model model = prover.getModel()) {
-                System.out.printf(Ansi.ansi().fg(Ansi.Color.RED)+"// Solved SAT with  = %s%n", model.evaluate(x));
-            }
-        } catch (InterruptedException | SolverException e) {
-            e.printStackTrace();
-            System.exit(-1); // can't do anything useful here
+        Solver solver = z3Ctx.mkSolver();
+        if (actual.getRefinement() != null) {
+            solver.add(actual.getRefinement());
         }
+
+        solver.add(expected.getRefinement());
+        Status res = solver.check();
+        if (res == Status.SATISFIABLE) {
+            // if we're here, we have a model which violates the refinement types
+            System.err.println("Violation via value " + solver.getModel().getConstInterp(actual.getType() == Type.STRING ? y : x));
+            return false;
+        } else if (res == Status.UNSATISFIABLE) {
+            return true;
+        }
+
         return false;
     }
 

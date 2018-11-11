@@ -1,13 +1,13 @@
 package eu.adamwilliams.reftypes.prototype.domain;
 
-import org.sosy_lab.java_smt.api.BooleanFormula;
+import com.microsoft.z3.BoolExpr;
 
 public class TypeContainer {
 
     private Type type;
-    private BooleanFormula refinement; // TODO: better type representation
+    private BoolExpr refinement;
 
-    public TypeContainer(Type type, BooleanFormula refinement) {
+    public TypeContainer(Type type, BoolExpr refinement) {
         this.type = type;
         this.refinement = refinement;
     }
@@ -16,7 +16,7 @@ public class TypeContainer {
         return type;
     }
 
-    public BooleanFormula getRefinement() {
+    public BoolExpr getRefinement() {
         return refinement;
     }
 

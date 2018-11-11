@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
-import org.sosy_lab.common.configuration.InvalidConfigurationException;
 
 import java.util.BitSet;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public class ParsingTests {
 
     @Test
-    public void testBasicProgram() throws InvalidConfigurationException {
+    public void testBasicProgram() {
         String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return\n" +
                 "}";
@@ -30,7 +29,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testParseRegex() throws InvalidConfigurationException {
+    public void testParseRegex() {
         String basicProgram = "function LookupUserById(str: string[/[A-Z+]/]): void {\n" +
                 "    return\n" +
                 "}";
@@ -42,7 +41,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testBasicProgramWithViolatedUintConstraint() throws InvalidConfigurationException {
+    public void testBasicProgramWithViolatedUintConstraint() {
         String basicProgram = "function LookupUserById(id: uint[< 5]): void {\n" +
                 "    return 5\n" +
                 "}";
@@ -55,7 +54,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testFunctionRedeclaration() throws InvalidConfigurationException {
+    public void testFunctionRedeclaration() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function LookupUserById(id: uint[> 1]): uint {\n" +
@@ -68,7 +67,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testReturnFromVoid() throws InvalidConfigurationException {
+    public void testReturnFromVoid() {
         String moreAdvancedProgram = "function LookupUserById(id: uint): void {\n" +
                 "    return 1\n" +
                 "}\n";
@@ -79,7 +78,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testMissingReturnCall() throws InvalidConfigurationException {
+    public void testMissingReturnCall() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint {\n" +
                 "    CallToUnrelatedFunction(1+1)\n" +
                 "}";
@@ -90,7 +89,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testFunctionCallTypes() throws InvalidConfigurationException {
+    public void testFunctionCallTypes() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -103,7 +102,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testNestedFunctionCallTypes() throws InvalidConfigurationException {
+    public void testNestedFunctionCallTypes() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): uint[> 1] {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(): uint[< 5] {\n" +
@@ -116,7 +115,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testMightViolateConstraint() throws InvalidConfigurationException {
+    public void testMightViolateConstraint() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 5]): uint {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(a: uint[> 1]): void {\n" +
@@ -129,7 +128,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testFunctionCallTypesUsingVariable() throws InvalidConfigurationException {
+    public void testFunctionCallTypesUsingVariable() {
         String moreAdvancedProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -143,7 +142,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testNestedFunctionCalls() throws InvalidConfigurationException {
+    public void testNestedFunctionCalls() {
         String nestedFunctionCalls = "function LookupUserById(id: uint[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n" + "function Main(id: uint[> 1]): uint {\n" +
@@ -158,7 +157,7 @@ public class ParsingTests {
     }
 
     @Test
-    public void testIllegalConstraintApplication() throws InvalidConfigurationException {
+    public void testIllegalConstraintApplication() {
         String illegalConstraint = "function LookupUserById(id: string[> 1]): void {\n" +
                 "    return 1+1\n" +
                 "}\n";
