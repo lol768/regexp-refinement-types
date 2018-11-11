@@ -32,6 +32,7 @@ dependencies {
 
 generateGrammarSource {
     arguments += ["-package", "eu.adamwilliams.reftypes.prototype.parser"]
+    arguments += ["-lib", "src/main/antlr/eu/adamwilliams/reftypes/prototype/parser/"]
 }
 
 run {

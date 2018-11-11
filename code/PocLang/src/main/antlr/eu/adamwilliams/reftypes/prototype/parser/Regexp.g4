@@ -2,7 +2,7 @@
 // converted to (limited) ANTLR Adam Williams Nov 2018
 
 grammar Regexp;
-program        : re EOF ;
+re_program     : re EOF ;
 re             : simple_re union_prime ;
 union_prime    : ALTERNATION re | /* ε */ ;
 
@@ -18,15 +18,19 @@ range          : positive_range | negative_range ;
 
 positive_range : '[' range_items ']' ;
 negative_range : '[^' range_items ']' ;
+lax_character  : CHARACTER | (DOT|PLUS|STAR|ALTERNATION|MINUS) ;
+character      : CHARACTER|MINUS ; // ranges are a bit more lax w.r.t what characters are allowed
 
 range_items    : range_item | range_item range_items ;
-range_item     : character '-' character | character;
-character      : CHARACTER ;
+range_item     : lax_character MINUS lax_character | lax_character;
 
 // ANTLR does not support rule refs in sets, so no DRY here
+MINUS          : '-' ;
 DOT            : '.' ;
 STAR           : '*' ;
 PLUS           : '+' ;
 ALTERNATION    : '|' ;
-CHARACTER      : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+') | '\\' META_CHAR;
-META_CHAR      : (DOT|PLUS|STAR|ALTERNATION|'['|']') ;
+CHARACTER      : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/') | ESCAPED_META;
+META_CHAR      : (DOT|PLUS|STAR|ALTERNATION|'['|']'|'/') ;
+fragment ESCAPED_FWD_SLASH: '\\/' ;
+fragment ESCAPED_META: '\\' META_CHAR ;
