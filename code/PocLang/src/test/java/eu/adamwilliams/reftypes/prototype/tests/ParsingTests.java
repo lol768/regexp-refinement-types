@@ -53,6 +53,33 @@ public class ParsingTests {
     }
 
     @Test
+    public void testRegexAlternation() {
+        String basicProgram = "function ShellFunction(): string[/g+|f+/] {\n" +
+                "    return \"f\"\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Application app = new Application();
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
+    public void testRegexFunctionCallViolation() {
+        String basicProgram = "function ShellFunction(): string[/g+|f+/] {\n" +
+                "    return \"f\"\n" +
+                "}\n" +
+                "function Main(): string[/f+/] {\n" +
+                "    return ShellFunction()\n" +
+                "}";
+
+        // to find violations, we want ACTUAL (/g+|f+/) to hold and EXPECTED to _NOT_ hold. I think..
+
+        ParseTree tree = getParseTree(basicProgram);
+        Application app = new Application();
+        Assert.assertNotEquals(0, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
     public void testBasicProgramWithViolatedUintConstraint() {
         String basicProgram = "function LookupUserById(id: uint[< 5]): void {\n" +
                 "    return 5\n" +

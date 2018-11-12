@@ -121,7 +121,7 @@ public class VisitorListener extends PocLangBaseListener {
             return new TypeContainer(type, null);
         }
 
-        bf = z3Ctx.mkNot(bf); // we want to find violations
+        // bf = z3Ctx.mkNot(bf); // we want to find violations
         return new TypeContainer(type, bf);
     }
 
@@ -242,7 +242,7 @@ public class VisitorListener extends PocLangBaseListener {
             solver.add(actual.getRefinement());
         }
 
-        solver.add(expected.getRefinement());
+        solver.add(z3Ctx.mkNot(expected.getRefinement()));
         Status res = solver.check();
         if (res == Status.SATISFIABLE) {
             // if we're here, we have a model which violates the refinement types

@@ -41,7 +41,7 @@ mode REGEX;
 
 BEGIN_RE_RANGE : '[' ;
 END_RE_RANGE   : ']' ;
-CHARACTER      : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/') | ESCAPED_META;
+CHARACTER      : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/'|'|') | ESCAPED_META;
 BEGIN_RE_GROUP : '(' ;
 END_RE_GROUP   : ')' ;
 MINUS          : '-' ;
