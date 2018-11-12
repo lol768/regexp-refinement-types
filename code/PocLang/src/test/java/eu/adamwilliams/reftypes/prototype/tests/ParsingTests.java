@@ -30,7 +30,7 @@ public class ParsingTests {
 
     @Test
     public void testParseRegex() {
-        String basicProgram = "function LookupUserById(str: string[/[A-Z+]/]): void {\n" +
+        String basicProgram = "function LookupUserById(str: string[/(goose)+/]): void {\n" +
                 "    return\n" +
                 "}";
 

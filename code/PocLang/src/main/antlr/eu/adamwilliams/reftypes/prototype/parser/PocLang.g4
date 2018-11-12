@@ -43,7 +43,7 @@ basic_re       : kleene_star | plus | elementary_re ;
 kleene_star    : elementary_re STAR ;
 plus           : elementary_re PLUS;
 elementary_re  : group | DOT | character | range ;
-group          : BEGIN_GROUP re END_GROUP ;
+group          : BEGIN_RE_GROUP re END_RE_GROUP ;
 range          : positive_range | negative_range ;
 
 positive_range : BEGIN_RE_RANGE range_items END_RE_RANGE ;

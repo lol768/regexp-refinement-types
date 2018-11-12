@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * like register functions in the function table here.
  */
 public class VisitorListener extends PocLangBaseListener {
+    private final RegexZ3Adapter regexAdapter;
     private FunctionTable table;
     private ErrorReporter reporter;
     private final Context z3Ctx;
@@ -33,6 +34,7 @@ public class VisitorListener extends PocLangBaseListener {
         this.z3Ctx = z3Ctx;
         this.x = z3Ctx.mkIntConst("x");
         this.y = (SeqExpr) z3Ctx.mkConst(z3Ctx.mkSymbol("x"), z3Ctx.getStringSort());
+        this.regexAdapter = new RegexZ3Adapter();
     }
 
     public void setPhase(VisitorPhase phase) {
@@ -112,7 +114,7 @@ public class VisitorListener extends PocLangBaseListener {
                 bf = z3Ctx.mkLe(x, z3Ctx.mkInt(val));
             }
         } else if (ctx.string_constraint() != null) {
-            bf = z3Ctx.mkInRe(y, z3Ctx.mkToRe(z3Ctx.mkString("parseTODO")));
+            bf = this.regexAdapter.getRefinementType(this.y, ctx.string_constraint().re(), this.z3Ctx);
         }
         if (bf == null) {
             // type is unconstrained

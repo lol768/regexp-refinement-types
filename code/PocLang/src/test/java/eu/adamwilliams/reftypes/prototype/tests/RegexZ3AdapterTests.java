@@ -28,7 +28,18 @@ public class RegexZ3AdapterTests {
 
         BoolExpr result = adapter.getRefinementType((SeqExpr) z3Context.mkConst("y", z3Context.getStringSort()), tree.string_constraint().re(), z3Context);
         Assert.assertEquals("(str.in.re y (re.+ (str.to.re \"a\")))", result.toString());
+    }
 
+    @Test
+    public void testKleeneStarGrouped() {
+        String constraint = "string[/(aaa)*/]";
+        PocLang.TypeContext tree = getParseTree(constraint);
+        Context z3Context = getZ3Context();
+        IRegexZ3Adapter adapter = new RegexZ3Adapter();
+
+        BoolExpr result = adapter.getRefinementType((SeqExpr) z3Context.mkConst("y", z3Context.getStringSort()), tree.string_constraint().re(), z3Context);
+        Assert.assertEquals("(let ((a!1 (re.* (re.++ (str.to.re \"a\") (re.++ (str.to.re \"a\") (str.to.re \"a\"))))))\n" +
+                "  (str.in.re y a!1))", result.toString());
     }
 
     private Context getZ3Context() {
