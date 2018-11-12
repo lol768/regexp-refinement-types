@@ -69,7 +69,7 @@ public class Application {
 
         FunctionTable tableForProgram = new FunctionTable();
         ErrorReporter reporter = new ErrorReporterImpl();
-        Map<String, String> cfg = new HashMap<String, String>();
+        Map<String, String> cfg = new HashMap<>();
         cfg.put("model", "true");
 
         try (Context ctx = new Context(cfg)) {
