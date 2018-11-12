@@ -153,7 +153,8 @@ public class VisitorListener extends PocLangBaseListener {
                 BoolExpr eqExpr = z3Ctx.mkEq(x, z3Ctx.mkInt(value_refContext.INT().getText()));
                 return new TypeContainer(type, eqExpr);
             } else if (value_refContext.STRING_LITERAL() != null) {
-                return new TypeContainer(type, z3Ctx.mkInRe(this.y, z3Ctx.mkToRe(z3Ctx.mkString(value_refContext.STRING_LITERAL().getText()))));
+                String text = value_refContext.STRING_LITERAL().getText().substring(1, value_refContext.STRING_LITERAL().getText().length()-1);
+                return new TypeContainer(type, z3Ctx.mkInRe(this.y, z3Ctx.mkToRe(z3Ctx.mkString(text))));
             }
             return new TypeContainer(type, null);
         }
