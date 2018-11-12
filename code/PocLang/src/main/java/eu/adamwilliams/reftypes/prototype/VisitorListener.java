@@ -121,7 +121,6 @@ public class VisitorListener extends PocLangBaseListener {
             return new TypeContainer(type, null);
         }
 
-        // bf = z3Ctx.mkNot(bf); // we want to find violations
         return new TypeContainer(type, bf);
     }
 
