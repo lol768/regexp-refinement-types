@@ -1,7 +1,5 @@
 package eu.adamwilliams.reftypes.prototype.domain;
 
-import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

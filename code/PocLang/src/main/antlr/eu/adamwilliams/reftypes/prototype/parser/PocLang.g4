@@ -1,46 +1,55 @@
-grammar PocLang;
+parser grammar PocLang;
+options { tokenVocab=PocLex; }
 body              : (
                     (WS? body_line? WS? NEWLINE)
                       | (WS? COMMENT_LINE NEWLINE)
                     )*;
 body_line         : (var_assignment | return_stmt | var_decl | function_call ) ;
 
-return_stmt       : 'return' (' ' expr )? ;
-var_decl          : 'var ' IDENTIFIER ': ' type ;
-type_keyword      : 'uint' # UnsignedIntType |
-                    'string' # StringType |
-                    'void' # VoidType ;
+return_stmt       : RETURN (SPACE expr )? ;
+var_decl          : VAR SPACE IDENTIFIER COLON SPACE type ;
+type_keyword      : UINT_T # UnsignedIntType |
+                    STRING_T # StringType |
+                    VOID_T # VoidType ;
 type              : (type_keyword)
-                    | (type_keyword '[' int_constraint ']')
-                    | (type_keyword '[' string_constraint ']') ;
-int_constraint    : '< ' INT # LessThanConstraint
-                    | '> ' INT # GreaterThanConstraint
-                    | '<= ' INT # LessThanEqualsConstraint
-                    | '>= ' INT # GreaterThanEqualsConstraint ;
-string_constraint : REGEX ;
-function_sig      : 'function ' IDENTIFIER '(' (argument_decl | argument_decl ARG_SEP)* '): ' type ' {' NEWLINE ;
-argument_decl     : IDENTIFIER ': ' type ;
-function          : function_sig body '}' ;
+                    | (type_keyword BEGIN_CONSTRAINT int_constraint END_CONSTRAINT)
+                    | (type_keyword BEGIN_CONSTRAINT string_constraint END_CONSTRAINT) ;
+int_constraint    : LT CONSTRAINT_SPACE CONSTRAINT_UINT # LessThanConstraint
+                    | GT CONSTRAINT_SPACE CONSTRAINT_UINT # GreaterThanConstraint
+                    | LE CONSTRAINT_SPACE CONSTRAINT_UINT # LessThanEqualsConstraint
+                    | GE CONSTRAINT_SPACE CONSTRAINT_UINT # GreaterThanEqualsConstraint ;
+string_constraint : RE_DELIMITER_OPEN re RE_DELIMITER_CLOSE ;
+function_sig      : FUNCTION SPACE IDENTIFIER BEGIN_GROUP (argument_decl | argument_decl ARG_SEP)* END_GROUP COLON SPACE type SPACE BEGIN_FUNCTION_BODY NEWLINE ;
+argument_decl     : IDENTIFIER COLON SPACE type ;
+function          : function_sig body END_FUNCTION_BODY ;
 program           : (function NEWLINE*)+ EOF;
-expr              : expr ('*'|'/') expr
-                    |	expr ('+'|'-') expr
+expr              : expr (MULTIPLY|DIVIDE) expr
+                    |	expr (ADD|SUBTRACT) expr
                     | value_ref
                     | function_call
-                    |	'(' expr ')' ;
-var_assignment    : IDENTIFIER WS? '=' expr ;
+                    |	BEGIN_GROUP expr END_GROUP ;
+var_assignment    : IDENTIFIER WS? EQ expr ;
 value_ref         : INT | STRING_LITERAL | identifier_ref ;
 identifier_ref    : IDENTIFIER ;
-function_call     : IDENTIFIER '(' (expr (ARG_SEP expr)*)? ')' ;
+function_call     : IDENTIFIER BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP ;
 
-IDENTIFIER        : [A-Za-z_][A-Za-z_0-9]* ;
-WS                : (' ' | '\t')+ -> channel(HIDDEN) ;
-COMMENT_LINE      : '//'  ~[\n\r]* -> channel(HIDDEN) ;
-NEWLINE           : [\n]+ ;
-ARG_SEP           : [,] WS?;
-INT               : [0-9]+ ;
-// SO 19237249
-fragment ESCAPED_QUOTE : '\\"';
-STRING_LITERAL :   '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"' ;
+re             : simple_re union_prime ;
+union_prime    : ALTERNATION re | /* ε */ ;
 
-fragment ESCAPED_FWD_SLASH: '\\\\';
-REGEX : '/' ( ESCAPED_FWD_SLASH | ~('\n'|'\r') )*? '/' ;
+simple_re      : basic_re concat_prime ;
+concat_prime   : simple_re | /* ε */ ;
+
+basic_re       : kleene_star | plus | elementary_re ;
+kleene_star    : elementary_re STAR ;
+plus           : elementary_re PLUS;
+elementary_re  : group | DOT | character | range ;
+group          : BEGIN_GROUP re END_GROUP ;
+range          : positive_range | negative_range ;
+
+positive_range : BEGIN_RE_RANGE range_items END_RE_RANGE ;
+negative_range : BEGIN_RE_RANGE RANGE_NEGATE range_items END_RE_RANGE ;
+lax_character  : CHARACTER | (DOT|PLUS|STAR|ALTERNATION|MINUS) ;
+character      : CHARACTER|MINUS ; // ranges are a bit more lax w.r.t what characters are allowed
+
+range_items    : range_item | range_item range_items ;
+range_item     : lax_character MINUS lax_character | lax_character;

@@ -2,8 +2,8 @@ package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
 import eu.adamwilliams.reftypes.prototype.ErrorReport;
-import eu.adamwilliams.reftypes.prototype.parser.PocLangLexer;
-import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
+import eu.adamwilliams.reftypes.prototype.parser.PocLang;
+import eu.adamwilliams.reftypes.prototype.parser.PocLex;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -168,9 +168,10 @@ public class ParsingTests {
     }
 
     private ParseTree getParseTree(String basicProgram) {
-        PocLangLexer lexer = new PocLangLexer(CharStreams.fromString(basicProgram));
+        PocLex lexer = new PocLex(CharStreams.fromString(basicProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        PocLangParser parser = new PocLangParser(tokens);
+        PocLang parser = new PocLang(tokens);
+
         parser.addErrorListener(new ANTLRErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {

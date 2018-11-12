@@ -2,8 +2,8 @@ package eu.adamwilliams.reftypes.prototype;
 
 import com.microsoft.z3.*;
 import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
-import eu.adamwilliams.reftypes.prototype.parser.PocLangLexer;
-import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
+import eu.adamwilliams.reftypes.prototype.parser.PocLang;
+import eu.adamwilliams.reftypes.prototype.parser.PocLex;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -40,9 +40,9 @@ public class Application {
 
     public void handleProgram() {
         String inputProgram = readStdIn();
-        PocLangLexer lexer = new PocLangLexer(CharStreams.fromString(inputProgram));
+        PocLex lexer = new PocLex(CharStreams.fromString(inputProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        PocLangParser parser = new PocLangParser(tokens);
+        PocLang parser = new PocLang(tokens);
 
         ParseTree tree = parser.program();
         if (parser.getNumberOfSyntaxErrors() > 0) {

@@ -3,8 +3,8 @@ package eu.adamwilliams.reftypes.prototype;
 import com.microsoft.z3.*;
 import eu.adamwilliams.reftypes.prototype.domain.*;
 import eu.adamwilliams.reftypes.prototype.domain.FunctionDeclaration;
+import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
-import eu.adamwilliams.reftypes.prototype.parser.PocLangParser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 
@@ -41,7 +41,7 @@ public class VisitorListener extends PocLangBaseListener {
 
 
     @Override
-    public void enterFunction_sig(PocLangParser.Function_sigContext ctx) {
+    public void enterFunction_sig(PocLang.Function_sigContext ctx) {
         String idText = ctx.IDENTIFIER().getText();
         Token symbol = ctx.IDENTIFIER().getSymbol();
 
@@ -74,14 +74,14 @@ public class VisitorListener extends PocLangBaseListener {
         }
     }
 
-    private TypeContainer mapTypeFromParsed(PocLangParser.TypeContext ctx) {
-        PocLangParser.Type_keywordContext keyword = ctx.type_keyword();
+    private TypeContainer mapTypeFromParsed(PocLang.TypeContext ctx) {
+        PocLang.Type_keywordContext keyword = ctx.type_keyword();
         Type type;
-        if (keyword instanceof PocLangParser.StringTypeContext) {
+        if (keyword instanceof PocLang.StringTypeContext) {
             type = Type.STRING;
-        } else if (keyword instanceof PocLangParser.VoidTypeContext) {
+        } else if (keyword instanceof PocLang.VoidTypeContext) {
             type = Type.VOID;
-        } else if (keyword instanceof PocLangParser.UnsignedIntTypeContext) {
+        } else if (keyword instanceof PocLang.UnsignedIntTypeContext) {
             type = Type.UNSIGNED_INTEGER;
         } else {
             throw new IllegalArgumentException("Unexpected type " + keyword.getClass().getName());
@@ -95,20 +95,20 @@ public class VisitorListener extends PocLangBaseListener {
         BoolExpr bf = null;
 
         if (ctx.int_constraint() != null) {
-            if (ctx.int_constraint() instanceof PocLangParser.GreaterThanConstraintContext) {
-                String val = ((PocLangParser.GreaterThanConstraintContext) ctx.int_constraint()).INT().getText();
+            if (ctx.int_constraint() instanceof PocLang.GreaterThanConstraintContext) {
+                String val = ((PocLang.GreaterThanConstraintContext) ctx.int_constraint()).CONSTRAINT_UINT().getText();
                 bf = z3Ctx.mkGt(x, z3Ctx.mkInt(val));
             }
-            if (ctx.int_constraint() instanceof PocLangParser.LessThanConstraintContext) {
-                String val = ((PocLangParser.LessThanConstraintContext) ctx.int_constraint()).INT().getText();
+            if (ctx.int_constraint() instanceof PocLang.LessThanConstraintContext) {
+                String val = ((PocLang.LessThanConstraintContext) ctx.int_constraint()).CONSTRAINT_UINT().getText();
                 bf = z3Ctx.mkLt(x, z3Ctx.mkInt(val));
             }
-            if (ctx.int_constraint() instanceof PocLangParser.GreaterThanEqualsConstraintContext) {
-                String val = ((PocLangParser.GreaterThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
+            if (ctx.int_constraint() instanceof PocLang.GreaterThanEqualsConstraintContext) {
+                String val = ((PocLang.GreaterThanEqualsConstraintContext) ctx.int_constraint()).CONSTRAINT_UINT().getText();
                 bf = z3Ctx.mkGe(x, z3Ctx.mkInt(val));
             }
-            if (ctx.int_constraint() instanceof PocLangParser.LessThanEqualsConstraintContext) {
-                String val = ((PocLangParser.LessThanEqualsConstraintContext) ctx.int_constraint()).INT().getText();
+            if (ctx.int_constraint() instanceof PocLang.LessThanEqualsConstraintContext) {
+                String val = ((PocLang.LessThanEqualsConstraintContext) ctx.int_constraint()).CONSTRAINT_UINT().getText();
                 bf = z3Ctx.mkLe(x, z3Ctx.mkInt(val));
             }
         } else if (ctx.string_constraint() != null) {
@@ -123,7 +123,7 @@ public class VisitorListener extends PocLangBaseListener {
         return new TypeContainer(type, bf);
     }
 
-    private boolean ensureApplicableConstraint(PocLangParser.TypeContext ctx, Type type) {
+    private boolean ensureApplicableConstraint(PocLang.TypeContext ctx, Type type) {
         switch (type) {
             case UNSIGNED_INTEGER:
                 if (ctx.string_constraint() != null) {
@@ -143,7 +143,7 @@ public class VisitorListener extends PocLangBaseListener {
         return true;
     }
 
-    private TypeContainer inferTypeFromValue(PocLangParser.Value_refContext value_refContext) {
+    private TypeContainer inferTypeFromValue(PocLang.Value_refContext value_refContext) {
         if (value_refContext.identifier_ref() == null) {
             Type type = value_refContext.INT() != null ? Type.UNSIGNED_INTEGER : Type.STRING; // FIXME: Do this better
 
@@ -163,14 +163,14 @@ public class VisitorListener extends PocLangBaseListener {
 
 
     @Override
-    public void enterVar_decl(PocLangParser.Var_declContext ctx) {
+    public void enterVar_decl(PocLang.Var_declContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), new StackEntry(mapTypeFromParsed(ctx.type()), StackEntryType.LOCAL));
         }
     }
 
     @Override
-    public void enterFunction_call(PocLangParser.Function_callContext ctx) {
+    public void enterFunction_call(PocLang.Function_callContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             String idText = ctx.IDENTIFIER().getText();
             Token symbol = ctx.IDENTIFIER().getSymbol();
@@ -183,14 +183,14 @@ public class VisitorListener extends PocLangBaseListener {
 
             // check types of arguments
             for (int i = 0; i < ctx.expr().size(); i++) {
-                PocLangParser.ExprContext expr = ctx.expr(i);
+                PocLang.ExprContext expr = ctx.expr(i);
                 checkExprType(expr, this.table.getFunctionByIdentifier(idText).getNthArgument(i).getValue(), symbol, reporter);
             }
         }
     }
 
-    private void checkExprType(PocLangParser.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
-        PocLangParser.Value_refContext value_refContext = expr.value_ref();
+    private void checkExprType(PocLang.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
+        PocLang.Value_refContext value_refContext = expr.value_ref();
         if (value_refContext != null) {
             try {
                 TypeContainer tc = this.inferTypeFromValue(value_refContext);
@@ -202,7 +202,7 @@ public class VisitorListener extends PocLangBaseListener {
             }
         }
 
-        PocLangParser.Function_callContext function_callContext = expr.function_call();
+        PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
             if (!this.checkTypes(expected, functionByIdentifier.getReturnType())) {
@@ -212,7 +212,7 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     @Override
-    public void enterVar_assignment(PocLangParser.Var_assignmentContext ctx) {
+    public void enterVar_assignment(PocLang.Var_assignmentContext ctx) {
         String variableId = ctx.IDENTIFIER().getText();
 
         if (!this.typesCurrentlyInScope.containsKey(variableId)) {
@@ -251,12 +251,12 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     @Override
-    public void enterReturn_stmt(PocLangParser.Return_stmtContext ctx) {
+    public void enterReturn_stmt(PocLang.Return_stmtContext ctx) {
         // this is horribly ugly, but we need to grab the enclosing function somehow
         ParserRuleContext bodyLineCtx = ctx.getParent();
-        PocLangParser.BodyContext bodyCtx = (PocLangParser.BodyContext) bodyLineCtx.getParent();
-        PocLangParser.FunctionContext function = (PocLangParser.FunctionContext) bodyCtx.getParent();
-        PocLangParser.Function_sigContext functionSignature = function.function_sig();
+        PocLang.BodyContext bodyCtx = (PocLang.BodyContext) bodyLineCtx.getParent();
+        PocLang.FunctionContext function = (PocLang.FunctionContext) bodyCtx.getParent();
+        PocLang.Function_sigContext functionSignature = function.function_sig();
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             FunctionDeclaration decl = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
             if (ctx.expr() == null && decl.getReturnType().getType() == Type.VOID) {
@@ -269,10 +269,10 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     @Override
-    public void exitBody(PocLangParser.BodyContext ctx) {
-        List<PocLangParser.Body_lineContext> lines = ctx.body_line();
-        boolean hasAtLeastOneReturn = lines.stream().flatMap(bl -> bl.children.stream()).anyMatch(line -> line instanceof PocLangParser.Return_stmtContext);
-        PocLangParser.Function_sigContext functionSignature = (PocLangParser.Function_sigContext) ctx.getParent().children.get(0);
+    public void exitBody(PocLang.BodyContext ctx) {
+        List<PocLang.Body_lineContext> lines = ctx.body_line();
+        boolean hasAtLeastOneReturn = lines.stream().flatMap(bl -> bl.children.stream()).anyMatch(line -> line instanceof PocLang.Return_stmtContext);
+        PocLang.Function_sigContext functionSignature = (PocLang.Function_sigContext) ctx.getParent().children.get(0);
         FunctionDeclaration functionDeclaration = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
 
         if (!hasAtLeastOneReturn && this.phase == VisitorPhase.COLLECTING_FUNCTIONS && functionDeclaration.getReturnType().getType() != Type.VOID) {
