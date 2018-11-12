@@ -47,7 +47,8 @@ public class RegexZ3Adapter implements IRegexZ3Adapter {
             }
 
             if (elementary.DOT() != null) {
-                return z3Ctx.mkRange(z3Ctx.mkString("\u0000"), z3Ctx.mkString("\uffff"));
+                // ascii only, for this prototype
+                return z3Ctx.mkRange(z3Ctx.mkString(" "), z3Ctx.mkString("~"));
             }
 
             if (elementary.range() != null) {

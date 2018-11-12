@@ -53,6 +53,18 @@ public class ParsingTests {
     }
 
     @Test
+    public void testDotMatchesAny() {
+        String basicProgram = "function LookupUserById(): string[/.+/] {\n" +
+                "    return \"f\"\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
     public void testRegexAlternation() {
         String basicProgram = "function ShellFunction(): string[/g+|f+/] {\n" +
                 "    return \"f\"\n" +
