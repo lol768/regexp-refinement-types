@@ -72,10 +72,9 @@ public class ParsingTests {
                 "    return ShellFunction()\n" +
                 "}";
 
-        // to find violations, we want ACTUAL (/g+|f+/) to hold and EXPECTED to _NOT_ hold. I think..
-
         ParseTree tree = getParseTree(basicProgram);
         Application app = new Application();
+        // there should be a violation found
         Assert.assertNotEquals(0, app.doTypeChecks(tree).getReports().size());
     }
 
