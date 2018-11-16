@@ -70,6 +70,7 @@
 \definecolor{id7-ruby-red}{HTML}{89102C}
 \definecolor{id7-emerald-green}{HTML}{797906}
 \definecolor{id7-sky-blue}{HTML}{204F79}
+\definecolor{id7-sky-blue-accent}{HTML}{4d7294}
 \definecolor{id7-sky-blue-tint}{HTML}{bccad7}
 \definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
 \setlength{\parindent}{0em}
@@ -81,8 +82,11 @@
 \def\labelitemii{\textcolor{id7-aubergine}{$\circ$}}
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
+\definecolor{termbg}{HTML}{232729}
 
 \newcommand{\infobox}[1] {\colorbox{id7-sky-blue-tint}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} \sffamily#1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\termbox}[1] {\colorbox{termbg}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{ \sffamily#1\vspace{.75\baselineskip}}}}}
 
 \newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
             \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
@@ -129,7 +133,7 @@
 \definecolor{lightgrey}{rgb}{0.96,0.96,0.96}
 
 \def \spacedrule {\textcolor{id7-aubergine}{\hrule}\vspace{1em}}
-\def \thedate {October \nth{4} 2018}
+\def \thedate {November \nth{15} 2018}
 \lhead{\textcolor{grey}{\thedate}}
 \rhead{\textcolor{grey}{Progress Report}}
 % ======================
@@ -189,12 +193,18 @@
     
     \section{Progress}
     
-    The project is currently ahead of schedule. Prototype work began with simple refinement types which could be applied to natural numbers. The final syntax was similar to the example presented in the specification:
+    Early on in the project lifetime it was decided to begin work on a phase 1 prototype with a simplified goal to gain some experience working with refinement types and type checkers in general. Once complete, work would continue in a 2nd phase which introduced regular expressions.
+    
+    The project is currently ahead of schedule. By week 7, both phases 1 and 2 have been completed to a satisfactory standard.
+    
+    \subsection*{Phase 1}
+    
+    Prototype work began with simple refinement types which could be applied to natural numbers. The final syntax was similar to the example presented in the specification:
     
     \begin{minted}{javascript}
 function Main(id: uint): uint[< 4] {
     // A simple function declaration, returns an int less than 4
-    return 3
+    return 0
 }
 function StackOne(): uint[> 5] {
     // This function must return an unsigned int greater than 5
@@ -206,19 +216,68 @@ function StackOne(): uint[> 5] {
     
     Running this simple program with the prototype tool yields the following output:
     
-    \lstdefinestyle{cmd}
-    {
-        backgroundcolor=\color{black},
-        basicstyle=\scriptsize\color{white}\ttfamily
-    }
+
+    \termbox{\includegraphics[width=\linewidth]{term1}}
     
-    \begin{lstlisting}
-➜  PocLang git:(master) ✗ cat input.txt| java -jar build/libs/reftypes-prototype-1.0-SNAPSHOT.jar
-Reading program from stdin (use Ctrl+D when finished)...
-Violation via value 0
-L7:4 Return type uint [(< x 4)] of function LookupUserById didn't satisfy uint [(> x 5)]
-    \end{lstlisting}
+    The prototype tool has found a valid value (here, $0$) which satisfies $x < 4$ but violates $x > 5$. If integrated into a ``real'' programming language, this would be identified at compile time and prevent successful compilation.
     
+    This initial version of the prototype which operated exclusively on the natural numbers was built using the following tools, libraries and languages:
+    
+    \begin{description}
+        \item[JavaSMT] Library which provides an abstraction layer over a variety of different SMT solvers (such as Z3 and MathSAT) and provides added type safety \citep{karpenkov2016javasmt}.
+        \item[ANTLR 4] An $LL(*)$ lexer and parser generator which can target languages such as Java, Go and C\# \citep{parr2011ll}. In the initial prototype, ANTLR was used to generate a combined lexer-parser using a composite grammar in which both non-terminals and terminal symbols (tokens) are specified.
+        \item[JUnit] A unit testing framework for Java. Used to build a collection of unit and integration tests to support refactoring and a test-driven development approach.
+        \item[Gradle] Industry-standard build automation system which co-ordinates the grammar generation, Java class compilation, construction of a JAR file with shaded dependencies and running the unit tests.
+        \item[IntelliJ IDEA] An advanced Java IDE with leading code inspection and analysis capabilities \citep{ideainspections} \citep{Jemerov:2008:IRI:1636642.1636655}. Used in conjunction with the official ANTLR plugin which provides grammar syntax highlighting and analysis.
+    \end{description}
+
+    The general steps involved in the process are described below.
+    
+    \tikzstyle{line} = [draw, -latex']
+    \tikzset{arrow/.style={
+            minimum height=1.2cm,%
+            inner sep=1em,
+            shape=signal,
+            signal from=west,
+            signal to=east,
+            signal pointer angle=110,
+            text depth=.25ex,
+            text height=1.5ex,
+            fill=skyblue,
+            baseline,
+            text centered, text=white
+    }}
+    \tikzset{arrowcur/.style={
+            fill=id7-sky-blue-accent
+    }}
+    \begin{figure}[H]
+
+            \begin{tikzpicture}[node distance=-\pgflinewidth, auto]
+            \sffamily{
+                \begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
+                \node [arrow, arrowcur, on chain] {\faCogs{} \textbf{Parsing}};
+                \node [arrow, on chain] {\faSearch{} Initial walk};
+                \node [arrow, on chain] {\faSearch{} Final walk};
+                \node [arrow, on chain] {\faCheckCircle{} Type checking};
+                \node [arrow, on chain] {\faFileText{} Report};
+                \end{scope}
+            }
+            \end{tikzpicture}
+
+    \end{figure}
+    
+
+    In the \textbf{Parsing} step, the ANTLR parser is used to generate a parse tree from the input program. For example, consider the following simple function declaration:
+    
+    \begin{minted}{javascript}
+function LookupUserById(id: uint[> 1]): uint {
+    return 1*1
+}
+    \end{minted}
+    
+    % Insert tikz tree   
+    
+    For the phase 1 prototype, the lexer and parser are both generated from the same grammar file.
 \bibliographystyle{agsm}
 \bibliography{references}
 

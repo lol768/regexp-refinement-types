@@ -6,6 +6,7 @@ import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLex;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.fusesource.jansi.Ansi;
@@ -15,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -24,18 +26,6 @@ public class Application {
         System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN) + "Reading program from stdin (use Ctrl+D when finished)..." + Ansi.ansi().fg(Ansi.Color.RED));
         Application instance = new Application();
         instance.handleProgram();
-
-//        ReExpr matchAnyChar = ctx.mkPlus(ctx.mkUnion(ctx.mkRange(ctx.mkString("a"), ctx.mkString("z")), ctx.mkToRe(ctx.mkString("!"))));
-//        ReExpr exprOne = ctx.mkConcat(ctx.mkToRe(ctx.mkString("geese")), matchAnyChar);
-//        ReExpr exprTwo = ctx.mkConcat(matchAnyChar, ctx.mkToRe(ctx.mkString("s")));
-//        SeqExpr x = (SeqExpr) ctx.mkConst(ctx.mkSymbol("x"), ctx.getStringSort());
-//
-//        Solver s = ctx.mkSolver();
-//        s.add(ctx.mkInRe(x, ctx.mkIntersect(exprOne, exprTwo)));
-//        s.add(ctx.mkGt(ctx.mkLength(x), ctx.mkInt(0)));
-//        Status res = s.check();
-//        System.out.println(res);
-//        System.out.println(s.getModel().getConstInterp(x));
     }
 
     public void handleProgram() {
@@ -43,7 +33,7 @@ public class Application {
         PocLex lexer = new PocLex(CharStreams.fromString(inputProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PocLang parser = new PocLang(tokens);
-
+        String[] ruleNames = parser.getRuleNames();
         ParseTree tree = parser.program();
         if (parser.getNumberOfSyntaxErrors() > 0) {
             // ANTLR is pretty forgiving, but generally we want to give up
@@ -51,6 +41,8 @@ public class Application {
             System.err.printf(Ansi.ansi().fg(Ansi.Color.RED) + "%d syntax error(s) need to be resolved.%n", parser.getNumberOfSyntaxErrors());
             System.exit(-1);
         }
+        
+        generateLatexDiagram(tree, ruleNames);
 
         ErrorReporter errorReporter = this.doTypeChecks(tree);
 
@@ -63,6 +55,53 @@ public class Application {
             System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN) + "No errors to report");
         }
     }
+
+    private void generateLatexDiagram(ParseTree treeItem, String[] ruleNames) {
+        if (treeItem.getPayload() instanceof RuleContext) {
+            RuleContext rc = (RuleContext) treeItem.getPayload();
+            System.out.print("\\node{"+ruleNames[rc.getRuleIndex()]+"}\n");
+        }
+        for (int i = 0; i < treeItem.getChildCount(); i++) {
+            generateLatexDiagramAux(treeItem.getChild(i), 0, ruleNames);
+        }
+
+
+    }
+
+    private void generateLatexDiagramAux(ParseTree treeItem, int indentation, String[] ruleNames) {
+        StringBuilder indent = new StringBuilder();
+        for (int i = 0; i < indentation; i++) {
+            indent.append(" ");
+        }
+        if (treeItem.getPayload() instanceof RuleContext) {
+            RuleContext rc = (RuleContext) treeItem.getPayload();
+            String text = ruleNames[rc.getRuleIndex()];
+            sanitiseText(indent, text);
+        } else {
+            String text = treeItem.getText();
+            sanitiseText(indent, text);
+        }
+        if (treeItem.getChildCount() > 0) {
+            System.out.print("\n"+indent.toString());
+        }
+        else {
+            System.out.println("}");
+            return;
+        }
+        for (int i = 0; i < treeItem.getChildCount(); i++) {
+            generateLatexDiagramAux(treeItem.getChild(i), indentation+2, ruleNames);
+        }
+        System.out.println(indent.toString() + "}");
+    }
+
+    private void sanitiseText(StringBuilder indent, String text) {
+        text = text.replace("_", "\\_");
+        text = text.replace("{", "\\{");
+        text = text.replace("}", "\\}");
+        text = text.replace("\n", "\\n");
+        System.out.print(indent.toString() + "child { node{"+text+"} ");
+    }
+
 
     public ErrorReporter doTypeChecks(ParseTree tree) {
         ParseTreeWalker walker = new ParseTreeWalker();
