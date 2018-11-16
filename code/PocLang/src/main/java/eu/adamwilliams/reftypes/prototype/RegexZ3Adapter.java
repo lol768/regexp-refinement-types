@@ -74,7 +74,7 @@ public class RegexZ3Adapter implements IRegexZ3Adapter {
         while (staged != null) {
             PocLang.Range_itemContext item = staged.range_item();
             ReExpr stagedExpr;
-            if (item.MINUS() != null) {
+            if (item.RANGE_SEPARATOR() != null) {
                 stagedExpr = z3Ctx.mkRange(z3Ctx.mkString(item.lax_character(0).getText()), z3Ctx.mkString(item.lax_character(1).getText()));
             } else {
                 stagedExpr = z3Ctx.mkRange(z3Ctx.mkString(item.lax_character(0).getText()), z3Ctx.mkString(item.lax_character(0).getText()));

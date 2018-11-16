@@ -39,7 +39,7 @@ STRING_LITERAL :   '"' ( ESCAPED_QUOTE | ~('\n'|'\r') )*? '"' ;
 
 mode REGEX;
 
-BEGIN_RE_RANGE : '[' ;
+BEGIN_RE_RANGE : '[' -> pushMode(REGEX_RANGE) ;
 END_RE_RANGE   : ']' ;
 CHARACTER      : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/'|'|') | ESCAPED_META;
 BEGIN_RE_GROUP : '(' ;
@@ -54,6 +54,12 @@ RE_DELIMITER_CLOSE: '/' -> popMode ;
 META_CHAR      : (DOT|PLUS|STAR|ALTERNATION|'['|']'|'/') ;
 fragment ESCAPED_FWD_SLASH: '\\/' ;
 fragment ESCAPED_META: '\\' META_CHAR ;
+
+mode REGEX_RANGE;
+RANGE_SEPARATOR        : '-' ;
+RANGE_CHARACTER        : ~('\n'|'\r'|']') | ESCAPED_RANGE;
+RANGE_TERMINATE        : ']' -> popMode ;
+fragment ESCAPED_RANGE : '\\' ']' ;
 
 mode CONSTRAINT;
 GT: '>' ;

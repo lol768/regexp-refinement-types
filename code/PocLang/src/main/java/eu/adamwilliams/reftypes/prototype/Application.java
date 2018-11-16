@@ -34,6 +34,8 @@ public class Application {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PocLang parser = new PocLang(tokens);
         String[] ruleNames = parser.getRuleNames();
+        //generateLatexDiagram(parser.type(), ruleNames);
+
         ParseTree tree = parser.program();
         if (parser.getNumberOfSyntaxErrors() > 0) {
             // ANTLR is pretty forgiving, but generally we want to give up
@@ -42,7 +44,6 @@ public class Application {
             System.exit(-1);
         }
         
-        generateLatexDiagram(tree, ruleNames);
 
         ErrorReporter errorReporter = this.doTypeChecks(tree);
 
@@ -59,11 +60,12 @@ public class Application {
     private void generateLatexDiagram(ParseTree treeItem, String[] ruleNames) {
         if (treeItem.getPayload() instanceof RuleContext) {
             RuleContext rc = (RuleContext) treeItem.getPayload();
-            System.out.print("\\node{"+ruleNames[rc.getRuleIndex()]+"}\n");
+            System.out.print("["+ruleNames[rc.getRuleIndex()]+"\n");
         }
         for (int i = 0; i < treeItem.getChildCount(); i++) {
             generateLatexDiagramAux(treeItem.getChild(i), 0, ruleNames);
         }
+        System.out.println("]");
 
 
     }
@@ -73,33 +75,37 @@ public class Application {
         for (int i = 0; i < indentation; i++) {
             indent.append(" ");
         }
+        System.out.print("[");
         if (treeItem.getPayload() instanceof RuleContext) {
             RuleContext rc = (RuleContext) treeItem.getPayload();
             String text = ruleNames[rc.getRuleIndex()];
-            sanitiseText(indent, text);
+            System.out.print(sanitiseText(text));
         } else {
             String text = treeItem.getText();
-            sanitiseText(indent, text);
+            System.out.print(sanitiseText(text));
         }
         if (treeItem.getChildCount() > 0) {
             System.out.print("\n"+indent.toString());
         }
         else {
-            System.out.println("}");
+            System.out.println("]");
             return;
         }
         for (int i = 0; i < treeItem.getChildCount(); i++) {
             generateLatexDiagramAux(treeItem.getChild(i), indentation+2, ruleNames);
         }
-        System.out.println(indent.toString() + "}");
+        System.out.println(indent.toString() + "]");
     }
 
-    private void sanitiseText(StringBuilder indent, String text) {
+    private String sanitiseText(String text) {
         text = text.replace("_", "\\_");
         text = text.replace("{", "\\{");
         text = text.replace("}", "\\}");
-        text = text.replace("\n", "\\n");
-        System.out.print(indent.toString() + "child { node{"+text+"} ");
+        text = text.replace("\n", "\\textbackslash{}n");
+        if (text.contains("[") || text.contains("]")) {
+            return "{" + text + "}";
+        }
+        return text;
     }
 
 

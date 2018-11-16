@@ -46,10 +46,10 @@ elementary_re  : group | DOT | character | range ;
 group          : BEGIN_RE_GROUP re END_RE_GROUP ;
 range          : positive_range | negative_range ;
 
-positive_range : BEGIN_RE_RANGE range_items END_RE_RANGE ;
-negative_range : BEGIN_RE_RANGE RANGE_NEGATE range_items END_RE_RANGE ;
-lax_character  : CHARACTER | (DOT|PLUS|STAR|ALTERNATION|MINUS) ;
+positive_range : BEGIN_RE_RANGE range_items RANGE_TERMINATE ;
+negative_range : BEGIN_RE_RANGE RANGE_NEGATE range_items RANGE_TERMINATE ;
+lax_character  : RANGE_CHARACTER ;
 character      : CHARACTER|MINUS ; // ranges are a bit more lax w.r.t what characters are allowed
 
 range_items    : range_item | range_item range_items ;
-range_item     : lax_character MINUS lax_character | lax_character;
+range_item     : lax_character RANGE_SEPARATOR lax_character | lax_character;
