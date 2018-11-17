@@ -1,6 +1,8 @@
-function ShellFunction(): string[/g+|f+/] {
-    return "f"
+function Main(id: uint): uint[< 4] {
+    // A simple function declaration, returns an int less than 4
+    return 0
 }
-function Main(): string[/f+/] {
-    return ShellFunction()
+function StackOne(): uint[> 5] {
+    // This function must return an unsigned int greater than 5
+    return Main(1)
 }
