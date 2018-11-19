@@ -15,7 +15,10 @@ COLON          : ':' ;
 SPACE          : ' ' ;
 UINT_T         : 'uint' ;
 STRING_T       : 'string' ;
+BOOL_T         : 'bool' ;
 VOID_T         : 'void' ;
+TRUE_LIT       : 'true' ;
+FALSE_LIT      : 'false' ;
 
 BEGIN_CONSTRAINT : '[' -> pushMode(CONSTRAINT);
 

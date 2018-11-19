@@ -29,6 +29,18 @@ public class ParsingTests {
     }
 
     @Test
+    public void testBoolType() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): bool {\n" +
+                "    return true\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
     public void testParseRegex() {
         String basicProgram = "function LookupUserById(str: string[/(goose)+/]): void {\n" +
                 "    return\n" +

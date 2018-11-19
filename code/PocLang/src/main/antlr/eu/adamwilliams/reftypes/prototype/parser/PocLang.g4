@@ -10,7 +10,8 @@ return_stmt       : RETURN (SPACE expr )? ;
 var_decl          : VAR SPACE IDENTIFIER COLON SPACE type ;
 type_keyword      : UINT_T # UnsignedIntType |
                     STRING_T # StringType |
-                    VOID_T # VoidType ;
+                    VOID_T # VoidType |
+                    BOOL_T #BoolType ;
 type              : (type_keyword)
                     | (type_keyword BEGIN_CONSTRAINT int_constraint END_CONSTRAINT)
                     | (type_keyword BEGIN_CONSTRAINT string_constraint END_CONSTRAINT) ;
@@ -29,7 +30,7 @@ expr              : expr (MULTIPLY|DIVIDE) expr
                     | function_call
                     |	BEGIN_GROUP expr END_GROUP ;
 var_assignment    : IDENTIFIER WS? EQ expr ;
-value_ref         : INT | STRING_LITERAL | identifier_ref ;
+value_ref         : INT | STRING_LITERAL | TRUE_LIT | FALSE_LIT | identifier_ref ;
 identifier_ref    : IDENTIFIER ;
 function_call     : IDENTIFIER BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP ;
 

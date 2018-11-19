@@ -85,6 +85,8 @@ public class VisitorListener extends PocLangBaseListener {
             type = Type.VOID;
         } else if (keyword instanceof PocLang.UnsignedIntTypeContext) {
             type = Type.UNSIGNED_INTEGER;
+        } else if (keyword instanceof PocLang.BoolTypeContext) {
+            type = Type.BOOLEAN;
         } else {
             throw new IllegalArgumentException("Unexpected type " + keyword.getClass().getName());
         }
@@ -147,7 +149,9 @@ public class VisitorListener extends PocLangBaseListener {
     private TypeContainer inferTypeFromValue(PocLang.Value_refContext value_refContext) {
         if (value_refContext.identifier_ref() == null) {
             Type type = value_refContext.INT() != null ? Type.UNSIGNED_INTEGER : Type.STRING; // FIXME: Do this better
-
+            if (value_refContext.TRUE_LIT() != null || value_refContext.FALSE_LIT() != null) {
+                type = Type.BOOLEAN;
+            }
             if (value_refContext.INT() != null) {
                 BoolExpr eqExpr = z3Ctx.mkEq(x, z3Ctx.mkInt(value_refContext.INT().getText()));
                 return new TypeContainer(type, eqExpr);
