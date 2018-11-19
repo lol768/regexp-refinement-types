@@ -1,4 +1,6 @@
 \documentclass[a4paper]{article}
+\usepackage{fontspec}
+\newfontfamily{\fallbackmono}{DejaVu Sans}
 \usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=0.5cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -21,6 +23,7 @@
 \usepackage{listings}
 \usepackage[hidelinks]{hyperref}
 \usepackage[osfigures]{opensans}
+\setmonofont{Ubuntu Mono}
 \usepackage{lastpage}
 \usepackage{fancyhdr}
 \usepackage{mdframed}
@@ -74,6 +77,10 @@
 \definecolor{id7-sky-blue-accent}{HTML}{4d7294}
 \definecolor{id7-sky-blue-tint}{HTML}{bccad7}
 \definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
+\definecolor{term-dir}{HTML}{1d7d7d}
+\definecolor{term-git}{HTML}{3a5069}
+\definecolor{term-green}{HTML}{4c7d1d}
+\definecolor{term-branch}{HTML}{8a1818}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
 \definecolor{todocolor}{rgb}{0.688,0.8176,0.93137}
@@ -83,11 +90,11 @@
 \def\labelitemii{\textcolor{id7-aubergine}{$\circ$}}
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
-\definecolor{termbg}{HTML}{232729}
+
 
 \newcommand{\infobox}[1] {\colorbox{id7-sky-blue-tint}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} \sffamily#1\vspace{.75\baselineskip}}}}}
 
-\newcommand{\termbox}[1] {\colorbox{termbg}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{ \sffamily#1\vspace{.75\baselineskip}}}}}
+\newcommand{\termbox}[1] {\colorbox{lightgrey}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{ \sffamily#1\vspace{.75\baselineskip}}}}}
 
 \newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
             \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
@@ -141,6 +148,7 @@
 
 \begin{document}
     
+    
 \newgeometry{margin=0in}
 \begin{titlepage}
     
@@ -184,11 +192,15 @@
     
     \section{Introduction}
     
+    Information security vulnerabilities often arise due to improper input handling. From SQL injection to cross-site scripting, vulnerabilities of this class are found on a daily basis in production applications by security professionals. It is desirable to try to detect and report on potentially insecure code as early as possible in the development process in order to maximise the probability that the issue is mitigated \citep{Sadowski:2018:LBS:3200906.3188720}.
+    
+    Tooling exists to perform static analysis and taint tracking, but is often unable to evaluate the effectiveness of input validation code that may already be in place. As a result, these tools lend themselves to generating false positives. In Appendix \ref{spec} we proposed a system which makes use of \emph{refinement types} in order to determine whether existing regular expression based input validation is effective by trying to find situations where input could fail to be matched by a regular expression.
+    
     Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type.
     
     For example, a local variable used to store natural numbers could be constrained via $\{n: \mathbb{N}\ \mid n \leq 5\}$. Only $\{0, 1, 2, 3, 4, 5\}$ would be permitted for values of $n$ under this refinement type.
     
-    This project applies refinement types to strings which enforce membership of $L(R)$ for some regular expression $R$. For example, $\{s: \Sigma^* \mid s \in L(ab+)\}$ \footnote{For some regular expression $R$, $L(R)$ is used to denote the language that it accepts} would allow \texttt{"ab"} to be assigned as a value of some variable $s$, but not \texttt{"a"}. This is motivated by the common use of regular expressions as a validation mechanism to provide security in systems that handle user input, with the ultimate aim of eliminating potential vulnerabilities at compile time.
+    This project applies refinement types to strings which enforce membership of $L(R)$ for some regular expression $R$. For example, $\{s: \Sigma^* \mid s \in L(ab+)\}$ \footnote{For some regular expression $R$, $L(R)$ is used to denote the language that it accepts} would allow \texttt{"ab"} to be assigned as a value of some variable $s$, but not \texttt{"a"}.
     
     Designing a proof-of-concept language with syntax for expressing such refinement types and implementing a type checker allows for the feasibility of such compile-time checks to be evaluated.
 
@@ -220,7 +232,13 @@ function StackOne(): uint[> 5] {
     Running this simple program with the prototype tool yields the following output:
     
 
-    \termbox{\includegraphics[width=\linewidth]{term1}}
+    \termbox{
+        \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} cat input.txt | ./gradlew run}\\
+        \texttt{\textbf{> Task :run}}\\
+        \textcolor{term-green}{\texttt{Reading program from stdin (use Ctrl+D when finished)...}}\\
+        \textcolor{id7-ruby-red}{\texttt{Violation via value 0}}\\
+        \textcolor{id7-ruby-red}{\texttt{L7:4 Return type uint [(< x 4)] of function Main didn't satisfy uint [(> x 5)]}}
+    }
     
     The prototype tool has found a valid value (here, $0$) which satisfies $x < 4$ but violates $x > 5$. If integrated into a ``real'' programming language, this would be identified at compile time and prevent successful compilation.
     
@@ -272,7 +290,7 @@ function StackOne(): uint[> 5] {
     In the \textbf{Parsing} step, the ANTLR parser is used to generate a parse tree from the input program. For example, consider the following simple function declaration below. The parse tree generated for this function definition is shown in figure \ref{tree}.
     
     \begin{minted}{javascript}
-function Main(id: uint[> 1]): uint {
+function Main(id: uint[> 1]): uint { // accepts one argument id, which must be greater than 1
     return 1*1
 }
     \end{minted}
@@ -390,20 +408,43 @@ for tree={
 
     Once the function definitions have been collected, the main type checking phase can begin. This covers validating function calls, variable assignments and return statements.
     
-    This is mainly achieved by visiting function bodies and initialising a stack for scoped storage of local variables and function arguments as is standard in most programming languages \citep[p. 88]{watt2004programming}.
+    This is mainly achieved by visiting function bodies and initialising a stack for scoped storage of local variables and function arguments as is standard in most programming languages \citep[p. 88]{watt2004programming}. Function calls are checked to ensure that the function identifier has been encountered before and exists in the function table. Variable assignments are checked to ensure that the type of the right-hand side expression satisfies the type declaration for the variable.
+   
     
     For types with a provided constraint, the JavaSMT library is used to check the inverted \emph{expected} type against the \emph{actual} type.
     
     For example, consider the code below:
     
-    \begin{minted}{javascript}
-    function Main(): uint[> 4] {
-        var u: uint[< 10]
-        return u
-    }
-    \end{minted}
+\begin{minted}{javascript}
+function Main(): uint[> 4] {
+    var u: uint[< 10]
+    return u
+}
+\end{minted}
+
+
+    In this case, the return value of \texttt{Main} is constrained as $\{x: \mathbb{N} \mid{} x > 4\}$. When the \texttt{return u} statement is checked, the \emph{expected} type is $\{x: \mathbb{N} \mid{} x > 4\}$ and the \emph{actual} type is $\{x: \mathbb{N} \mid{} x < 10\}$. It should be apparent that $u$ could be a value such as $2$ (since $2 < 10$) which would violate the return type constraint.
     
-    In this case, the return value of \texttt{Main} is constrained as $\{x: \mathbb{N} \mid{} x > 4\}$. When the \texttt{return u} statement is checked, the \emph{expected} type is $\{x: \mathbb{N} \mid{} x > 4\}$ and the \emph{actual} type is $\{x: \mathbb{N} \mid{} x < 10\}$. The \emph{expected} type is negated to give $\{x: \mathbb{N} \mid{} x \le 4\}$ and this constraint, along with the constraint defined by the \emph{actual} type are passed to the SMT solver to find a model. This model will include a value for $x$ that satisfies the conjunction of the two constraints.
+    To find this, the \emph{expected} type is negated to give $\{x: \mathbb{N} \mid{} x \le 4\}$ and this constraint, along with the constraint defined by the \emph{actual} type are passed to the SMT solver to find a model. This model will include a value for $x$ that satisfies the conjunction of the two constraints $x \le 4 \land x < 10$. The code below shows how the JavaSMT API allows these problems to be configured and solved:
+    
+    \begin{minted}{java}
+IntegerFormulaManager imgr = context.getFormulaManager().getIntegerFormulaManager();
+IntegerFormula x = imgr.makeVariable("x");
+
+BooleanFormula expectedNegated = imgr.lessOrEquals(x, x.makeNumber(4)); // x <= 4
+BooleanFormula actual = imgr.lessThan(x, x.makeNumber(10)); // x < 10
+
+try (ProverEnvironment prover = context.newProverEnvironment(ProverOptions.GENERATE_MODELS)) {
+    prover.addConstraint(expectedNegated);
+    prover.addConstraint(actual); // both constraints must hold
+    boolean isUnsat = prover.isUnsat(); // isUnsat = false here.
+    try (Model model = prover.getModel()) {
+        // Prints the value of x found for which the two constraints hold
+        // (i.e. a violation of the refinement type has been found)
+        System.out.printf("Violation found with: ", model.evaluate(x));
+    }
+}
+    \end{minted}
     
     If the SMT theorem is satisfiable, we have found a violation -- it is possible for the refinement type constraints to not hold during execution. These are reported via the central error reporting mechanism.
     
@@ -519,7 +560,13 @@ function Main(): string[/f+/] {
 
 It will correctly determine that the union of \texttt{g+} in the constraint of \texttt{SecondaryFunction}'s return type is incompatible with \texttt{Main}'s return type:
 
-\termbox{\includegraphics[width=\linewidth]{term2}}
+\termbox{
+    \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} cat input.txt | ./gradlew run}\\
+    \texttt{\textbf{> Task :run}}\\
+    \textcolor{term-green}{\texttt{Reading program from stdin (use Ctrl+D when finished)...}}\\
+    \textcolor{id7-ruby-red}{\texttt{Violation via value "gggg"}}\\
+    \textcolor{id7-ruby-red}{\texttt{L5:4 Return type string [(str.in.re x (re.union (re.+ (str.to.re "g")) (re.+ (str.to.re "f"))))] of function SecondaryFunction didn't satisfy string [(str.in.re x (re.+ (str.to.re "f")))]}}
+}
 
 \section{Project Management}
 
@@ -554,7 +601,12 @@ Objective 2 and the sub-objective related to testing has been completed as of th
     \item[Regexp refinement types] As described above, constraint violations for regular language membership.
 \end{description}
 
-\termbox{\includegraphics[width=\linewidth]{term3}}
+\termbox{
+    \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} ./gradlew test --rerun-tasks}\\\\
+
+    \textcolor{term-green}{\textbf{\texttt{BUILD SUCCESSFUL}}} \texttt{in 4s}\\
+    \texttt{4 actionable tasks: 4 executed}
+}
 
 Manual testing has taken place throughout and has been used to influence development of new unit tests.
 
@@ -562,9 +614,10 @@ Objective 1. (b) has been completed, in addition to local variable type constrai
 
 This level of progress is in line with the original schedule, which allocated false positive rate evaluation to occur in early February of 2019 (with implementation to be finished in late November and testing to take place from December until January).
 
-Immediate next steps once these objectives are complete will involve making the prototype language more expressive by introducing constructs to control execution flow. If time permits, the \emph{stretch objectives} will also be considered. There does not appear to be a need to make changes to the schedule at this time.
+There were some setbacks due to the initial use of JavaSMT. In hindsight, evaluating the effectiveness of the JavaSMT abstraction layer for use with strings \emph{prior} to creating the prototype with unsigned integers would have saved time. It is likely we would have used Z3 from the start.
 
-Throughout the project lifetime, code has been managed using the Git version control system. This has proved an invaluable tool for managing and syncing project assets and code.
+The immediate next steps once these objectives are complete include making the prototype language more expressive by introducing constructs to control execution flow. If time permits, the \emph{stretch objectives} will also be considered. There does not appear to be a need to make changes to the schedule at this time.
+
 
 \pagebreak[5]
 
