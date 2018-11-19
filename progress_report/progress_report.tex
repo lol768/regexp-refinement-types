@@ -115,9 +115,9 @@
 {\normalfont\sffamily\huge\color{id7-aubergine}}
 {\thesection. }{0em}{}
 
-\titleformat{\subsection}
-{\normalfont\Large\sffamily\color{id7-aubergine}}
-{\thesection}{0em}{}
+\titleformat{\subsection}[runin]
+{\normalfont\fontsize{18}{10}\sffamily\color{id7-aubergine}}
+{\thesubsection. }{0em}{}
 
 \titleformat{\subsubsection}
 {\normalfont\large\sffamily\color{id7-aubergine}}
@@ -200,7 +200,7 @@
     
     The project is currently ahead of schedule. By week 7, both phases 1 and 2 have been completed to a satisfactory standard.
     
-    \subsection*{Phase 1}
+    \subsection*{Phase 1}\hfill
     
     Prototype work began with simple refinement types which could be applied to natural numbers. The final syntax was similar to the example presented in the specification:
     
@@ -253,8 +253,10 @@ function StackOne(): uint[> 5] {
     \tikzset{arrowcur/.style={
             fill=id7-sky-blue-accent
     }}
-    \begin{figure}[H]
-            \begin{tikzpicture}[node distance=-\pgflinewidth, auto]
+
+        \subsection*{Parsing}
+        
+            \hfill\resizebox*{0.5\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
             \sffamily{
                 \begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
                 \node [arrow, arrowcur, on chain] {\faCogs{} \textbf{Parsing}};
@@ -264,9 +266,8 @@ function StackOne(): uint[> 5] {
                 \node [arrow, on chain] {\faFileText{} Reporting};
                 \end{scope}
             }
-            \end{tikzpicture}
-    \end{figure}
-    
+            \end{tikzpicture}}
+ 
 
     In the \textbf{Parsing} step, the ANTLR parser is used to generate a parse tree from the input program. For example, consider the following simple function declaration below. The parse tree generated for this function definition is shown in figure \ref{tree}.
     
@@ -349,8 +350,9 @@ for tree={
     
     For the phase 1 prototype, the lexer and parser are both generated from the same grammar file. Any \emph{syntactical} errors are found during this step, these must be fixed before the type checking will be carried out.
     
-    \begin{figure}[H]
-        \begin{tikzpicture}[node distance=-\pgflinewidth, auto]
+    \subsection*{Initial Walk}
+    
+    \hfill\resizebox*{0.5\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
         \sffamily{
             \begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
             \node [arrow, on chain] {\faCogs{} Parsing};
@@ -360,8 +362,7 @@ for tree={
             \node [arrow, on chain] {\faFileText{} Reporting};
             \end{scope}
         }
-        \end{tikzpicture}
-    \end{figure}
+        \end{tikzpicture}}
 
     The language designed for this prototype allows for functions to be called from within functions that may occur anywhere within the program code. As a result, it is necessary to perform one initial pass through the parse tree in order to collect function names to store in the function table. This table stores the identifier (\texttt{Main} in the example used previously) and the return type.
     
@@ -373,8 +374,9 @@ for tree={
     
     \widthboxedfigure{FunctionTable.png}{Dependency diagram showing how the functions declarations are stored and the data stored alongside them.}{0.5}
     
-    \begin{figure}[H]
-        \begin{tikzpicture}[node distance=-\pgflinewidth, auto]
+    \subsection*{Type Checking}
+    
+    \hfill\resizebox*{0.5\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
         \sffamily{
             \begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
             \node [arrow, on chain] {\faCogs{} Parsing};
@@ -384,8 +386,7 @@ for tree={
             \node [arrow, on chain] {\faFileText{} Reporting};
             \end{scope}
         }
-        \end{tikzpicture}
-    \end{figure}
+        \end{tikzpicture}}
 
     Once the function definitions have been collected, the main type checking phase can begin. This covers validating function calls, variable assignments and return statements.
     
@@ -406,8 +407,9 @@ for tree={
     
     If the SMT theorem is satisfiable, we have found a violation -- it is possible for the refinement type constraints to not hold during execution. These are reported via the central error reporting mechanism.
     
-    \begin{figure}[H]
-        \begin{tikzpicture}[node distance=-\pgflinewidth, auto]
+    \subsection*{Reporting}
+    
+    \hfill\resizebox*{0.5\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
         \sffamily{
             \begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
             \node [arrow, on chain] {\faCogs{} Parsing};
@@ -417,14 +419,13 @@ for tree={
             \node [arrow, arrowcur, on chain] {\faFileText{} \textbf{Reporting}};
             \end{scope}
         }
-        \end{tikzpicture}
-    \end{figure}
+        \end{tikzpicture}}
 
     During the 4th and final step of execution, the prototype application reports the errors discovered previously. Each of these includes a line number and message to describe the problem.
     
     These are simply printed to the standard error stream at the command line, but a real language could show these violations in an IDE to highlight problems inline.
 
-\subsection*{Phase 2}
+\subsection*{Phase 2}\hfill
 
 Once unsigned integer constraints were complete and a set of passing test cases had been written, the focus shifted to adding \texttt{string} support. A new type keyword was added, and the grammar was modified to accept regular expression constraints as shown in the example below.
 
@@ -520,7 +521,7 @@ It will correctly determine that the union of \texttt{g+} in the constraint of \
 
 \termbox{\includegraphics[width=\linewidth]{term2}}
 
-\section*{Project Management}
+\section{Project Management}
 
 The following objectives were described in the project specification (Appendix \ref{spec}):
 
