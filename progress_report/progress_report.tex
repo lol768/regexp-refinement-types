@@ -268,28 +268,33 @@ function StackOne(): uint[> 5] {
     \end{figure}
     
 
-    In the \textbf{Parsing} step, the ANTLR parser is used to generate a parse tree from the input program. For example, consider the following simple function declaration:
+    In the \textbf{Parsing} step, the ANTLR parser is used to generate a parse tree from the input program. For example, consider the following simple function declaration below. The parse tree generated for this function definition is shown in figure \ref{tree}.
     
     \begin{minted}{javascript}
 function Main(id: uint[> 1]): uint {
     return 1*1
 }
     \end{minted}
-The parse tree generated for this function definition is shown in figure \ref{tree}.
+
 
 \begin{figure}[H]
 \begin{forest}
+for tree={
+    parent anchor=south,
+    child anchor=north,
+    inner sep=1pt,
+    l sep = 8.5mm,
+    s sep = 5mm
+}
 [program
 [function
 [function\_sig
-[function]
-[ ]
+[function ]
 [Main]
 [(]
 [argument\_decl
 [id]
-[:]
-[ ]
+[: ]
 [type
 [type\_keyword
 [uint]
@@ -297,29 +302,26 @@ The parse tree generated for this function definition is shown in figure \ref{tr
 [{[}]
 [int\_constraint
 [>]
-[ ]
+[<sp>]
 [1]
 ]
 [{]}]
 ]
 ]
-[)]
-[:]
-[ ]
+[): ]
 [type
 [type\_keyword
 [uint]
 ]
 ]
-[ ]
-[\{]
+[ \{]
 [\textbackslash{}n]
 ]
 [body
 [body\_line
 [return\_stmt
 [return]
-[ ]
+[<sp>]
 [expr
 [expr
 [value\_ref
@@ -342,7 +344,7 @@ The parse tree generated for this function definition is shown in figure \ref{tr
 [<EOF>]
 ]]
 \end{forest}
-\caption{Parse tree for the \texttt{Main} function. Note that the \texttt{type} non-terminal describes everything about the types, including any applicable constraints. \label{tree}}
+\caption{Parse tree for the \texttt{Main} function. \label{tree}}
 \end{figure}
     
     For the phase 1 prototype, the lexer and parser are both generated from the same grammar file. Any \emph{syntactical} errors are found during this step, these must be fixed before the type checking will be carried out.
