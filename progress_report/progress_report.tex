@@ -550,10 +550,10 @@ As a result, the decision was made to build Z3 from source and use its Java bind
 The final prototype allows us to write a program like the one below:
 
 \begin{minted}{javascript}
-function SecondaryFunction(): string[/g+|f+/] {
+function SecondaryFunction(): string[/g+|f+/] { // must return one or more 'g's OR one or more 'f's
     return "f"
 }
-function Main(): string[/f+/] {
+function Main(): string[/f+/] { // must return one or more 'f's
     return SecondaryFunction()
 }
 \end{minted}
@@ -567,6 +567,8 @@ It will correctly determine that the union of \texttt{g+} in the constraint of \
     \textcolor{id7-ruby-red}{\texttt{Violation via value "gggg"}}\\
     \textcolor{id7-ruby-red}{\texttt{L5:4 Return type string [(str.in.re x (re.union (re.+ (str.to.re "g")) (re.+ (str.to.re "f"))))] of function SecondaryFunction didn't satisfy string [(str.in.re x (re.+ (str.to.re "f")))]}}
 }
+
+The string which the SMT solver has found, ``gggg'', matches \texttt{/g+|f+/} (and so is a valid return value for \texttt{SecondaryFunction}) -- however, it does not match \texttt{/f+/}. In this way, it would be possible for the \texttt{Main} function at runtime to violate the contract constraining the values it can return.
 
 \section{Project Management}
 
