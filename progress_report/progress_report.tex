@@ -198,7 +198,7 @@
     
     Information security vulnerabilities often arise due to improper input handling. From SQL injection to cross-site scripting, vulnerabilities of this class are found on a daily basis in production applications by security professionals. It is desirable to try to detect and report on potentially insecure code as early as possible in the development process in order to maximise the probability that the issue is resolved \citep{Sadowski:2018:LBS:3200906.3188720}.
     
-    Tooling exists to perform static analysis and taint tracking, but is often unable to evaluate the effectiveness of input validation code that may already be in place. As a result, these tools lend themselves to generating false positives. In Appendix \ref{spec} we proposed a system which makes use of \emph{refinement types} in order to determine whether existing regular expression based input validation is effective by trying to find situations where input could fail to be matched by a regular expression.
+    Tooling exists to perform static analysis and taint tracking, but is often unable to evaluate the effectiveness of input validation code that may already be in place. As a result, these tools lend themselves to generating false positives. We propose a system which makes use of \emph{refinement types} in order to determine whether existing regular expression based input validation is effective by trying to find situations where input could fail to be matched by a regular expression.
     
     Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type. A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 5\}$;  only $\{0, 1, 2, 3, 4, 5\}$ would be permitted for values of $n$ under this constraint.
     
@@ -210,9 +210,9 @@
     
     \section{Project State}
     
-    Early on in the project lifetime we decided to begin prototyping work with a simplified goal, in order to gain experience working with refinement types and type checkers in general. Once complete, work would continue in a 2nd phase which introduced regular expressions.
-    
     The project is currently ahead of schedule. By week 7, both phases 1 and 2 have been completed to a satisfactory standard.
+    
+    Early on in the project lifetime we decided to begin prototyping work with a simplified goal, in order to gain experience working with refinement types and type checkers in general. Once complete, work would continue in a 2nd phase which introduced regular expressions.
     
     \subsection*{Phase 1}\hfill
     
@@ -230,7 +230,7 @@ function StackOne(): uint[> 5] {
     \end{minted}
     
     As the \texttt{Main()} function returns an integer less than 4, a violation is present within \texttt{StackOne()} where it is returned. This violation arises because \texttt{StackOne}'s return type is constrained to be greater than 5.
-    
+    \pagebreak[5]
     Running this simple program with the prototype tool yields the following output:
     
 
@@ -470,7 +470,7 @@ try (ProverEnvironment prover = context.newProverEnvironment(ProverOptions.GENER
 
 \subsection*{Phase 2}\hfill
 
-Once unsigned integer constraints were complete and a set of passing test cases had been written, the focus shifted to adding \texttt{string} support. A new type keyword was added, and the grammar was modified to accept regular expression constraints as shown in the example below.
+Once the initial prototype for a language with refinement types for natural numbers was completed and a set of passing test cases had been written, the focus shifted to adding \texttt{string} support. A new type keyword was added, and the grammar was modified to accept regular expression constraints as shown in the example below.
 
 \begin{minted}{javascript}
 function LookupUserById(): string[/g+/] {
@@ -489,7 +489,7 @@ CHARACTER  : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/'|'|') | ESCAPED_META;
 
 The \texttt{IDENTIFIER} token was used for function and variable names. The \texttt{CHARACTER} token was used for single characters within a regular expression. As the two token definitions overlapped, only one would be identified by the lexer which had the effect of breaking the parsing of either the regular expressions, or the function definitions.
 
-The fix for this issue was to use lexical modes. When the start of a string constraint is detected, the lexer should switch into a \texttt{REGEX} mode and match arbitrary characters with the \texttt{CHARACTER} token. At the end of the regular expression the mode should return to the default. Unfortunately, lexical modes are not supported in ANTLR's composite grammars and it was therefore necessary to split the parser and lexer into separate grammar files.
+We fix this issue with lexical modes: when the start of a string constraint is detected, the lexer should switch into a \texttt{REGEX} mode and match arbitrary characters with the \texttt{CHARACTER} token. At the end of the regular expression the mode should return to the default. Unfortunately, lexical modes are not supported in ANTLR's composite grammars and it was therefore necessary to split the parser and lexer into separate grammar files.
 
 
 \begin{figure}[H]
@@ -545,11 +545,13 @@ The fix for this issue was to use lexical modes. When the start of a string cons
     \caption{\label{regextree}Parse tree for regular expression \texttt{[A-Z]+}.}
 \end{figure}
 
-Once this parsing was complete, it should have simply been a matter of taking advantage of the SMT solver's regular language membership support to find violations in much the same way as was performed on the integers. String (and regular expression support) is not universal amongst SMT solvers, however -- and JavaSMT did not provide an abstraction layer over such functionality.
+With the parser for this modified language complete, it should have simply been a matter of taking advantage of the SMT solver's regular language membership support to find violations in much the same way as was performed on the integers. String (and regular expression support) is not universal amongst SMT solvers, however -- and JavaSMT did not provide an abstraction layer over such functionality.
 
 As a result, we decided to build Z3 from source and use its Java bindings instead of the JavaSMT library. Z3, a C++ SMT solver, includes the Z3str3 component which is able to efficiently support solving string equations and predicates involving regular language membership \citep{berzish2017z3str3}. The original code which used the JavaSMT APIs to solve constraint problems with integers was then modified to use Z3. An adapter was written to construct a Z3 regular expression object from the parse tree.
 
-The example Java below shows what is involved in formulating and solving string constraint problems using Z3str3's API:
+The example Java below shows what is involved in formulating and solving string constraint problems using Z3str3's API.
+
+We first must build the regular expressions which we want to use as constraints. In the same way that regular expressions can be defined inductively, Z3 offers an API that allows us to build up complex \texttt{ReExpr} objects by repeatedly applying operations to them:
 
 \begin{minted}{java}
 // /[a-z!]+/
@@ -564,16 +566,21 @@ ReExpr matchAnyChar = ctx.mkPlus(
 ReExpr exprOne = ctx.mkConcat(ctx.mkToRe(ctx.mkString("foo")), matchAnyChar);
 // /[a-z!]+bar/
 ReExpr exprTwo = ctx.mkConcat(matchAnyChar, ctx.mkToRe(ctx.mkString("bar")));
+\end{minted}
 
+With our regular expression objects built, we can now create the string equation. This requires an unknown variable $x$ of string type/sort and a \texttt{Solver} instance, which we can inform of the constraints.
+
+\begin{minted}{java}
 // our unknown string
 SeqExpr x = (SeqExpr) ctx.mkConst(ctx.mkSymbol("x"), ctx.getStringSort());
 
 Solver s = ctx.mkSolver();
-// must satisfy both expressions
+// must satisfy both expressions - x must belong to the intersection
 s.add(ctx.mkInRe(x, ctx.mkIntersect(exprOne, exprTwo)));
-// non-empty constraint, not strictly necessary
-s.add(ctx.mkGt(ctx.mkLength(x), ctx.mkInt(0)));
+\end{minted}
+Finally, with the constraints set, we can begin searching for a satisfying model. Z3 will attempt to find a string for $x$ which matches both expressions:
 
+\begin{minted}{java}
 // try and find model satisfying requirements
 Status res = s.check();
 
@@ -589,6 +596,7 @@ System.out.println(s.getModel().getConstInterp(x));
 
 Internally, Z3str3 uses Thompson's construction algorithm to generate an NFA representation for a regular expression \citep{z3nfa}. These representations are used to find matching strings. For example, \texttt{g+|f+} could be represented as shown below:
 
+\begin{center}
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
 semithick]
 \node[initial,state]   (A)                      {$q_s$};
@@ -607,6 +615,7 @@ semithick]
 (C1) edge [bend left] node {$\epsilon$} (C)
 (C1) edge node {$\epsilon$} (F);
 \end{tikzpicture}
+\end{center}
 
 The final prototype uses the complement of the \emph{expected} type as a constraint along with the \emph{actual} type. A model which satisfies these constraints indicates a string could be assigned or returned which violates the regular expression constraints. The prototype allows us to write a program like the one below:
 
