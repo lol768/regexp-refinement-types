@@ -7,11 +7,9 @@ import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -261,9 +259,9 @@ public class VisitorListener extends PocLangBaseListener {
     @Override
     public void enterReturn_stmt(PocLang.Return_stmtContext ctx) {
         // this is horribly ugly, but we need to grab the enclosing function somehow
-        ParserRuleContext bodyLineCtx = ctx.getParent();
-        PocLang.BodyContext bodyCtx = (PocLang.BodyContext) bodyLineCtx.getParent();
-        PocLang.FunctionContext function = (PocLang.FunctionContext) bodyCtx.getParent();
+        ParserRuleContext parentCtx = ctx.getParent();
+        while (!(parentCtx instanceof PocLang.FunctionContext)) parentCtx = parentCtx.getParent();
+        PocLang.FunctionContext function = (PocLang.FunctionContext) parentCtx;
         PocLang.Function_sigContext functionSignature = function.function_sig();
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             FunctionDeclaration decl = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
@@ -277,21 +275,35 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     @Override
-    public void exitBody(PocLang.BodyContext ctx) {
-        List<PocLang.Body_lineContext> lines = ctx.body_line();
-        boolean hasAtLeastOneReturn = lines.stream().flatMap(bl -> bl.children.stream()).anyMatch(line -> line instanceof PocLang.Return_stmtContext);
-        PocLang.Function_sigContext functionSignature = (PocLang.Function_sigContext) ctx.getParent().children.get(0);
+    public void exitFunction_body(PocLang.Function_bodyContext ctx) {
+        Stack<ParseTree> lines = new Stack<>();
+        lines.add(ctx);
+        boolean hasAtLeastOneReturn = false;
+
+        while (!lines.empty()) {
+            ParseTree pop = lines.pop();
+            if (pop instanceof PocLang.Return_stmtContext) {
+                hasAtLeastOneReturn = true;
+            }
+            for (int i = 0; i < pop.getChildCount(); i++) {
+                lines.push(pop.getChild(i));
+            }
+        }
+        ParserRuleContext parentCtx = ctx.getParent();
+        while (!(parentCtx instanceof PocLang.FunctionContext)) parentCtx = parentCtx.getParent();
+        PocLang.Function_sigContext functionSignature = (PocLang.Function_sigContext) ((PocLang.FunctionContext)parentCtx).children.get(0);
         FunctionDeclaration functionDeclaration = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
 
         if (!hasAtLeastOneReturn && this.phase == VisitorPhase.COLLECTING_FUNCTIONS && functionDeclaration.getReturnType().getType() != Type.VOID) {
             String owningFunctionId = functionDeclaration.getIdentifier();
-            this.reporter.reportError(new ErrorReport(lines.get(lines.size() - 1).getStart(), "No return statement in function " + owningFunctionId));
+            this.reporter.reportError(new ErrorReport(ctx.getStop(), "No return statement in function " + owningFunctionId));
             return;
         }
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             this.typesCurrentlyInScope.clear();
         }
     }
+
 
 
 }

@@ -4,6 +4,7 @@ body              : (
                     (WS? body_line? WS? NEWLINE)
                       | (WS? COMMENT_LINE NEWLINE)
                     )*;
+function_body     : body ;
 body_line         : (var_assignment | return_stmt | var_decl | function_call | if_stmt ) ;
 
 return_stmt       : RETURN (SPACE expr )? ;
@@ -23,7 +24,7 @@ int_constraint    : LT CONSTRAINT_SPACE CONSTRAINT_UINT # LessThanConstraint
 string_constraint : RE_DELIMITER_OPEN re RE_DELIMITER_CLOSE ;
 function_sig      : FUNCTION SPACE IDENTIFIER BEGIN_GROUP (argument_decl | argument_decl ARG_SEP)* END_GROUP COLON SPACE type SPACE BEGIN_BODY NEWLINE ;
 argument_decl     : IDENTIFIER COLON SPACE type ;
-function          : function_sig body END_BODY ;
+function          : function_sig function_body END_BODY ;
 program           : (function NEWLINE*)+ EOF;
 expr              : expr (MULTIPLY|DIVIDE) expr
                     |	expr (ADD|SUBTRACT) expr
