@@ -4,9 +4,10 @@ body              : (
                     (WS? body_line? WS? NEWLINE)
                       | (WS? COMMENT_LINE NEWLINE)
                     )*;
-body_line         : (var_assignment | return_stmt | var_decl | function_call ) ;
+body_line         : (var_assignment | return_stmt | var_decl | function_call | if_stmt ) ;
 
 return_stmt       : RETURN (SPACE expr )? ;
+if_stmt           : IF SPACE BEGIN_GROUP expr END_GROUP SPACE BEGIN_BODY NEWLINE body END_BODY ;
 var_decl          : VAR SPACE IDENTIFIER COLON SPACE type ;
 type_keyword      : UINT_T # UnsignedIntType |
                     STRING_T # StringType |
@@ -20,9 +21,9 @@ int_constraint    : LT CONSTRAINT_SPACE CONSTRAINT_UINT # LessThanConstraint
                     | LE CONSTRAINT_SPACE CONSTRAINT_UINT # LessThanEqualsConstraint
                     | GE CONSTRAINT_SPACE CONSTRAINT_UINT # GreaterThanEqualsConstraint ;
 string_constraint : RE_DELIMITER_OPEN re RE_DELIMITER_CLOSE ;
-function_sig      : FUNCTION SPACE IDENTIFIER BEGIN_GROUP (argument_decl | argument_decl ARG_SEP)* END_GROUP COLON SPACE type SPACE BEGIN_FUNCTION_BODY NEWLINE ;
+function_sig      : FUNCTION SPACE IDENTIFIER BEGIN_GROUP (argument_decl | argument_decl ARG_SEP)* END_GROUP COLON SPACE type SPACE BEGIN_BODY NEWLINE ;
 argument_decl     : IDENTIFIER COLON SPACE type ;
-function          : function_sig body END_FUNCTION_BODY ;
+function          : function_sig body END_BODY ;
 program           : (function NEWLINE*)+ EOF;
 expr              : expr (MULTIPLY|DIVIDE) expr
                     |	expr (ADD|SUBTRACT) expr

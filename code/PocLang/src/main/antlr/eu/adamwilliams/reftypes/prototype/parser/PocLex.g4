@@ -11,6 +11,7 @@ DIVIDE         : '/' ;
 RETURN         : 'return' ;
 VAR            : 'var' ;
 FUNCTION       : 'function' ;
+IF             : 'if' ;
 COLON          : ':' ;
 SPACE          : ' ' ;
 UINT_T         : 'uint' ;
@@ -26,8 +27,8 @@ BEGIN_GROUP: '(' ;
 END_GROUP: ')' ;
 
 
-BEGIN_FUNCTION_BODY: '{' ;
-END_FUNCTION_BODY: '}' ;
+BEGIN_BODY: '{' ;
+END_BODY: '}' ;
 
 IDENTIFIER     : [A-Za-z_] [A-Za-z_0-9]* ;
 
