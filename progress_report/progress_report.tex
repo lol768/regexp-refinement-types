@@ -198,19 +198,32 @@
     
     Information security vulnerabilities often arise due to improper input handling. From SQL injection to cross-site scripting, vulnerabilities of this class are found on a daily basis in production applications by security professionals. It is desirable to try to detect and report on potentially insecure code as early as possible in the development process in order to maximise the probability that the issue is resolved \citep{Sadowski:2018:LBS:3200906.3188720}.
     
-    Tooling exists to perform static analysis and taint tracking, but is often unable to evaluate the effectiveness of input validation code that may already be in place. As a result, these tools lend themselves to generating false positives. We propose a system which makes use of \emph{refinement types} in order to determine whether existing regular expression based input validation is effective by trying to find situations where input could fail to be matched by a regular expression.
+    Tooling exists to perform static analysis using \emph{taint tracking}, which involves monitoring data flow of user input and generating alerts for unsafe interactions with potentially dangerous functions or \emph{sinks} \citep{jovanovic2006pixy}. Taint tracking is often unable to evaluate the effectiveness of input validation code that may already be in place. As a result, these tools lend themselves to generating false positives. For example, a naive taint tracking tool which does not consider validation measures may determine the code below which interpolates user input into a SQL query string to be vulnerable. However, as the user input is filtered first such that it matches a restrictive regular expression, such a vulnerability report would be a false positive and would not be exploitable.
     
-    Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type. A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 5\}$;  only $\{0, 1, 2, 3, 4, 5\}$ would be permitted for values of $n$ under this constraint.
+    \begin{minted}{php}
+<?php
+preg_match("/[A-Za-z]+/", $_GET['name'], $matches); // sanitises name
+$name = $matches[0]; // name is guaranteed to only consist of A-Z and a-z
+mysql_query("select * from users where first_name = '$name'"); // not exploitable
+    \end{minted}
     
-    This project applies refinement types to strings which enforce membership of $L(R)$ for some regular expression $R$. For example, $\{s: \Sigma^* \mid s \in L(ab+)\}$ \footnote{For some regular expression $R$, $L(R)$ is used to denote the language that it accepts} would allow \texttt{"ab"} to be assigned as a value of some variable $s$, but not \texttt{"a"}.
+    Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type \citep{benjaminpierce2002}. A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 5\}$;  only $\{0, 1, 2, 3, 4, 5\}$ would be permitted for values of $n$ under this constraint.
     
-    We design a proof-of-concept language with syntax for expressing such refinement types and implement a type checker in order to evaluate the feasibility of compile time regular expression checks.
+    This project applies refinement types to strings which enforce membership of $L(R)$ for some regular expression $R$. For example, $\{s: \Sigma^* \mid s \in L(ab+)\}$ \footnote{For some regular expression $R$, $L(R)$ is used to denote the language that it accepts} would allow \texttt{"ab"} to be assigned as a value of some variable $s$, but not \texttt{"a"}. These refinement types can be used within local variable types, as well as function return types and can be syntactically included after the type keyword:
+    
+    \begin{minted}{javascript}
+function GetString(): string[/N+/] { // return type is a string which matches the N+ regex
+    return "November"
+}
+    \end{minted}
+    
+    We design a proof-of-concept language with syntax for expressing such refinement types and implement a type checker in order to evaluate the feasibility of compile time regular expression checks. Vulnerabilities such as local file inclusion, directory traversal, SQL/LDAP injection can all arise due to unsafe user input handling. The purpose of this language is to enable security-critical functionality involving user input to be implemented/wrapped and then invoked from an existing codebase. The efficacy and false positive rate of this type checker can then be compared with existing static analysis tools designed to detect these kind of vulnerabilities.
 
     Per the specification included in Appendix \ref{spec}, Weeks 1-9 of the project were scheduled to involve implementing and testing a prototype parser and type checker for the language.
     
     \section{Project State}
     
-    The project is currently ahead of schedule. By week 7, both phases 1 and 2 have been completed to a satisfactory standard.
+    The project is currently ahead of schedule. By week 7, both phases 1 and 2 have been completed, resulting in a functional prototype.
     
     Early on in the project lifetime we decided to begin prototyping work with a simplified goal, in order to gain experience working with refinement types and type checkers in general. Once complete, work would continue in a 2nd phase which introduced regular expressions.
     
@@ -230,7 +243,7 @@ function StackOne(): uint[> 5] {
     \end{minted}
     
     As the \texttt{Main()} function returns an integer less than 4, a violation is present within \texttt{StackOne()} where it is returned. This violation arises because \texttt{StackOne}'s return type is constrained to be greater than 5.
-    \pagebreak[5]
+   
     Running this simple program with the prototype tool yields the following output:
     
 
@@ -393,7 +406,7 @@ for tree={
     It is within this stage that function re-declarations can be discovered and reported. Errors are stored centrally and associated with the input token closest to the origin of the problem.
     
     \widthboxedfigure{FunctionTable.png}{Dependency diagram showing how the functions declarations are stored and the data stored alongside them.}{0.5}
-    \pagebreak[5]
+    
     \subsection*{Type Checking}
     
     \hfill\resizebox*{0.5\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
@@ -427,15 +440,27 @@ function Main(): uint[> 4] {
 
     In this case, the return value of \texttt{Main} is constrained as $\{x: \mathbb{N} \mid{} x > 4\}$. When the \texttt{return u} statement is checked, the \emph{expected} type is $\{x: \mathbb{N} \mid{} x > 4\}$ and the \emph{actual} type is $\{x: \mathbb{N} \mid{} x < 10\}$. It should be apparent that $u$ could be a value such as $2$ (since $2 < 10$) which would violate the return type constraint.
     
-    To find this, the \emph{expected} type is negated to give $\{x: \mathbb{N} \mid{} x \le 4\}$ and this constraint, along with the constraint defined by the \emph{actual} type are passed to the SMT solver to find a model. This model will include a value for $x$ that satisfies the conjunction of the two constraints $x \le 4 \land x < 10$. The code below shows how the JavaSMT API allows these problems to be configured and solved:
+    To find this, the \emph{expected} type is negated to give $\{x: \mathbb{N} \mid{} x \le 4\}$ and this constraint, along with the constraint defined by the \emph{actual} type are passed to the SMT solver to find a model. This model will include a value for $x$ that satisfies the conjunction of the two constraints $x \le 4 \land x < 10$. The code below shows how the JavaSMT API allows these problems to be configured and solved.
+    
+    We first use the formula manager to set up a variable to represent our unknown:
     
     \begin{minted}{java}
 IntegerFormulaManager imgr = context.getFormulaManager().getIntegerFormulaManager();
 IntegerFormula x = imgr.makeVariable("x");
+\end{minted}
 
+Once this is complete, we can build formulae involving the variable as well as other operations. These map to the constraints discussed previously:
+
+\begin{minted}{java}
 BooleanFormula expectedNegated = imgr.lessOrEquals(x, x.makeNumber(4)); // x <= 4
 BooleanFormula actual = imgr.lessThan(x, x.makeNumber(10)); // x < 10
+\end{minted}
 
+Finally, we create a prover environment with our two constraints added. We specify that we would like models to be generated alongside the satisfiability result. The model, if found, will include an example value for $x$ that satisfies all of the constraints.
+
+We check the result of the operation with the \texttt{isUnsat} method. If the SMT solver is unable to find a satisfying model, this method will return \texttt{true}.
+
+\begin{minted}{java}
 try (ProverEnvironment prover = context.newProverEnvironment(ProverOptions.GENERATE_MODELS)) {
     prover.addConstraint(expectedNegated);
     prover.addConstraint(actual); // both constraints must hold
@@ -628,7 +653,8 @@ function Main(): string[/f+/] { // must return one or more 'f's
 }
 \end{minted}
 
-It will correctly determine that the union of \texttt{g+} in the constraint of \texttt{SecondaryFunction}'s return type is incompatible with \texttt{Main}'s return type:
+
+The type checker will correctly determine that the union of \texttt{g+} in the constraint of \texttt{SecondaryFunction}'s return type is incompatible with \texttt{Main}'s return type. Note that the constraint used in the return type contract is used, despite the fact that \texttt{SecondaryFunction} in its current implementation returns a string which matches \texttt{g+|f+}.
 
 \termbox{
     \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} cat input.txt | ./gradlew run}\\
@@ -645,37 +671,22 @@ The string which the SMT solver has found, ``gggg'', matches \texttt{/g+|f+/} (a
 
 The following objectives were described in the project specification (Appendix \ref{spec}):
 
-\begin{enumerate}
-    \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).
-    \begin{enumerate}
-        \item Explore the consequences of typical string operations (e.g. concatenation) and define the type of
-        their return value when applied to elements of the regular expression type.
-
-        \item At minimum, this should allow for simple functions to be declared that can safely accept/return a
-        particular regular expression input.
-        \item Evaluate the rate of false positives when compared to existing static analysis
-    \end{enumerate}
-    \item Implement such a type system that can guarantee type safety, built against a simplified proof-of-concept
-    language.
-    \begin{enumerate}
-        \item Test the implementation against a variety of test cases. The testing strategy should make use of
-        automated unit tests, and manual system testing considering both general expected input as well as
-        any relevant ``edge-cases'' that need to be handled.
-    \end{enumerate}
-\end{enumerate}
-
 \arrayrulecolor{lightgrey} % <---
 \def\arraystretch{1.5}%  1 is the default, change whatever you need
 \begin{table}[H]
     \centering
     \rowcolors{1}{}{lightgrey}
-    \begin{tabular}[t]{|p{1cm}|p{8cm}|p{1cm}|}
+    \begin{tabular}[t]{|p{2cm}|p{12cm}|p{1cm}|}
         \hline
         \rowcolor[HTML]{204F79}
         {\color[HTML]{FFFFFF} \sffamily \textbf{\#}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Objective}} & {\color[HTML]{FFFFFF} \sffamily  \textbf{Status}} \\ \hline
-        1. & Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by). & \faCheck{}           \\ \hline
-        1. (a) & Explore the consequences of typical string operations (e.g. concatenation) and define the type of
-        their return value when applied to elements of the regular expression type. & \faCheck{}           \\ \hline
+        1. & Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by). & \faCheckCircleO{}           \\ \hline
+        \hspace{1.5em} 1. (a) & Explore the consequences of typical string operations (e.g. concatenation) and define the type of
+        their return value when applied to elements of the regular expression type. & \faTimes{}           \\ \hline
+        \hspace{1.5em} 1. (b) & At minimum, this should allow for simple functions to be declared that can safely accept/return a particular regular expression input. & \faCheck{}           \\ \hline
+        \hspace{1.5em} 1. (c) & Evaluate the rate of false positives when compared to existing static analysis techniques. & \faTimes{}           \\ \hline
+        2. & Implement such a type system that can guarantee type safety, built against a simplified proof-of-concept language. & \faCheck{}           \\ \hline
+        \hspace{1.5em} 2. (a) & Test the implementation against a variety of test cases. The testing strategy should make use of automated unit tests, and manual system testing considering both general expected input as well as any relevant ``edge-cases'' that need to be handled. & \faCheck{}           \\ \hline
     \end{tabular}
     \caption{Objective progress to date.}
     \label{satable}
