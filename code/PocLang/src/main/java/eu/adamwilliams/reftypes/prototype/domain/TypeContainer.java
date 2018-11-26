@@ -6,10 +6,15 @@ public class TypeContainer {
 
     private Type type;
     private BoolExpr refinement;
+    private String friendlyRefinement;
 
     public TypeContainer(Type type, BoolExpr refinement) {
         this.type = type;
         this.refinement = refinement;
+    }
+
+    public void setFriendlyRefinement(String friendlyRefinement) {
+        this.friendlyRefinement = friendlyRefinement;
     }
 
     public Type getType() {
@@ -34,6 +39,12 @@ public class TypeContainer {
             case VOID:
                 friendlyType = "void";
                 break;
+            case BOOLEAN:
+                friendlyType = "boolean";
+                break;
+        }
+        if (this.friendlyRefinement != null) {
+            return friendlyType + (this.refinement == null ? "" : String.format(" [%s]", this.friendlyRefinement));
         }
         return friendlyType + (this.refinement == null ? "" : String.format(" [%s]", this.refinement.toString()));
     }

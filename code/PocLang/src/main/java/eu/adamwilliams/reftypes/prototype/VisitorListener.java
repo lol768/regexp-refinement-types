@@ -25,6 +25,7 @@ public class VisitorListener extends PocLangBaseListener {
     private Map<String, StackEntry> typesCurrentlyInScope = new HashMap<>();
     private IntExpr x; // represents unknown int
     private SeqExpr y; // represents unknown string
+    private TypeContainer expectedIfExprType;
 
     public VisitorListener(FunctionTable table, ErrorReporter reporter, Context z3Ctx) {
         this.table = table;
@@ -77,6 +78,7 @@ public class VisitorListener extends PocLangBaseListener {
     private TypeContainer mapTypeFromParsed(PocLang.TypeContext ctx) {
         PocLang.Type_keywordContext keyword = ctx.type_keyword();
         Type type;
+        String friendlyRefinement = null;
         if (keyword instanceof PocLang.StringTypeContext) {
             type = Type.STRING;
         } else if (keyword instanceof PocLang.VoidTypeContext) {
@@ -113,7 +115,9 @@ public class VisitorListener extends PocLangBaseListener {
                 String val = ((PocLang.LessThanEqualsConstraintContext) ctx.int_constraint()).CONSTRAINT_UINT().getText();
                 bf = z3Ctx.mkLe(x, z3Ctx.mkInt(val));
             }
+            friendlyRefinement = ctx.int_constraint().getText();
         } else if (ctx.string_constraint() != null) {
+            friendlyRefinement = ctx.string_constraint().getText();
             bf = this.regexAdapter.getRefinementType(this.y, ctx.string_constraint().re(), this.z3Ctx);
         }
         if (bf == null) {
@@ -121,7 +125,9 @@ public class VisitorListener extends PocLangBaseListener {
             return new TypeContainer(type, null);
         }
 
-        return new TypeContainer(type, bf);
+        TypeContainer typeContainer = new TypeContainer(type, bf);
+        typeContainer.setFriendlyRefinement(friendlyRefinement);
+        return typeContainer;
     }
 
     private boolean ensureApplicableConstraint(PocLang.TypeContext ctx, Type type) {
@@ -271,6 +277,14 @@ public class VisitorListener extends PocLangBaseListener {
                 this.reporter.reportError(new ErrorReport(ctx.expr().start, "Attempt to return value from void function " + functionSignature.IDENTIFIER().getText()));
             }
             this.checkExprType(ctx.expr(), decl.getReturnType(), ctx.getStart(), this.reporter);
+        }
+    }
+
+    @Override
+    public void enterIf_stmt(PocLang.If_stmtContext ctx) {
+        if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            expectedIfExprType = new TypeContainer(Type.BOOLEAN, null);
+            this.checkExprType(ctx.expr(), expectedIfExprType, ctx.expr().stop, this.reporter);
         }
     }
 
