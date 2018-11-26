@@ -664,6 +664,23 @@ The following objectives were described in the project specification (Appendix \
     \end{enumerate}
 \end{enumerate}
 
+\arrayrulecolor{lightgrey} % <---
+\def\arraystretch{1.5}%  1 is the default, change whatever you need
+\begin{table}[H]
+    \centering
+    \rowcolors{1}{}{lightgrey}
+    \begin{tabular}[t]{|p{1cm}|p{8cm}|p{1cm}|}
+        \hline
+        \rowcolor[HTML]{204F79}
+        {\color[HTML]{FFFFFF} \sffamily \textbf{\#}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Objective}} & {\color[HTML]{FFFFFF} \sffamily  \textbf{Status}} \\ \hline
+        1. & Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by). & \faCheck{}           \\ \hline
+        1. (a) & Explore the consequences of typical string operations (e.g. concatenation) and define the type of
+        their return value when applied to elements of the regular expression type. & \faCheck{}           \\ \hline
+    \end{tabular}
+    \caption{Objective progress to date.}
+    \label{satable}
+\end{table}
+
 Objective 2 and the sub-objective related to testing has been completed as of the time of writing. 26 individual passing JUnit test methods have been defined which cover the broad areas described below:
 
 \begin{description}
