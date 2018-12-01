@@ -29,6 +29,36 @@ public class ParsingTests {
     }
 
     @Test
+    public void testIllegalVariableReference() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): string {\n" +
+                "    return data\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        Assert.assertEquals(1, app.doTypeChecks(tree).getReports().size());
+    }
+
+    @Test
+    public void testVariableShadowsExisting() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): string {\n" +
+                "    var a: uint\n" +
+                "    if (true) {\n" +
+                "        var a: string\n" +
+                "        return a\n" +
+                "    }\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        List<ErrorReport> reports = app.doTypeChecks(tree).getReports();
+        Assert.assertEquals(1, reports.size());
+        Assert.assertTrue(reports.stream().anyMatch(rp -> rp.getMsg().contains("shadow")));
+    }
+
+    @Test
     public void testBoolType() {
         String basicProgram = "function LookupUserById(id: uint[> 1]): bool {\n" +
                 "    return true\n" +

@@ -2,19 +2,19 @@ package eu.adamwilliams.reftypes.prototype.domain;
 
 public class StackEntry {
     private TypeContainer type;
-    private StackEntryType stackType;
+    private final StackEntryType stackEntryType;
 
-    public StackEntry(TypeContainer type, StackEntryType stackType) {
+    public StackEntry(TypeContainer type, StackEntryType stackEntryType) {
         this.type = type;
-        this.stackType = stackType;
+        this.stackEntryType = stackEntryType;
     }
 
     public TypeContainer getType() {
         return type;
     }
 
-    public StackEntryType getStackType() {
-        return stackType;
+    public StackEntryType getStackEntryType() {
+        return stackEntryType;
     }
 }
 

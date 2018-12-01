@@ -22,7 +22,7 @@ public class VisitorListener extends PocLangBaseListener {
     private ErrorReporter reporter;
     private final Context z3Ctx;
     private VisitorPhase phase = VisitorPhase.COLLECTING_FUNCTIONS;
-    private Map<String, StackEntry> typesCurrentlyInScope = new HashMap<>();
+    private List<ScopeContainer> scopeContainers = new ArrayList<>();
     private IntExpr x; // represents unknown int
     private SeqExpr y; // represents unknown string
     private TypeContainer expectedIfExprType;
@@ -66,12 +66,14 @@ public class VisitorListener extends PocLangBaseListener {
                     )
             );
             this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type_specifier()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
-
         } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
             LinkedHashMap<String, TypeContainer> arguments = this.table.getFunctionByIdentifier(idText).getArguments();
+            ScopeContainer sc = new ScopeContainer();
+
             for (Map.Entry<String, TypeContainer> entry : arguments.entrySet()) {
-                this.typesCurrentlyInScope.put(entry.getKey(), new StackEntry(entry.getValue(), StackEntryType.ARGUMENT));
+                sc.insertIdentifier(entry.getKey(), new StackEntry(entry.getValue(), StackEntryType.ARGUMENT));
             }
+            this.scopeContainers.add(sc);
         }
     }
 
@@ -167,17 +169,26 @@ public class VisitorListener extends PocLangBaseListener {
         }
 
         String variableId = value_refContext.identifier_ref().getText();
-        if (!this.typesCurrentlyInScope.containsKey(variableId)) {
+        StackEntry identifierLookup = this.lookupIdentifierInScopes(variableId);
+
+        if (identifierLookup == null) {
             throw new IllegalArgumentException("Reference to variable " + variableId + " which isn't in scope");
         }
-        return this.typesCurrentlyInScope.get(variableId).getType();
+        return identifierLookup.getType();
     }
 
 
     @Override
     public void enterVar_decl(PocLang.Var_declContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
+            String id = ctx.IDENTIFIER().getText();
+            if (this.lookupIdentifierInScopes(id) != null) {
+                this.reporter.reportError(new ErrorReport(
+                        ctx.IDENTIFIER().getSymbol(),
+                        "Declaration of '" + id + "' would shadow existing variable in scope"
+                ));
+            }
+            this.scopeContainers.get(this.scopeContainers.size()-1).insertIdentifier(id, new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
         }
     }
 
@@ -226,12 +237,12 @@ public class VisitorListener extends PocLangBaseListener {
     @Override
     public void enterVar_assignment(PocLang.Var_assignmentContext ctx) {
         String variableId = ctx.IDENTIFIER().getText();
-
-        if (!this.typesCurrentlyInScope.containsKey(variableId)) {
+        StackEntry identifierLookup = this.lookupIdentifierInScopes(variableId);
+        if (identifierLookup == null) {
             this.reporter.reportError(new ErrorReport(ctx.getStart(), "Assignment to variable " + variableId + " which isn't in scope"));
             return; // bail, we can't check types at this point
         }
-        this.checkExprType(ctx.expr(), this.typesCurrentlyInScope.get(variableId).getType(), ctx.getStart(), this.reporter);
+        this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
     }
 
     private boolean checkTypes(TypeContainer expected, TypeContainer actual) {
@@ -313,11 +324,30 @@ public class VisitorListener extends PocLangBaseListener {
             this.reporter.reportError(new ErrorReport(ctx.getStop(), "No return statement in function " + owningFunctionId));
             return;
         }
+    }
+
+    @Override
+    public void exitBody(PocLang.BodyContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.typesCurrentlyInScope.clear();
+            this.scopeContainers.remove(this.scopeContainers.size()-1);
         }
     }
 
+    @Override
+    public void enterBody(PocLang.BodyContext ctx) {
+        // function sig visitor handles the very first body's scope container
+        if (this.phase == VisitorPhase.CHECKING_TYPES && !(ctx.getParent() instanceof PocLang.Function_bodyContext)) {
+            this.scopeContainers.add(new ScopeContainer());
+        }
+    }
 
-
+    private StackEntry lookupIdentifierInScopes(String identifier) {
+        for (int i = this.scopeContainers.size()-1; i >= 0; i--) {
+            ScopeContainer scopeContainer = this.scopeContainers.get(i);
+            if (scopeContainer.hasIdentifier(identifier)) {
+                return scopeContainer.getByIdentifier(identifier);
+            }
+        }
+        return null;
+    }
 }
