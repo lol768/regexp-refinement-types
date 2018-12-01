@@ -58,14 +58,14 @@ public class VisitorListener extends PocLangBaseListener {
             LinkedHashMap<String, TypeContainer> collect = ctx.argument_decl().stream().collect(
                     Collectors.toMap(
                             ad -> ad.IDENTIFIER().getText(),
-                            ad -> mapTypeFromParsed(ad.type()),
+                            ad -> mapTypeFromParsed(ad.type_specifier()),
                             (u, v) -> {
                                 throw new IllegalStateException(String.format("Duplicate key %s", u));
                             },
                             LinkedHashMap::new
                     )
             );
-            this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
+            this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type_specifier()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
 
         } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
             LinkedHashMap<String, TypeContainer> arguments = this.table.getFunctionByIdentifier(idText).getArguments();
@@ -75,7 +75,7 @@ public class VisitorListener extends PocLangBaseListener {
         }
     }
 
-    private TypeContainer mapTypeFromParsed(PocLang.TypeContext ctx) {
+    private TypeContainer mapTypeFromParsed(PocLang.Type_specifierContext ctx) {
         PocLang.Type_keywordContext keyword = ctx.type_keyword();
         Type type;
         String friendlyRefinement = null;
@@ -130,7 +130,7 @@ public class VisitorListener extends PocLangBaseListener {
         return typeContainer;
     }
 
-    private boolean ensureApplicableConstraint(PocLang.TypeContext ctx, Type type) {
+    private boolean ensureApplicableConstraint(PocLang.Type_specifierContext ctx, Type type) {
         switch (type) {
             case UNSIGNED_INTEGER:
                 if (ctx.string_constraint() != null) {
@@ -177,7 +177,7 @@ public class VisitorListener extends PocLangBaseListener {
     @Override
     public void enterVar_decl(PocLang.Var_declContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), new StackEntry(mapTypeFromParsed(ctx.type()), StackEntryType.LOCAL));
+            this.typesCurrentlyInScope.put(ctx.IDENTIFIER().getText(), new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
         }
     }
 

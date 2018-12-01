@@ -51,8 +51,8 @@ public class RegexZ3Adapter implements IRegexZ3Adapter {
                 return z3Ctx.mkRange(z3Ctx.mkString(" "), z3Ctx.mkString("~"));
             }
 
-            if (elementary.range() != null) {
-                PocLang.RangeContext items = elementary.range();
+            if (elementary.range_re() != null) {
+                PocLang.Range_reContext items = elementary.range_re();
                 if (items.positive_range() != null) {
                     PocLang.Positive_rangeContext positive_rangeContext = items.positive_range();
                     return handleRegexRange(positive_rangeContext.range_items(), z3Ctx);

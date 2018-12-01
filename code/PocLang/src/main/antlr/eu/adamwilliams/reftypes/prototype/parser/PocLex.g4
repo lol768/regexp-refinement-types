@@ -12,6 +12,7 @@ RETURN         : 'return' ;
 VAR            : 'var' ;
 FUNCTION       : 'function' ;
 IF             : 'if' ;
+ELSE           : 'else' ;
 COLON          : ':' ;
 SPACE          : ' ' ;
 UINT_T         : 'uint' ;
@@ -34,7 +35,7 @@ IDENTIFIER     : [A-Za-z_] [A-Za-z_0-9]* ;
 
 
 WS                : (' ' | '\t')+ -> channel(HIDDEN) ;
-COMMENT_LINE      : '//'  ~[\n\r]* -> channel(HIDDEN) ;
+COMMENT_LINE      : '//'  ~[\n\r]* ;
 NEWLINE           : [\n]+ ;
 ARG_SEP           : [,] WS?;
 // SO 19237249

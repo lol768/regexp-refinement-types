@@ -22,7 +22,7 @@ public class RegexZ3AdapterTests {
     @Test
     public void testSimpleExpression() {
         String constraint = "string[/a+/]";
-        PocLang.TypeContext tree = getParseTree(constraint);
+        PocLang.Type_specifierContext tree = getParseTree(constraint);
         Context z3Context = getZ3Context();
         IRegexZ3Adapter adapter = new RegexZ3Adapter();
 
@@ -33,7 +33,7 @@ public class RegexZ3AdapterTests {
     @Test
     public void testKleeneStarGrouped() {
         String constraint = "string[/(aaa)*/]";
-        PocLang.TypeContext tree = getParseTree(constraint);
+        PocLang.Type_specifierContext tree = getParseTree(constraint);
         Context z3Context = getZ3Context();
         IRegexZ3Adapter adapter = new RegexZ3Adapter();
 
@@ -50,7 +50,7 @@ public class RegexZ3AdapterTests {
         return new Context(cfg);
     }
 
-    private PocLang.TypeContext getParseTree(String constraint) {
+    private PocLang.Type_specifierContext getParseTree(String constraint) {
         PocLex lexer = new PocLex(CharStreams.fromString(constraint));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PocLang parser = new PocLang(tokens);
@@ -76,6 +76,6 @@ public class RegexZ3AdapterTests {
 
             }
         });
-        return parser.type();
+        return parser.type_specifier();
     }
 }
