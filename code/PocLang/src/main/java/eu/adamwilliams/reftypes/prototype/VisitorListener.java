@@ -7,6 +7,7 @@ import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.*;
@@ -163,7 +164,9 @@ public class VisitorListener extends PocLangBaseListener {
                 return new TypeContainer(type, eqExpr);
             } else if (value_refContext.STRING_LITERAL() != null) {
                 String text = value_refContext.STRING_LITERAL().getText().substring(1, value_refContext.STRING_LITERAL().getText().length()-1);
-                return new TypeContainer(type, z3Ctx.mkInRe(this.y, z3Ctx.mkToRe(z3Ctx.mkString(text))));
+                TypeContainer typeContainer = new TypeContainer(type, z3Ctx.mkInRe(this.y, z3Ctx.mkToRe(z3Ctx.mkString(text))));
+                typeContainer.setFriendlyRefinement("\"" + text + "\"");
+                return typeContainer;
             }
             return new TypeContainer(type, null);
         }
@@ -217,8 +220,10 @@ public class VisitorListener extends PocLangBaseListener {
         if (value_refContext != null) {
             try {
                 TypeContainer tc = this.inferTypeFromValue(value_refContext);
-                if (!this.checkTypes(expected, tc)) {
-                    reporter.reportError(new ErrorReport(symbol, tc + " didn't satisfy " + expected));
+                Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
+                if (!typeCheckResult.a) {
+                    String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
+                    reporter.reportError(new ErrorReport(symbol, tc + " didn't satisfy " + expected + supp));
                 }
             } catch (IllegalArgumentException ex) {
                 reporter.reportError(new ErrorReport(symbol, ex.getMessage()));
@@ -228,8 +233,10 @@ public class VisitorListener extends PocLangBaseListener {
         PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
-            if (!this.checkTypes(expected, functionByIdentifier.getReturnType())) {
-                reporter.reportError(new ErrorReport(symbol, "Return type " + functionByIdentifier.getReturnType() + " of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected));
+            Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, functionByIdentifier.getReturnType());
+            if (!typeCheckResult.a) {
+                String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
+                reporter.reportError(new ErrorReport(symbol, "Return type " + functionByIdentifier.getReturnType() + " of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected + supp));
             }
         }
     }
@@ -245,13 +252,13 @@ public class VisitorListener extends PocLangBaseListener {
         this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
     }
 
-    private boolean checkTypes(TypeContainer expected, TypeContainer actual) {
+    private Pair<Boolean, String> checkTypes(TypeContainer expected, TypeContainer actual) {
         if (expected.getType() != actual.getType()) {
-            return false; // fail fast
+            return new Pair<>(false, null); // fail fast
         }
 
         if (expected.getRefinement() == null) {
-            return true;
+            return new Pair<>(true, null);
         }
 
         // Solve formula, get model, and print variable assignment
@@ -264,13 +271,12 @@ public class VisitorListener extends PocLangBaseListener {
         Status res = solver.check();
         if (res == Status.SATISFIABLE) {
             // if we're here, we have a model which violates the refinement types
-            System.err.println("Violation via value " + solver.getModel().getConstInterp(actual.getType() == Type.STRING ? y : x));
-            return false;
+            return new Pair<>(false, solver.getModel().getConstInterp(actual.getType() == Type.STRING ? y : x).toString());
         } else if (res == Status.UNSATISFIABLE) {
-            return true;
+            return new Pair<>(true, null);
         }
 
-        return false;
+        return new Pair<>(false, null);
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import spark.ResponseTransformer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,13 +19,55 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+
+import static spark.Spark.*;
+
 public class Application {
 
     public static void main(String[] args) {
         AnsiConsole.systemInstall();
         System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN) + "Reading program from stdin (use Ctrl+D when finished)..." + Ansi.ansi().fg(Ansi.Color.RED));
         Application instance = new Application();
-        instance.handleProgram();
+        //instance.handleProgram();
+        instance.startWebServer();
+    }
+
+    public void startWebServer() {
+        options("/check",
+                (request, response) -> {
+
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
+
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
+
+                    return "OK";
+                });
+
+        post("/check", (req, res) -> {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    String program = req.body();
+                    PocLex lexer = new PocLex(CharStreams.fromString(program));
+                    CommonTokenStream tokens = new CommonTokenStream(lexer);
+                    PocLang parser = new PocLang(tokens);
+                    if (parser.getNumberOfSyntaxErrors() > 0) {
+                        res.status(400);
+                        return "Syntactically invalid";
+                    }
+                    return doTypeChecks(parser.program());
+
+                }, new JsonTransformer()
+        );
     }
 
     public void handleProgram() {
@@ -42,7 +85,7 @@ public class Application {
             System.err.printf(Ansi.ansi().fg(Ansi.Color.RED) + "%d syntax error(s) need to be resolved.%n", parser.getNumberOfSyntaxErrors());
             System.exit(-1);
         }
-        
+
 
         ErrorReporter errorReporter = this.doTypeChecks(tree);
 
@@ -59,7 +102,7 @@ public class Application {
     private void generateLatexDiagram(ParseTree treeItem, String[] ruleNames) {
         if (treeItem.getPayload() instanceof RuleContext) {
             RuleContext rc = (RuleContext) treeItem.getPayload();
-            System.out.print("["+ruleNames[rc.getRuleIndex()]+"\n");
+            System.out.print("[" + ruleNames[rc.getRuleIndex()] + "\n");
         }
         for (int i = 0; i < treeItem.getChildCount(); i++) {
             generateLatexDiagramAux(treeItem.getChild(i), 0, ruleNames);
@@ -84,14 +127,13 @@ public class Application {
             System.out.print(sanitiseText(text));
         }
         if (treeItem.getChildCount() > 0) {
-            System.out.print("\n"+indent.toString());
-        }
-        else {
+            System.out.print("\n" + indent.toString());
+        } else {
             System.out.println("]");
             return;
         }
         for (int i = 0; i < treeItem.getChildCount(); i++) {
-            generateLatexDiagramAux(treeItem.getChild(i), indentation+2, ruleNames);
+            generateLatexDiagramAux(treeItem.getChild(i), indentation + 2, ruleNames);
         }
         System.out.println(indent.toString() + "]");
     }
@@ -136,4 +178,14 @@ public class Application {
                 .lines().collect(Collectors.joining("\n"));
     }
 
+    public class JsonTransformer implements ResponseTransformer {
+
+        private Gson gson = new Gson();
+
+        @Override
+        public String render(Object model) {
+            return gson.toJson(model);
+        }
+
+    }
 }

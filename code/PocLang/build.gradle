@@ -26,8 +26,12 @@ jar {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'eu.adamwilliams.z3', name: 'vendor-z3', version: '1.0.0'
+    compile "com.sparkjava:spark-core:2.7.2"
+
     compile 'org.fusesource.jansi:jansi:1.17.1'
     antlr "org.antlr:antlr4:4.7.1"
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'org.slf4j:slf4j-simple:1.7.12'
 }
 
 generateGrammarSource {
