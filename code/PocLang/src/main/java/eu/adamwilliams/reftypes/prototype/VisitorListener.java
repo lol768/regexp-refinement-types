@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -229,6 +230,8 @@ public class VisitorListener extends PocLangBaseListener {
                 reporter.reportError(new ErrorReport(symbol, ex.getMessage()));
             }
         }
+
+
 
         PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {

@@ -21,6 +21,8 @@ BOOL_T         : 'bool' ;
 VOID_T         : 'void' ;
 TRUE_LIT       : 'true' ;
 FALSE_LIT      : 'false' ;
+EQ_ASSIGNMENT: '=' ;
+
 
 BEGIN_CONSTRAINT : '[' -> pushMode(CONSTRAINT);
 

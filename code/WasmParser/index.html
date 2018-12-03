@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-GB" class="no-js id7-non-branded"> <!-- class="id7-non-branded" to remove Warwick branding -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Include any favicons here -->
+    <meta name="theme-color" content="#5b3069">
+    <!-- Use the brand colour of the site -->
+
+    <style type="text/css">
+        .program {
+            white-space: pre;
+            font-family: monospace;
+        }
+
+        .body {
+            display: block;
+            margin-left: 2em;
+        }
+
+        .COMMENT_LINE {
+            font-style: italic;
+            color: #333;
+        }
+
+        .FUNCTION, .RETURN, .IF, .ELSE {
+            color: green;
+            font-weight: bold;
+        }
+
+        .STRING_LITERAL {
+            color: #BA2121;
+        }
+
+        .type_keyword {
+            color: #00aaaa;
+        }
+
+        .PLUS, .STAR {
+            color: #2006ff;
+        }
+
+        .character, .lax_character {
+            color: #008000;
+        }
+
+        .TRUE_LIT, .FALSE_LIT {
+            color: green;
+            font-weight: bold;
+        }
+
+        #output {
+
+        }
+
+        .id7-site-footer {
+            padding-bottom: 20px;
+        }
+
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+
+
+        #input {
+            margin-right: 2em;
+            height: 210px;
+            font-family: monospace;
+            width: 100%;
+        }
+
+        .ERROR {
+            background-color: bisque;
+            text-decoration: dotted underline red;
+        }
+        .errored {
+            position: relative;
+        }
+        .errored:before {
+            font-family: 'Font Awesome 5 Pro';
+            content: "\F071   ";
+            color: #f00;
+            opacity: 0.5;
+            margin-left: -26px;
+            line-height: 1.6;
+        }
+
+        .logo {
+            padding-left: 1em;
+            padding-top: 1.5em;
+            padding-bottom: 0.5em;
+        }
+
+        #output {
+            padding-left: 2em;
+            padding-top: 1em;
+            padding-bottom: 1em;
+            border: 1px solid #999;
+        }
+
+        #syntax-error {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="wasm_exec.js"></script>
+    <script type="text/javascript">
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("Test.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+
+        function renderReport(data) {
+            var erroreds = document.querySelectorAll(".errored");
+            for (var el of erroreds) {
+                el.classList.remove("errored");
+                document.querySelector(".l" + report.lineNo).setAttribute("title", null);
+            }
+
+            if (data.reports.length === 0) {
+                document.querySelector(".tc-no-issues").classList.remove("hide");
+                document.querySelector(".tc-issues").classList.add("hide");
+            } else {
+                var len = data.reports.length;
+                document.querySelector(".tc-issues").classList.remove("hide");
+                document.querySelector(".tc-no-issues").classList.add("hide");
+                document.querySelector("#tc-num-issues").textContent = len + (len === 1 ? " issue" : " issues");
+                document.querySelector("#tc-issue-list").innerHTML = "";
+                for (var report of data.reports) {
+                    var el = document.createElement("li");
+                    el.textContent = "L" + report.lineNo + ":" + report.colNo + " " + report.msg;
+                    document.querySelector("#tc-issue-list").appendChild(el);
+
+                    document.querySelector(".l" + report.lineNo + ":not(.function_body)").classList.add("errored");
+                    document.querySelector(".l" + report.lineNo + ":not(.function_body)").setAttribute("title", report.msg);
+                }
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            $('[data-toggle=popover]').popover({"placement": "top", "html": true});
+            document.querySelector("#do-type-checks").addEventListener("click", (e) => {
+                e.preventDefault();
+                document.querySelector(".type-checking-icon").classList.add("hide");
+                document.querySelector(".type-checking-loader").classList.remove("hide");
+                document.querySelector("#do-type-checks").classList.add("disabled");
+                fetch("http://localhost:4567/check", {"method": "POST", "body": document.querySelector("#input").value}).then(r => r.json()).then(data => {
+                    renderReport(data);
+                    document.querySelector(".type-checking-icon").classList.remove("hide");
+                    document.querySelector(".type-checking-loader").classList.add("hide");
+                    document.querySelector("#do-type-checks").classList.remove("disabled");
+
+                });
+            });
+        });
+    </script>
+
+    <title>PoC Lang</title>
+
+    <!-- Lato web font -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic&amp;subset=latin,latin-ext"
+          rel="stylesheet" type="text/css" crossorigin="anonymous">
+
+    <!-- ID7 -->
+    <link href="css/id7.css" rel="stylesheet">
+
+    <!-- Default styling. You will probably want to replace with your own site.css -->
+    <link href="css/id7-default-theme.css" rel="stylesheet">
+
+    <script src="js/id7-bundle.min.js"></script>
+</head>
+<body>
+<div class="id7-left-border"></div>
+<div class="id7-fixed-width-container">
+    <a class="sr-only sr-only-focusable" href="#main">Skip to main content</a>
+
+    <header class="id7-page-header">
+        <div class="id7-utility-masthead">
+            <nav class="id7-utility-bar">
+                <!-- Include the utility bar component here if used -->
+            </nav>
+
+            <div class="id7-masthead">
+                <div class="id7-masthead-contents">
+                    <div class="clearfix">
+                        <img src="images/logo_re.png" class="logo">
+
+                    </div>
+
+                    <div class="id7-header-text clearfix">
+                        <h1>
+                            <!-- Parent site link often excluded -->
+                            <span class="id7-current-site-link"><a href="#">Regex Refinement Types</a></span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docs master nav -->
+        <div class="id7-navigation">
+                <nav class="navbar navbar-primary hidden-xs" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="">PoC Lang</a></li>
+                        <li><a href="#">Design</a></li>
+                        <li><a href="#">Code</a></li>
+                    </ul>
+                </nav>
+            </div>
+    </header>
+
+    <!-- Page content of course! -->
+    <main class="id7-main-content-area" id="main">
+        <header class="id7-main-content-header">
+            <div class="id7-horizontal-divider">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" version="1.1" width="1130" height="40" viewBox="0, 0, 1130, 40">
+                    <path d="m 0,0.5 1030.48, 0 22.8,39.5 16.96,-31.4 16.96,31.4 22.8,-39.5 20,0" stroke="#383838" fill="none" class="divider"></path>
+                </svg>
+            </div>
+
+            <div class="id7-page-title">
+                <h1>PoC Lang</h1>
+            </div>
+        </header>
+
+
+        <div class="id7-main-content">
+            <p>On the left, enter code written in the proof of concept language. As you type, the code will be lexed and
+                parsed using an in-browser Go application which uses the project's ANTL4 grammar. This Go code is
+                compiled using the WebAssembly target.</p>
+            <p>Once you're finished, click the &ldquo;Type check&rdquo; button to perform the type checks using the Java
+                checker. If
+                successful, the &ldquo;Execute&rdquo; button will be enabled for use.</p>
+
+            <div class="alert alert-info tc-no-issues hide"><i class="far fa-check"></i> The type check finished successfully, finding no issues.</div>
+
+            <div class="alert alert-warning tc-issues hide"><i class="far fa-exclamation-triangle"></i> The type check finished, but found <strong><span id="tc-num-issues"></span></strong>:
+            <ul id="tc-issue-list">
+
+            </ul>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Input</h2>
+<textarea id="input">
+function Foo(): string[/[A-Z]+/] {
+    // return string
+    if (true) {
+        return "AAA"
+    }
+    return "BBB"
+}</textarea>
+                </div>
+                <div class="col-sm-6">
+                    <h2>Output <small><span class="label label-warning hide pull-right" id="syntax-error" data-toggle="popover" title="Last syntax error" data-content="And here's some amazing content. It's very engaging. Right?"><i class="far fa-bell"></i> Syntactically invalid</span></small></h2>
+                    <div id="output">
+                        <h3 id="loading">Loading...</h3></div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="#" class="btn btn-default" id="do-type-checks"><i class="far fa-search type-checking-icon"></i> <i class="far fa-spin fa-spinner-third type-checking-loader hide"></i> Perform type checks</a>
+                    <a href="#" class="btn btn-default disabled"><i class="far fa-cogs"></i> Execute</a>
+
+                </div>
+                <div class="col-sm-6">
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="id7-page-footer id7-footer-coloured"> <!-- one of id7-footer-coloured or id7-footer-divider -->
+        <div class="id7-site-footer">
+            <!-- Only included when footer class="id7-footer-divider"
+              <div class="id7-horizontal-divider">
+              {% include divider.html %}
+              </div>
+            -->
+
+            <h2>Contact us</h2>
+            <p><a href="#">project@adamwilliams.eu</a></p>
+        </div>
+        <div class="id7-app-footer">
+            <!-- Only include the id7-logo-bleed for footer class="id7-footer-coloured" -->
+            <div class="id7-logo-bleed"></div>
+
+            <div class="id7-footer-utility">
+                <ul>
+                    <li><a href="https://warwick.ac.uk/copyright">© MMXV</a></li>
+                    <li><a href="https://warwick.ac.uk/terms">Terms</a></li>
+                    <li><a href="https://warwick.ac.uk/privacy">Privacy</a></li>
+                    <li><a href="https://warwick.ac.uk/cookies">Cookies</a></li>
+                    <li><a href="https://warwick.ac.uk/accessibility">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+<div class="id7-right-border"></div>
+</body>
+</html>

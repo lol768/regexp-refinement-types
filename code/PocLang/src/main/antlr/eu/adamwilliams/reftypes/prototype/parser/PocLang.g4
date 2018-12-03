@@ -32,7 +32,7 @@ expr              : expr (MULTIPLY|DIVIDE) expr
                     | value_ref
                     | function_call
                     |	BEGIN_GROUP expr END_GROUP ;
-var_assignment    : IDENTIFIER WS? EQ expr ;
+var_assignment    : IDENTIFIER WS? EQ_ASSIGNMENT expr ;
 value_ref         : INT | STRING_LITERAL | TRUE_LIT | FALSE_LIT | identifier_ref ;
 identifier_ref    : IDENTIFIER ;
 function_call     : IDENTIFIER BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP ;
