@@ -290,7 +290,7 @@ public class VisitorListener extends PocLangBaseListener {
         }
         this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.currentFunction.getBody().getStatements().add(new VariableAssignmentStatement(this.getAstExpression(ctx.expr())));
+            this.currentFunction.getBody().getStatements().add(new VariableAssignmentStatement(this.getAstExpression(ctx.expr()), variableId, identifierLookup));
         }
     }
 
