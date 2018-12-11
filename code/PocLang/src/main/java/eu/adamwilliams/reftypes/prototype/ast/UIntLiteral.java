@@ -9,6 +9,9 @@ public class UIntLiteral extends ValueExpression {
     public UIntLiteral(long value, TypeContainer tc) {
         this.value = value;
         this.typeContainer = tc;
+        if (this.typeContainer.getType() != Type.UNSIGNED_INTEGER) {
+            throw new IllegalArgumentException("Illegal AST node, UInt literal must be UNSIGNED_INTEGER");
+        }
     }
 
     @Override

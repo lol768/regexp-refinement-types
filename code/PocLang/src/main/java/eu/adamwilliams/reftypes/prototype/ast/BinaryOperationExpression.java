@@ -49,7 +49,18 @@ public class BinaryOperationExpression extends Expression {
 
     @Override
     public Object evaluate() {
-        // TODO: eval()
+        switch (this.binOpType) {
+            case INT_ADD:
+                return ((Long)lhs.evaluate()) + ((Long)rhs.evaluate());
+            case INT_SUBTRACT:
+                return ((Long)lhs.evaluate()) - ((Long)rhs.evaluate());
+            case INT_DIVIDE:
+                return ((Long)lhs.evaluate()) / ((Long)rhs.evaluate());
+            case INT_MULTIPLY:
+                return ((Long)lhs.evaluate()) * ((Long)rhs.evaluate());
+            case STRING_CONCAT:
+                return lhs.evaluate() + ((String)rhs.evaluate());
+        }
         return null;
     }
 }
