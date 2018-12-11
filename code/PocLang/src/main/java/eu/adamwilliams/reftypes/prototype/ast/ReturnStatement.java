@@ -1,5 +1,7 @@
 package eu.adamwilliams.reftypes.prototype.ast;
 
+import java.util.Optional;
+
 public class ReturnStatement extends Statement {
     private Expression value;
 
@@ -7,7 +9,7 @@ public class ReturnStatement extends Statement {
         this.value = value;
     }
 
-    public Expression getValue() {
-        return value;
+    public Optional<Expression> getValue() {
+        return Optional.ofNullable(value);
     }
 }

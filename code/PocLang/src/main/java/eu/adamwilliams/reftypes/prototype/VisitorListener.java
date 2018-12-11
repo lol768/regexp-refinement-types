@@ -1,15 +1,14 @@
 package eu.adamwilliams.reftypes.prototype;
 
 import com.microsoft.z3.*;
+import eu.adamwilliams.reftypes.prototype.ast.*;
 import eu.adamwilliams.reftypes.prototype.domain.*;
-import eu.adamwilliams.reftypes.prototype.domain.FunctionDeclaration;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLangBaseListener;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +27,8 @@ public class VisitorListener extends PocLangBaseListener {
     private IntExpr x; // represents unknown int
     private SeqExpr y; // represents unknown string
     private TypeContainer expectedIfExprType;
+    private FunctionDeclaration currentFunction;
+    private Statement currentStmt;
 
     public VisitorListener(FunctionTable table, ErrorReporter reporter, Context z3Ctx) {
         this.table = table;
@@ -69,8 +70,9 @@ public class VisitorListener extends PocLangBaseListener {
             );
             this.table.addFunction(new FunctionDeclaration(idText, mapTypeFromParsed(ctx.type_specifier()), collect, symbol.getLine(), symbol.getCharPositionInLine()));
         } else if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            LinkedHashMap<String, TypeContainer> arguments = this.table.getFunctionByIdentifier(idText).getArguments();
-            ScopeContainer sc = new ScopeContainer();
+            this.currentFunction = this.table.getFunctionByIdentifier(idText);
+            LinkedHashMap<String, TypeContainer> arguments = this.currentFunction.getArguments();
+            ScopeContainer sc = new ScopeContainer(this.currentFunction.getBody());
 
             for (Map.Entry<String, TypeContainer> entry : arguments.entrySet()) {
                 sc.insertIdentifier(entry.getKey(), new StackEntry(entry.getValue(), StackEntryType.ARGUMENT));
@@ -164,7 +166,7 @@ public class VisitorListener extends PocLangBaseListener {
                 BoolExpr eqExpr = z3Ctx.mkEq(x, z3Ctx.mkInt(value_refContext.INT().getText()));
                 return new TypeContainer(type, eqExpr);
             } else if (value_refContext.STRING_LITERAL() != null) {
-                String text = value_refContext.STRING_LITERAL().getText().substring(1, value_refContext.STRING_LITERAL().getText().length()-1);
+                String text = value_refContext.STRING_LITERAL().getText().substring(1, value_refContext.STRING_LITERAL().getText().length() - 1);
                 TypeContainer typeContainer = new TypeContainer(type, z3Ctx.mkInRe(this.y, z3Ctx.mkToRe(z3Ctx.mkString(text))));
                 typeContainer.setFriendlyRefinement("\"" + text + "\"");
                 return typeContainer;
@@ -176,7 +178,8 @@ public class VisitorListener extends PocLangBaseListener {
         StackEntry identifierLookup = this.lookupIdentifierInScopes(variableId);
 
         if (identifierLookup == null) {
-            throw new IllegalArgumentException("Reference to variable " + variableId + " which isn't in scope");
+            this.reporter.reportError(new ErrorReport(value_refContext.start, "Couldn't infer type here," + variableId + " not in scope"));
+            return new TypeContainer(Type.UNKNOWN, null);
         }
         return identifierLookup.getType();
     }
@@ -192,7 +195,8 @@ public class VisitorListener extends PocLangBaseListener {
                         "Declaration of '" + id + "' would shadow existing variable in scope"
                 ));
             }
-            this.scopeContainers.get(this.scopeContainers.size()-1).insertIdentifier(id, new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
+            this.scopeContainers.get(this.scopeContainers.size() - 1).insertIdentifier(id, new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
+            this.currentFunction.getBody().getStatements().add(new VariableDeclarationStatement(id));
         }
     }
 
@@ -213,14 +217,23 @@ public class VisitorListener extends PocLangBaseListener {
                 PocLang.ExprContext expr = ctx.expr(i);
                 checkExprType(expr, this.table.getFunctionByIdentifier(idText).getNthArgument(i).getValue(), symbol, reporter);
             }
+            if (ctx.getParent() instanceof PocLang.Body_lineContext) {
+                FunctionCallExpression expr = getAstExpressionForFunctionCall(ctx);
+                this.currentFunction.getBody().getStatements().add(new FunctionCallStatement(expr));
+            }
         }
     }
 
     private void checkExprType(PocLang.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
+        if (getExprType(expr) == null) {
+            reporter.reportError(new ErrorReport(symbol, "Couldn't derive a type for this expression, it's probably nonsensical."));
+            return;
+        }
+
         PocLang.Value_refContext value_refContext = expr.value_ref();
         if (value_refContext != null) {
             try {
-                TypeContainer tc = this.inferTypeFromValue(value_refContext);
+                TypeContainer tc = this.getExprType(expr);
                 Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
                 if (!typeCheckResult.a) {
                     String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
@@ -232,16 +245,39 @@ public class VisitorListener extends PocLangBaseListener {
         }
 
 
-
         PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
-            Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, functionByIdentifier.getReturnType());
+            Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, getExprType(expr));
             if (!typeCheckResult.a) {
                 String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
                 reporter.reportError(new ErrorReport(symbol, "Return type " + functionByIdentifier.getReturnType() + " of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected + supp));
             }
         }
+    }
+
+    private TypeContainer getExprType(PocLang.ExprContext expr) {
+        PocLang.Value_refContext value_refContext = expr.value_ref();
+
+        if (value_refContext != null) {
+            return this.inferTypeFromValue(value_refContext);
+        }
+
+        PocLang.Function_callContext function_callContext = expr.function_call();
+        if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
+            return this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText()).getReturnType();
+        }
+
+        List<PocLang.ExprContext> binOpItems = expr.expr();
+        if (binOpItems.stream().allMatch(e -> getExprType(e) != null && getExprType(e).getType() == Type.UNSIGNED_INTEGER)) {
+            return new TypeContainer(Type.UNSIGNED_INTEGER, null); // TODO: We can infer a better refinement here..
+        }
+
+        if (expr.ADD() != null && binOpItems.stream().allMatch(e -> getExprType(e) != null && getExprType(e).getType() == Type.STRING)) {
+            return new TypeContainer(Type.STRING, null); // TODO: We can infer a better refinement here..
+        }
+
+        return null;
     }
 
     @Override
@@ -253,6 +289,9 @@ public class VisitorListener extends PocLangBaseListener {
             return; // bail, we can't check types at this point
         }
         this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
+        if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            this.currentFunction.getBody().getStatements().add(new VariableAssignmentStatement(this.getAstExpression(ctx.expr())));
+        }
     }
 
     private Pair<Boolean, String> checkTypes(TypeContainer expected, TypeContainer actual) {
@@ -292,11 +331,13 @@ public class VisitorListener extends PocLangBaseListener {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             FunctionDeclaration decl = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
             if (ctx.expr() == null && decl.getReturnType().getType() == Type.VOID) {
+                this.getTopBody().getStatements().add(new ReturnStatement(null));
                 return;
             } else if (decl.getReturnType().getType() == Type.VOID) {
                 this.reporter.reportError(new ErrorReport(ctx.expr().start, "Attempt to return value from void function " + functionSignature.IDENTIFIER().getText()));
             }
             this.checkExprType(ctx.expr(), decl.getReturnType(), ctx.getStart(), this.reporter);
+            this.getTopBody().getStatements().add(new ReturnStatement(this.getAstExpression(ctx.expr())));
         }
     }
 
@@ -305,6 +346,20 @@ public class VisitorListener extends PocLangBaseListener {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
             expectedIfExprType = new TypeContainer(Type.BOOLEAN, null);
             this.checkExprType(ctx.expr(), expectedIfExprType, ctx.expr().stop, this.reporter);
+
+
+            IfStatement ifStmt = new IfStatement(getAstExpression(ctx.expr()), null, null, null);
+            if (this.getTopBody().getParentStatement() instanceof IfStatement) {
+                ((IfStatement) this.getTopBody().getParentStatement()).setElseIf(ifStmt);
+            }
+            this.currentStmt = ifStmt;
+        }
+    }
+
+    @Override
+    public void exitIf_stmt(PocLang.If_stmtContext ctx) {
+        if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            this.currentStmt = null;
         }
     }
 
@@ -325,7 +380,7 @@ public class VisitorListener extends PocLangBaseListener {
         }
         ParserRuleContext parentCtx = ctx.getParent();
         while (!(parentCtx instanceof PocLang.FunctionContext)) parentCtx = parentCtx.getParent();
-        PocLang.Function_sigContext functionSignature = (PocLang.Function_sigContext) ((PocLang.FunctionContext)parentCtx).children.get(0);
+        PocLang.Function_sigContext functionSignature = (PocLang.Function_sigContext) ((PocLang.FunctionContext) parentCtx).children.get(0);
         FunctionDeclaration functionDeclaration = this.table.getFunctionByIdentifier(functionSignature.IDENTIFIER().getText());
 
         if (!hasAtLeastOneReturn && this.phase == VisitorPhase.COLLECTING_FUNCTIONS && functionDeclaration.getReturnType().getType() != Type.VOID) {
@@ -338,7 +393,7 @@ public class VisitorListener extends PocLangBaseListener {
     @Override
     public void exitBody(PocLang.BodyContext ctx) {
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            this.scopeContainers.remove(this.scopeContainers.size()-1);
+            this.scopeContainers.remove(this.scopeContainers.size() - 1);
         }
     }
 
@@ -346,17 +401,73 @@ public class VisitorListener extends PocLangBaseListener {
     public void enterBody(PocLang.BodyContext ctx) {
         // function sig visitor handles the very first body's scope container
         if (this.phase == VisitorPhase.CHECKING_TYPES && !(ctx.getParent() instanceof PocLang.Function_bodyContext)) {
-            this.scopeContainers.add(new ScopeContainer());
+            Body body = new Body(this.currentStmt);
+            if (this.getTopBody().getParentStatement() instanceof IfStatement && ctx.getParent() instanceof PocLang.Optional_elseContext) {
+                ((IfStatement)this.getTopBody().getParentStatement()).setElseBody(body);
+            }
+
+            this.scopeContainers.add(new ScopeContainer(body));
         }
     }
 
     private StackEntry lookupIdentifierInScopes(String identifier) {
-        for (int i = this.scopeContainers.size()-1; i >= 0; i--) {
+        for (int i = this.scopeContainers.size() - 1; i >= 0; i--) {
             ScopeContainer scopeContainer = this.scopeContainers.get(i);
             if (scopeContainer.hasIdentifier(identifier)) {
                 return scopeContainer.getByIdentifier(identifier);
             }
         }
         return null;
+    }
+
+    private Expression getAstExpression(PocLang.ExprContext exprCtx) {
+        if (!exprCtx.expr().isEmpty()) {
+            boolean isAdd = exprCtx.ADD() != null;
+            boolean isMultiply = exprCtx.MULTIPLY() != null;
+            boolean isDivide = exprCtx.DIVIDE() != null;
+            boolean isSubtract = exprCtx.SUBTRACT() != null;
+            BinaryOperationType type = (isAdd ? BinaryOperationType.INT_ADD : (isMultiply ? BinaryOperationType.INT_MULTIPLY : (
+                    isDivide ? BinaryOperationType.INT_DIVIDE : BinaryOperationType.INT_SUBTRACT
+            )));
+
+            if (getExprType(exprCtx).getType() == Type.UNSIGNED_INTEGER) {
+                return new BinaryOperationExpression(type, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
+            } else if (getExprType(exprCtx).getType() == Type.STRING && isAdd) {
+                return new BinaryOperationExpression(BinaryOperationType.STRING_CONCAT, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
+            }
+        } else if (exprCtx.function_call() != null) {
+            PocLang.Function_callContext ctx = (PocLang.Function_callContext) exprCtx.function_call();
+            return getAstExpressionForFunctionCall(ctx);
+        } else if (exprCtx.value_ref() != null) {
+            PocLang.Value_refContext value_refContext = exprCtx.value_ref();
+            if (value_refContext.FALSE_LIT() != null || value_refContext.TRUE_LIT() != null) {
+                return new BooleanLiteral(Boolean.parseBoolean(value_refContext.getText()), inferTypeFromValue(value_refContext));
+            }
+            if (value_refContext.INT() != null) {
+                return new UIntLiteral(Long.parseLong(value_refContext.INT().getText()), inferTypeFromValue(value_refContext));
+            }
+            if (value_refContext.STRING_LITERAL() != null) {
+                String text = value_refContext.STRING_LITERAL().getText();
+                return new StringLiteral(value_refContext.STRING_LITERAL().getText().substring(1, text.length() - 1), inferTypeFromValue(value_refContext)); // ""
+            } else if (value_refContext.identifier_ref() != null) {
+                String text = value_refContext.identifier_ref().getText();
+                StackEntry entry = lookupIdentifierInScopes(text);
+                if (entry == null) {
+                    return new ErrorNode();
+                }
+                return new VariableRefExpression(text, entry);
+            }
+        }
+        throw new IllegalArgumentException("Can't handle this expression");
+    }
+
+    private FunctionCallExpression getAstExpressionForFunctionCall(PocLang.Function_callContext ctx) {
+        List<Expression> arguments = new ArrayList<>();
+        arguments.addAll(ctx.expr().stream().map(e -> getAstExpression(e)).collect(Collectors.toList()));
+        return new FunctionCallExpression(this.table.getFunctionByIdentifier(ctx.IDENTIFIER().getText()), arguments);
+    }
+    
+    private Body getTopBody() {
+        return this.scopeContainers.get(this.scopeContainers.size()-1).getEnclosingBody();
     }
 }

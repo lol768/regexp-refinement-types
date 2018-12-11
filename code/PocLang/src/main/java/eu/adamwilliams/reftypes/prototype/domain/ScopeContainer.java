@@ -1,13 +1,19 @@
 package eu.adamwilliams.reftypes.prototype.domain;
 
+import eu.adamwilliams.reftypes.prototype.ast.Body;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScopeContainer {
     private Map<String, StackEntry> identifierMap = new HashMap<String, StackEntry>();
+    private Body enclosingBody;
+    public ScopeContainer(Body body) {
+        this.enclosingBody = body;
+    }
 
-    public ScopeContainer() {
-
+    public Body getEnclosingBody() {
+        return enclosingBody;
     }
 
     public void insertIdentifier(String identifierName, StackEntry entry) {

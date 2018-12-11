@@ -1,16 +1,19 @@
-package eu.adamwilliams.reftypes.prototype.domain;
+package eu.adamwilliams.reftypes.prototype.ast;
+
+import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FunctionDeclaration {
+public class FunctionDeclaration extends Statement {
     private String identifier;
     private TypeContainer returnType;
     private LinkedHashMap<String, TypeContainer> arguments;
     private int lineNo;
     private int colNo;
+    private Body body = new Body(this);
 
     public String getIdentifier() {
         return identifier;
@@ -43,5 +46,9 @@ public class FunctionDeclaration {
         this.lineNo = lineNo;
         this.colNo = colNo;
         this.arguments = arguments;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }

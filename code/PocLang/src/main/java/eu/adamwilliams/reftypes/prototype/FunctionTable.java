@@ -1,6 +1,6 @@
 package eu.adamwilliams.reftypes.prototype;
 
-import eu.adamwilliams.reftypes.prototype.domain.FunctionDeclaration;
+import eu.adamwilliams.reftypes.prototype.ast.FunctionDeclaration;
 
 import java.util.HashMap;
 import java.util.Map;

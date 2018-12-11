@@ -37,7 +37,7 @@ public class ParsingTests {
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
         Application app = new Application();
-        Assert.assertEquals(1, app.doTypeChecks(tree).getReports().size());
+        Assert.assertTrue( app.doTypeChecks(tree).getReports().size() > 1);
     }
 
     @Test
