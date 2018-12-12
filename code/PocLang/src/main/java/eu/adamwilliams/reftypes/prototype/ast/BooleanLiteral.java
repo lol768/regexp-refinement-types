@@ -9,7 +9,7 @@ public class BooleanLiteral extends ValueExpression {
     public BooleanLiteral(boolean value, TypeContainer tc) {
         this.value = value;
         this.typeContainer = tc;
-        if (this.typeContainer.getType() != Type.STRING) {
+        if (this.typeContainer.getType() != Type.BOOLEAN) {
             throw new IllegalArgumentException("Illegal AST node, Boolean literal must be BOOLEAN");
         }
     }
