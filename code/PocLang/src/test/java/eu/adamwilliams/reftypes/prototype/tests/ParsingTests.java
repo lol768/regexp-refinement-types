@@ -2,6 +2,8 @@ package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
 import eu.adamwilliams.reftypes.prototype.ErrorReport;
+import eu.adamwilliams.reftypes.prototype.ast.FunctionDeclaration;
+import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLex;
 import org.antlr.v4.runtime.*;
@@ -149,7 +151,10 @@ public class ParsingTests {
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
         Application app = new Application();
-        Assert.assertEquals(1, app.doTypeChecks(tree).getReports().size());
+        TypeCheckResults results = app.doTypeChecks(tree);
+        Assert.assertEquals(1, results.getReports().size());
+        FunctionDeclaration lookupUserById = results.getFunctionTable().getFunctionByIdentifier("LookupUserById");
+        Assert.assertNotNull(lookupUserById);
     }
 
     @Test

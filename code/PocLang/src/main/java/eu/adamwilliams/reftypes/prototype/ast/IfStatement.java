@@ -24,6 +24,10 @@ public class IfStatement extends Statement {
         return Optional.ofNullable(bodyIfTrue);
     }
 
+    public void setBodyIfTrue(Body bodyIfTrue) {
+        this.bodyIfTrue = bodyIfTrue;
+    }
+
     public Optional<Body> getElseBody() {
         return Optional.ofNullable(elseBody);
     }
