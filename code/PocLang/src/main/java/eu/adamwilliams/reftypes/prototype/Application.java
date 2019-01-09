@@ -1,6 +1,7 @@
 package eu.adamwilliams.reftypes.prototype;
 
 import com.microsoft.z3.*;
+import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLex;
@@ -87,14 +88,14 @@ public class Application {
         }
 
 
-        ErrorReporter errorReporter = this.doTypeChecks(tree);
+        TypeCheckResults tcr = this.doTypeChecks(tree);
 
         // Print out any and all errors
-        for (ErrorReport report : errorReporter.getReports()) {
+        for (ErrorReport report : tcr.getReports()) {
             System.err.println(Ansi.ansi().fg(Ansi.Color.RED) + "L" + report.getToken().getLine() + ":" + report.getToken().getCharPositionInLine() + " " + report.getMsg());
         }
 
-        if (errorReporter.getReports().size() == 0) {
+        if (tcr.getReports().size() == 0) {
             System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN) + "No errors to report");
         }
     }
@@ -150,7 +151,7 @@ public class Application {
     }
 
 
-    public ErrorReporter doTypeChecks(ParseTree tree) {
+    public TypeCheckResults doTypeChecks(ParseTree tree) {
         ParseTreeWalker walker = new ParseTreeWalker();
 
         FunctionTable tableForProgram = new FunctionTable();
@@ -165,11 +166,10 @@ public class Application {
             // Now that our function table is populated we can check the function calls
             listener.setPhase(VisitorPhase.CHECKING_TYPES);
             walker.walk(listener, tree);
+            return listener.getResults();
         }
         // We walk the parse tree in two passes
         // In the first phase, we're simply making a note of all of the declared functions in the function table
-
-        return reporter;
     }
 
 

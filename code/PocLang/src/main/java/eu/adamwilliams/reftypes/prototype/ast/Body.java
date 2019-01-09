@@ -22,6 +22,6 @@ public class Body {
     }
 
     public List<Statement> getStatements() {
-        return new ArrayList<>(this.statements);
+        return this.statements;
     }
 }

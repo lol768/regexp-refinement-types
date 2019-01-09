@@ -39,6 +39,10 @@ public class VisitorListener extends PocLangBaseListener {
         this.regexAdapter = new RegexZ3Adapter();
     }
 
+    public TypeCheckResults getResults() {
+        return new TypeCheckResults(this.reporter, this.table);
+    }
+
     public void setPhase(VisitorPhase phase) {
         this.phase = phase;
     }
@@ -349,6 +353,7 @@ public class VisitorListener extends PocLangBaseListener {
 
 
             IfStatement ifStmt = new IfStatement(getAstExpression(ctx.expr()), null, null, null);
+            this.getTopBody().getStatements().add(ifStmt);
             if (this.getTopBody().getParentStatement() instanceof IfStatement) {
                 ((IfStatement) this.getTopBody().getParentStatement()).setElseIf(ifStmt);
             }
@@ -404,6 +409,8 @@ public class VisitorListener extends PocLangBaseListener {
             Body body = new Body(this.currentStmt);
             if (this.getTopBody().getParentStatement() instanceof IfStatement && ctx.getParent() instanceof PocLang.Optional_elseContext) {
                 ((IfStatement)this.getTopBody().getParentStatement()).setElseBody(body);
+            } else if (this.currentStmt instanceof IfStatement) {
+                ((IfStatement)currentStmt).setBodyIfTrue(body);
             }
 
             this.scopeContainers.add(new ScopeContainer(body));
