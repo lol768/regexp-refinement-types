@@ -2,11 +2,9 @@ package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
 import eu.adamwilliams.reftypes.prototype.ErrorReport;
-import eu.adamwilliams.reftypes.prototype.ast.BinaryOperationExpression;
-import eu.adamwilliams.reftypes.prototype.ast.BinaryOperationType;
-import eu.adamwilliams.reftypes.prototype.ast.StringLiteral;
-import eu.adamwilliams.reftypes.prototype.ast.UIntLiteral;
+import eu.adamwilliams.reftypes.prototype.ast.*;
 import eu.adamwilliams.reftypes.prototype.domain.Type;
+import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLex;
@@ -77,6 +75,40 @@ public class AstTests {
                 new UIntLiteral(3, new TypeContainer(Type.UNSIGNED_INTEGER, null))
         );
         Assert.assertEquals(21L, (long) ((Long) binOpEx.evaluate()));
+    }
+
+    @Test
+    public void testBasicAstConstruction() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+                "    return\n" +
+                "}";
+
+        ParseTree tree = ParsingTests.getParseTree(basicProgram);
+        Application app = new Application();
+        TypeCheckResults results = app.doTypeChecks(tree);
+        // I miss shouldly :(
+
+        Assert.assertTrue("Function table is populated properly", results.getFunctionTable().hasFunction("LookupUserById"));
+        Assert.assertEquals("Number of arguments is correct", 1, results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getArguments().size());
+        Assert.assertEquals("Number of body statements is correct", 1, results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getBody().getStatements().size());
+        Assert.assertTrue("Body statement type is correct", results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getBody().getStatements().get(0) instanceof ReturnStatement);
+    }
+
+    @Test
+    public void testNestedIfAst() {
+        String program = "function FetchString(): string[/.+/] {\n" +
+                "    if (true) {\n" +
+                "        if (false) {\n" +
+                "            return \"foo\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+        ParseTree tree = ParsingTests.getParseTree(program);
+        Application app = new Application();
+        TypeCheckResults results = app.doTypeChecks(tree);
+        Body body = results.getFunctionTable().getFunctionByIdentifier("FetchString").getBody();
+        Assert.assertTrue("If statement for first statement of body", body.getStatements().get(0) instanceof IfStatement);
+
     }
 
 }
