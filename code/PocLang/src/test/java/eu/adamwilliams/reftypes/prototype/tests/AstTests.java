@@ -2,11 +2,9 @@ package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
 import eu.adamwilliams.reftypes.prototype.ErrorReport;
-import eu.adamwilliams.reftypes.prototype.ast.BinaryOperationExpression;
-import eu.adamwilliams.reftypes.prototype.ast.BinaryOperationType;
-import eu.adamwilliams.reftypes.prototype.ast.StringLiteral;
-import eu.adamwilliams.reftypes.prototype.ast.UIntLiteral;
+import eu.adamwilliams.reftypes.prototype.ast.*;
 import eu.adamwilliams.reftypes.prototype.domain.Type;
+import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
 import eu.adamwilliams.reftypes.prototype.parser.PocLex;
@@ -77,6 +75,52 @@ public class AstTests {
                 new UIntLiteral(3, new TypeContainer(Type.UNSIGNED_INTEGER, null))
         );
         Assert.assertEquals(21L, (long) ((Long) binOpEx.evaluate()));
+    }
+
+    @Test
+    public void testEvaluateReturn() {
+        String moreAdvancedProgram = "function Test(id: uint[> 1]): uint {\n" +
+                "    return 1+1\n" +
+                "}";
+
+        ParseTree tree = getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Test");
+
+        ReturnStatement returnStmt = (ReturnStatement) function.getBody().getStatements().get(0);
+        Assert.assertTrue(returnStmt.getValue().isPresent());
+        long result = (long) returnStmt.getValue().get().evaluate();
+        Assert.assertEquals(2, result);
+    }
+
+    private ParseTree getParseTree(String basicProgram) {
+        PocLex lexer = new PocLex(CharStreams.fromString(basicProgram));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        PocLang parser = new PocLang(tokens);
+
+        parser.addErrorListener(new ANTLRErrorListener() {
+            @Override
+            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                Assert.fail(msg);
+            }
+
+            @Override
+            public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
+
+            }
+
+            @Override
+            public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
+
+            }
+
+            @Override
+            public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
+
+            }
+        });
+        return parser.program();
     }
 
 }

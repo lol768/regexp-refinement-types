@@ -165,7 +165,8 @@ public class ParsingTests {
 
         ParseTree tree = getParseTree(basicProgram);
         Application app = new Application();
-        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+        TypeCheckResults result = app.doTypeChecks(tree);
+        Assert.assertEquals(0, result.getReports().size());
     }
 
     @Test
