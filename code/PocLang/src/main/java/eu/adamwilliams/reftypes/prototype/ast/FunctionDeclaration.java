@@ -51,4 +51,9 @@ public class FunctionDeclaration extends Statement {
     public Body getBody() {
         return body;
     }
+
+    @Override
+    public void execute() {
+        // no-op
+    }
 }

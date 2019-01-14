@@ -1,7 +1,5 @@
 package eu.adamwilliams.reftypes.prototype.ast;
 
-import java.util.List;
-
 public class FunctionCallStatement extends Statement {
     private FunctionCallExpression expr;
 
@@ -11,5 +9,10 @@ public class FunctionCallStatement extends Statement {
 
     public FunctionCallExpression getExpr() {
         return expr;
+    }
+
+    @Override
+    public void execute() {
+        expr.evaluate();
     }
 }

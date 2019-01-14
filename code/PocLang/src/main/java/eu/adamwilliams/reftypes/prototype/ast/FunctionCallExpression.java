@@ -22,6 +22,9 @@ public class FunctionCallExpression extends Expression {
 
     @Override
     public Object evaluate() {
+        Body calleeBody = callee.getBody();
+        List<Statement> statements = calleeBody.getStatements();
+
         return null;
     }
 }

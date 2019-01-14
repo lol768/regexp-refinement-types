@@ -1,0 +1,7 @@
+function Call(): void {
+    var a: uint
+}
+
+function NoReturn(): uint {
+    Call()
+}

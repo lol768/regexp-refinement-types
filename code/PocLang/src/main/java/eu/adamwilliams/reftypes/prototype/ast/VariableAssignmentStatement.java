@@ -16,4 +16,9 @@ public class VariableAssignmentStatement extends Statement {
     public Expression getNewValue() {
         return newValue;
     }
+
+    @Override
+    public void execute() {
+        this.entry.setCurrentValue(this.newValue.evaluate());
+    }
 }

@@ -27,7 +27,8 @@ public class ParsingTests {
         ParseTree tree = getParseTree(basicProgram);
         Assert.assertTrue(tree.getText().contains("LookupUserById"));
         Application app = new Application();
-        Assert.assertEquals(0, app.doTypeChecks(tree).getReports().size());
+        TypeCheckResults results = app.doTypeChecks(tree);
+        Assert.assertEquals(0, results.getReports().size());
     }
 
     @Test
@@ -311,7 +312,7 @@ public class ParsingTests {
         Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Attempt to apply int constraint to string type"))));
     }
 
-    private ParseTree getParseTree(String basicProgram) {
+    public static ParseTree getParseTree(String basicProgram) {
         PocLex lexer = new PocLex(CharStreams.fromString(basicProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PocLang parser = new PocLang(tokens);

@@ -199,8 +199,9 @@ public class VisitorListener extends PocLangBaseListener {
                         "Declaration of '" + id + "' would shadow existing variable in scope"
                 ));
             }
-            this.scopeContainers.get(this.scopeContainers.size() - 1).insertIdentifier(id, new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL));
-            this.currentFunction.getBody().getStatements().add(new VariableDeclarationStatement(id));
+            StackEntry entry = new StackEntry(mapTypeFromParsed(ctx.type_specifier()), StackEntryType.LOCAL);
+            this.scopeContainers.get(this.scopeContainers.size() - 1).insertIdentifier(id, entry);
+            this.currentFunction.getBody().getStatements().add(new VariableDeclarationStatement(id, entry));
         }
     }
 
@@ -443,7 +444,7 @@ public class VisitorListener extends PocLangBaseListener {
                 return new BinaryOperationExpression(BinaryOperationType.STRING_CONCAT, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
             }
         } else if (exprCtx.function_call() != null) {
-            PocLang.Function_callContext ctx = (PocLang.Function_callContext) exprCtx.function_call();
+            PocLang.Function_callContext ctx = exprCtx.function_call();
             return getAstExpressionForFunctionCall(ctx);
         } else if (exprCtx.value_ref() != null) {
             PocLang.Value_refContext value_refContext = exprCtx.value_ref();

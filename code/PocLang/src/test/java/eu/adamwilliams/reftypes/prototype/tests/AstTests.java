@@ -1,25 +1,15 @@
 package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
-import eu.adamwilliams.reftypes.prototype.ErrorReport;
 import eu.adamwilliams.reftypes.prototype.ast.*;
 import eu.adamwilliams.reftypes.prototype.domain.Type;
 import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
-import eu.adamwilliams.reftypes.prototype.parser.PocLang;
-import eu.adamwilliams.reftypes.prototype.parser.PocLex;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.BitSet;
-import java.util.List;
-
 public class AstTests {
-
     @Test
     public void testMath() {
         BinaryOperationExpression binOpAdd = new BinaryOperationExpression(
@@ -78,12 +68,46 @@ public class AstTests {
     }
 
     @Test
+    public void testBasicAstConstruction() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): void {\n" +
+                "    return\n" +
+                "}";
+
+        ParseTree tree = ParsingTests.getParseTree(basicProgram);
+        Application app = new Application();
+        TypeCheckResults results = app.doTypeChecks(tree);
+        // I miss shouldly :(
+
+        Assert.assertTrue("Function table is populated properly", results.getFunctionTable().hasFunction("LookupUserById"));
+        Assert.assertEquals("Number of arguments is correct", 1, results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getArguments().size());
+        Assert.assertEquals("Number of body statements is correct", 1, results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getBody().getStatements().size());
+        Assert.assertTrue("Body statement type is correct", results.getFunctionTable().getFunctionByIdentifier("LookupUserById").getBody().getStatements().get(0) instanceof ReturnStatement);
+    }
+
+    @Test
+    public void testNestedIfAst() {
+        String program = "function FetchString(): string[/.+/] {\n" +
+                "    if (true) {\n" +
+                "        if (false) {\n" +
+                "            return \"foo\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+        ParseTree tree = ParsingTests.getParseTree(program);
+        Application app = new Application();
+        TypeCheckResults results = app.doTypeChecks(tree);
+        Body body = results.getFunctionTable().getFunctionByIdentifier("FetchString").getBody();
+        Assert.assertTrue("If statement for first statement of body", body.getStatements().get(0) instanceof IfStatement);
+
+    }
+
+    @Test
     public void testEvaluateReturn() {
         String moreAdvancedProgram = "function Test(id: uint[> 1]): uint {\n" +
                 "    return 1+1\n" +
                 "}";
 
-        ParseTree tree = getParseTree(moreAdvancedProgram);
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
         Application app = new Application();
         TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
         FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Test");
@@ -94,33 +118,27 @@ public class AstTests {
         Assert.assertEquals(2, result);
     }
 
-    private ParseTree getParseTree(String basicProgram) {
-        PocLex lexer = new PocLex(CharStreams.fromString(basicProgram));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        PocLang parser = new PocLang(tokens);
+    @Test
+    public void testVariableAssignment() {
+        String moreAdvancedProgram = "function Test(id: uint[> 1]): uint {\n" +
+                "    var a: uint\n" +
+                "    a=4+1\n" +
+                "    return a\n" +
+                "}";
 
-        parser.addErrorListener(new ANTLRErrorListener() {
-            @Override
-            public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                Assert.fail(msg);
-            }
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Test");
 
-            @Override
-            public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
+        VariableAssignmentStatement assignStmt = (VariableAssignmentStatement) function.getBody().getStatements().get(1);
+        assignStmt.execute();
+        ReturnStatement returnStmt = (ReturnStatement) function.getBody().getStatements().get(2);
 
-            }
-
-            @Override
-            public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
-
-            }
-
-            @Override
-            public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
-
-            }
-        });
-        return parser.program();
+        Assert.assertTrue(returnStmt.getValue().isPresent());
+        long result = (long) returnStmt.getValue().get().evaluate();
+        Assert.assertEquals(5, result);
     }
-
 }
+
+// End of term 2, start of Easter break

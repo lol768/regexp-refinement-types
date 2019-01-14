@@ -12,4 +12,9 @@ public class ReturnStatement extends Statement {
     public Optional<Expression> getValue() {
         return Optional.ofNullable(value);
     }
+
+    @Override
+    public void execute() {
+        // TODO
+    }
 }

@@ -23,6 +23,6 @@ public class VariableRefExpression extends Expression {
 
     @Override
     public Object evaluate() {
-        return null;
+        return this.entry.getCurrentValue();
     }
 }
