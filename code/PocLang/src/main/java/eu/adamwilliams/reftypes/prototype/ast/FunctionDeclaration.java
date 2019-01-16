@@ -1,11 +1,9 @@
 package eu.adamwilliams.reftypes.prototype.ast;
 
+import eu.adamwilliams.reftypes.prototype.domain.StackEntry;
 import eu.adamwilliams.reftypes.prototype.domain.TypeContainer;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FunctionDeclaration extends Statement {
     private String identifier;
@@ -14,6 +12,7 @@ public class FunctionDeclaration extends Statement {
     private int lineNo;
     private int colNo;
     private Body body = new Body(this);
+    private List<StackEntry> argumentEntries = new ArrayList<>();
 
     public String getIdentifier() {
         return identifier;
@@ -53,7 +52,11 @@ public class FunctionDeclaration extends Statement {
     }
 
     @Override
-    public void execute() {
-        // no-op
+    public Optional<Expression> execute() {
+        return Optional.empty();
+    }
+
+    public List<StackEntry> getArgumentEntries() {
+        return argumentEntries;
     }
 }

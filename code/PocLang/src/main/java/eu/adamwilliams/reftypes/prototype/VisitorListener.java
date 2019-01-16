@@ -79,8 +79,11 @@ public class VisitorListener extends PocLangBaseListener {
             ScopeContainer sc = new ScopeContainer(this.currentFunction.getBody());
 
             for (Map.Entry<String, TypeContainer> entry : arguments.entrySet()) {
-                sc.insertIdentifier(entry.getKey(), new StackEntry(entry.getValue(), StackEntryType.ARGUMENT));
+                StackEntry stackEntry = new StackEntry(entry.getValue(), StackEntryType.ARGUMENT);
+                sc.insertIdentifier(entry.getKey(), stackEntry);
+                this.currentFunction.getArgumentEntries().add(stackEntry);
             }
+
             this.scopeContainers.add(sc);
         }
     }

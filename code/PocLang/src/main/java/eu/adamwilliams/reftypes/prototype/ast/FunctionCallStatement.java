@@ -1,5 +1,7 @@
 package eu.adamwilliams.reftypes.prototype.ast;
 
+import java.util.Optional;
+
 public class FunctionCallStatement extends Statement {
     private FunctionCallExpression expr;
 
@@ -12,7 +14,9 @@ public class FunctionCallStatement extends Statement {
     }
 
     @Override
-    public void execute() {
-        expr.evaluate();
+    public Optional<Expression> execute() {
+        // TODO: set up args
+        BodyEvaluator.evaluateBody(this.getExpr().getCallee().getBody());
+        return Optional.empty();
     }
 }

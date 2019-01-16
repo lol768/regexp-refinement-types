@@ -2,6 +2,8 @@ package eu.adamwilliams.reftypes.prototype.ast;
 
 import eu.adamwilliams.reftypes.prototype.domain.StackEntry;
 
+import java.util.Optional;
+
 public class VariableDeclarationStatement extends Statement {
     private String identifier;
     private StackEntry stackEntry;
@@ -20,7 +22,7 @@ public class VariableDeclarationStatement extends Statement {
     }
 
     @Override
-    public void execute() {
-        // no-op
+    public Optional<Expression> execute() {
+        return Optional.empty();
     }
 }

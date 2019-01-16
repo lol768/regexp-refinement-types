@@ -9,6 +9,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Optional;
+
 public class AstTests {
     @Test
     public void testMath() {
@@ -138,6 +140,63 @@ public class AstTests {
         Assert.assertTrue(returnStmt.getValue().isPresent());
         long result = (long) returnStmt.getValue().get().evaluate();
         Assert.assertEquals(5, result);
+    }
+
+    @Test
+    public void testEvaluate() {
+        String moreAdvancedProgram = "function Main(): uint {\n" +
+                "    var a: uint\n" +
+                "    a=4+1\n" +
+                "    return a\n" +
+                "}";
+
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Main");
+        Optional<Expression> result = BodyEvaluator.evaluateBody(function.getBody());
+
+        Assert.assertEquals(5L, result.get().evaluate());
+    }
+
+    @Test
+    public void testEvaluateWithFunctionCall() {
+        String moreAdvancedProgram = "function Main(): uint {\n" +
+                "    return Secondary()\n" +
+                "}\n\n" +
+                "function Secondary(): uint {\n" +
+                "    var a: uint\n" +
+                "    a=7-1\n" +
+                "    return a\n" +
+                "}\n\n";
+
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Main");
+        Optional<Expression> result = BodyEvaluator.evaluateBody(function.getBody());
+
+        Assert.assertEquals(6L, result.get().evaluate());
+    }
+
+    @Test
+    public void testEvaluateWithFunctionCallAndArgument() {
+        String moreAdvancedProgram = "function Main(): uint {\n" +
+                "    return Secondary(5)\n" +
+                "}\n\n" +
+                "function Secondary(b: uint): uint {\n" +
+                "    var a: uint\n" +
+                "    a=7-b\n" +
+                "    return a\n" +
+                "}\n\n";
+
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Main");
+        Optional<Expression> result = BodyEvaluator.evaluateBody(function.getBody());
+
+        Assert.assertEquals(2L, result.get().evaluate());
     }
 }
 

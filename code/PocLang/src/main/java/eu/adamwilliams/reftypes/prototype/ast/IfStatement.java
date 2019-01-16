@@ -45,8 +45,16 @@ public class IfStatement extends Statement {
     }
 
     @Override
-    public void execute() {
-        // TODO
+    public Optional<Expression> execute() {
+        boolean expr = (boolean) this.condition.evaluate();
+        if (expr) {
+            return BodyEvaluator.evaluateBody(this.bodyIfTrue);
+        } else if (elseBody != null) {
+            return BodyEvaluator.evaluateBody(this.elseBody);
+        } else if (elseIf != null) {
+            return elseIf.execute();
+        }
+        throw new IllegalArgumentException("Illegal if");
     }
 }
 

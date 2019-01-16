@@ -2,6 +2,8 @@ package eu.adamwilliams.reftypes.prototype.ast;
 
 import eu.adamwilliams.reftypes.prototype.domain.StackEntry;
 
+import java.util.Optional;
+
 public class VariableAssignmentStatement extends Statement {
     private Expression newValue;
     private String variableRef;
@@ -18,7 +20,8 @@ public class VariableAssignmentStatement extends Statement {
     }
 
     @Override
-    public void execute() {
+    public Optional<Expression> execute() {
         this.entry.setCurrentValue(this.newValue.evaluate());
+        return Optional.empty();
     }
 }

@@ -22,9 +22,10 @@ public class FunctionCallExpression extends Expression {
 
     @Override
     public Object evaluate() {
+        for (int i = 0; i < this.arguments.size(); i++) {
+            callee.getArgumentEntries().get(i).setCurrentValue(this.arguments.get(i).evaluate());
+        }
         Body calleeBody = callee.getBody();
-        List<Statement> statements = calleeBody.getStatements();
-
-        return null;
+        return BodyEvaluator.evaluateBody(calleeBody).get().evaluate();
     }
 }
