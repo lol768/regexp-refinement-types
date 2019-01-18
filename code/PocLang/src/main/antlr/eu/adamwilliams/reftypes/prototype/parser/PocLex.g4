@@ -21,6 +21,11 @@ BOOL_T         : 'bool' ;
 VOID_T         : 'void' ;
 TRUE_LIT       : 'true' ;
 FALSE_LIT      : 'false' ;
+GT_CONDITION: '>' ;
+GE_CONDITION: '>=' ;
+LT_CONDITION: '<' ;
+LE_CONDITION: '<=' ;
+EQ_CONDITION: '==' ;
 EQ_ASSIGNMENT: '=' ;
 
 

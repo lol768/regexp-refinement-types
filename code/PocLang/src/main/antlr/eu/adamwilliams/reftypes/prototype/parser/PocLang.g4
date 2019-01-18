@@ -30,6 +30,7 @@ program           : (function NEWLINE*)+ EOF;
 expr              : expr (MULTIPLY|DIVIDE) expr
                     |	expr (ADD|SUBTRACT) expr
                     | value_ref
+                    |   expr SPACE (LT_CONDITION|GT_CONDITION|LE_CONDITION|GE_CONDITION|EQ_CONDITION) SPACE expr
                     | function_call
                     |	BEGIN_GROUP expr END_GROUP ;
 var_assignment    : IDENTIFIER WS? EQ_ASSIGNMENT expr ;

@@ -72,6 +72,7 @@ func main() {
 	doc.Call("querySelector", "#loading").Set("innerHTML", "")
 	changeEvent := js.NewCallback(func(args []js.Value) {
 		highlight(doc.Call("getElementById", "input").Get("value").String(), doc)
+		doc.Call("getElementById", "execute").Get("classList").Call("add", "disabled")
 	})
 	doc.Call("getElementById", "input").Call("addEventListener", "keyup", changeEvent)
 	highlight(doc.Call("getElementById", "input").Get("value").String(), doc)

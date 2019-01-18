@@ -1,6 +1,8 @@
 package eu.adamwilliams.reftypes.prototype;
 
 import com.microsoft.z3.*;
+import eu.adamwilliams.reftypes.prototype.ast.BodyEvaluator;
+import eu.adamwilliams.reftypes.prototype.ast.Expression;
 import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
 import eu.adamwilliams.reftypes.prototype.domain.VisitorPhase;
 import eu.adamwilliams.reftypes.prototype.parser.PocLang;
@@ -18,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
@@ -65,7 +68,36 @@ public class Application {
                         res.status(400);
                         return "Syntactically invalid";
                     }
-                    return doTypeChecks(parser.program());
+                    return doTypeChecks(parser.program()).getReports();
+
+                }, new JsonTransformer()
+        );
+
+        post("/evaluate", (req, res) -> {
+                    res.header("Access-Control-Allow-Origin", "*");
+                    CommonTokenStream tokens = new CommonTokenStream(new PocLex(CharStreams.fromString(req.body())));
+                    PocLang parser = new PocLang(tokens);
+                    if (parser.getNumberOfSyntaxErrors() > 0) {
+                        res.status(400);
+                        return "Syntactically invalid.";
+                    }
+                    TypeCheckResults results = doTypeChecks(parser.program());
+                    if (!results.getReports().isEmpty()) {
+                        res.status(400);
+                        return "Type check failed, use /check endpoint.";
+                    }
+
+                    if (!results.getFunctionTable().hasFunction("Main")) {
+                        res.status(400);
+                        return "Need a Main function to execute.";
+                    }
+
+                    Optional<Expression> mainEvalResult = BodyEvaluator.evaluateBody(results.getFunctionTable().getFunctionByIdentifier("Main").getBody());
+                    if (mainEvalResult.isPresent()) {
+                        return mainEvalResult.get().evaluate();
+                    } else {
+                        return "Void method";
+                    }
 
                 }, new JsonTransformer()
         );

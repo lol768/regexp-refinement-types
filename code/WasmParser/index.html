@@ -25,7 +25,7 @@
             color: #333;
         }
 
-        .FUNCTION, .RETURN, .IF, .ELSE, .VAR {
+        .FUNCTION, .RETURN, .IF, .ELSE {
             color: green;
             font-weight: bold;
         }
@@ -76,9 +76,11 @@
             background-color: bisque;
             text-decoration: dotted underline red;
         }
+
         .errored {
             position: relative;
         }
+
         .errored:before {
             font-family: 'Font Awesome 5 Pro';
             content: "\F071   ";
@@ -119,16 +121,16 @@
                 document.querySelector(".l" + report.lineNo).setAttribute("title", null);
             }
 
-            if (data.reports.length === 0) {
+            if (data.length === 0) {
                 document.querySelector(".tc-no-issues").classList.remove("hide");
                 document.querySelector(".tc-issues").classList.add("hide");
             } else {
-                var len = data.reports.length;
+                var len = data.length;
                 document.querySelector(".tc-issues").classList.remove("hide");
                 document.querySelector(".tc-no-issues").classList.add("hide");
                 document.querySelector("#tc-num-issues").textContent = len + (len === 1 ? " issue" : " issues");
                 document.querySelector("#tc-issue-list").innerHTML = "";
-                for (var report of data.reports) {
+                for (var report of data) {
                     var el = document.createElement("li");
                     el.textContent = "L" + report.lineNo + ":" + report.colNo + " " + report.msg;
                     document.querySelector("#tc-issue-list").appendChild(el);
@@ -146,13 +148,43 @@
                 document.querySelector(".type-checking-icon").classList.add("hide");
                 document.querySelector(".type-checking-loader").classList.remove("hide");
                 document.querySelector("#do-type-checks").classList.add("disabled");
-                fetch("http://localhost:4567/check", {"method": "POST", "body": document.querySelector("#input").value}).then(r => r.json()).then(data => {
+                fetch("http://localhost:4567/check", {
+                    "method": "POST",
+                    "body": document.querySelector("#input").value
+                }).then(r => r.json()).then(data => {
                     renderReport(data);
+                    if (data.length === 0) {
+                        document.querySelector("#execute").classList.remove("disabled");
+                    }
                     document.querySelector(".type-checking-icon").classList.remove("hide");
                     document.querySelector(".type-checking-loader").classList.add("hide");
                     document.querySelector("#do-type-checks").classList.remove("disabled");
+                    document.querySelector("#evalwrap").classList.add("hide");
+                });
+            });
+
+            document.querySelector("#execute").addEventListener("click", (e) => {
+                e.preventDefault();
+                if (document.querySelector("#execute").classList.contains("disabled")) {
+                    return;
+                }
+
+                document.querySelector(".executing-icon").classList.add("hide");
+                document.querySelector(".executing-loader").classList.remove("hide");
+                document.querySelector("#execute").classList.add("disabled");
+
+                fetch("http://localhost:4567/evaluate", {
+                    "method": "POST",
+                    "body": document.querySelector("#input").value
+                }).then(r => r.json()).then(data => {
+                    document.querySelector("#evalwrap").classList.remove("hide");
+                    document.querySelector("#evaloutput").textContent = data;
+                    document.querySelector(".executing-icon").classList.remove("hide");
+                    document.querySelector(".executing-loader").classList.add("hide");
+                    document.querySelector("#do-type-checks").classList.remove("disabled");
 
                 });
+
             });
         });
     </script>
@@ -201,22 +233,24 @@
 
         <!-- Docs master nav -->
         <div class="id7-navigation">
-                <nav class="navbar navbar-primary hidden-xs" role="navigation">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="">PoC Lang</a></li>
-                        <li><a href="#">Design</a></li>
-                        <li><a href="#">Code</a></li>
-                    </ul>
-                </nav>
-            </div>
+            <nav class="navbar navbar-primary hidden-xs" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="">PoC Lang</a></li>
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Code</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <!-- Page content of course! -->
     <main class="id7-main-content-area" id="main">
         <header class="id7-main-content-header">
             <div class="id7-horizontal-divider">
-                <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" version="1.1" width="1130" height="40" viewBox="0, 0, 1130, 40">
-                    <path d="m 0,0.5 1030.48, 0 22.8,39.5 16.96,-31.4 16.96,31.4 22.8,-39.5 20,0" stroke="#383838" fill="none" class="divider"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" version="1.1" width="1130" height="40"
+                     viewBox="0, 0, 1130, 40">
+                    <path d="m 0,0.5 1030.48, 0 22.8,39.5 16.96,-31.4 16.96,31.4 22.8,-39.5 20,0" stroke="#383838"
+                          fill="none" class="divider"></path>
                 </svg>
             </div>
 
@@ -234,37 +268,47 @@
                 checker. If
                 successful, the &ldquo;Execute&rdquo; button will be enabled for use.</p>
 
-            <div class="alert alert-info tc-no-issues hide"><i class="far fa-check"></i> The type check finished successfully, finding no issues.</div>
+            <div class="alert alert-info tc-no-issues hide"><i class="far fa-check"></i> The type check finished
+                successfully, finding no issues.
+            </div>
 
-            <div class="alert alert-warning tc-issues hide"><i class="far fa-exclamation-triangle"></i> The type check finished, but found <strong><span id="tc-num-issues"></span></strong>:
-            <ul id="tc-issue-list">
+            <div class="alert alert-warning tc-issues hide"><i class="far fa-exclamation-triangle"></i> The type check
+                finished, but found <strong><span id="tc-num-issues"></span></strong>:
+                <ul id="tc-issue-list">
 
-            </ul>
+                </ul>
             </div>
 
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Input</h2>
-<textarea id="input">
-function Foo(): string[/[A-Z]+/] {
-    // return string
-    if (true) {
-        return "AAA"
-    }
-    return "BBB"
+                    <textarea id="input">
+function Main(): string[/[A-Za-z ]+/] {
+    return "Hello world"
 }</textarea>
                 </div>
                 <div class="col-sm-6">
-                    <h2>Output <small><span class="label label-warning hide pull-right" id="syntax-error" data-toggle="popover" title="Last syntax error" data-content="And here's some amazing content. It's very engaging. Right?"><i class="far fa-bell"></i> Syntactically invalid</span></small></h2>
+                    <h2>Output
+                        <small><span class="label label-warning hide pull-right" id="syntax-error" data-toggle="popover"
+                                     title="Last syntax error"
+                                     data-content="And here's some amazing content. It's very engaging. Right?"><i
+                                        class="far fa-bell"></i> Syntactically invalid</span></small>
+                    </h2>
                     <div id="output">
                         <h3 id="loading">Loading...</h3></div>
+                    <p></p>
+                    <div id="evalwrap" class="hide"><div class="alert alert-success"><i class="far fa-terminal"></i> <strong>Evaluation result</strong><br /><samp id="evaloutput"></samp></div></div>
 
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="#" class="btn btn-default" id="do-type-checks"><i class="far fa-search type-checking-icon"></i> <i class="far fa-spin fa-spinner-third type-checking-loader hide"></i> Perform type checks</a>
-                    <a href="#" class="btn btn-default disabled"><i class="far fa-cogs"></i> Execute</a>
+                    <a href="#" class="btn btn-default" id="do-type-checks"><i
+                                class="far fa-search type-checking-icon"></i> <i
+                                class="far fa-spin fa-spinner-third type-checking-loader hide"></i> Perform type checks</a>
+                    <a href="#" class="btn btn-default disabled" id="execute"><i
+                                class="far fa-cogs executing-icon"></i> <i
+                                class="far fa-spin fa-spinner-third executing-loader hide"></i> Execute</a>
 
                 </div>
                 <div class="col-sm-6">

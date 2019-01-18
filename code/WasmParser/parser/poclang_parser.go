@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 57, 339,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 62, 344,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -39,129 +39,132 @@ var parserATN = []uint16{
 	14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 15, 3, 15, 3, 15, 3, 15, 3, 16, 3, 16,
 	7, 16, 212, 10, 16, 12, 16, 14, 16, 215, 11, 16, 6, 16, 217, 10, 16, 13,
 	16, 14, 16, 218, 3, 16, 3, 16, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17,
-	3, 17, 5, 17, 230, 10, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 7,
-	17, 238, 10, 17, 12, 17, 14, 17, 241, 11, 17, 3, 18, 3, 18, 5, 18, 245,
-	10, 18, 3, 18, 3, 18, 3, 18, 3, 19, 3, 19, 3, 19, 3, 19, 3, 19, 5, 19,
-	255, 10, 19, 3, 20, 3, 20, 3, 21, 3, 21, 3, 21, 3, 21, 3, 21, 7, 21, 264,
-	10, 21, 12, 21, 14, 21, 267, 11, 21, 5, 21, 269, 10, 21, 3, 21, 3, 21,
-	3, 22, 3, 22, 3, 22, 3, 23, 3, 23, 3, 23, 5, 23, 279, 10, 23, 3, 24, 3,
-	24, 3, 24, 3, 25, 3, 25, 5, 25, 286, 10, 25, 3, 26, 3, 26, 3, 26, 5, 26,
-	291, 10, 26, 3, 27, 3, 27, 3, 27, 3, 28, 3, 28, 3, 28, 3, 29, 3, 29, 3,
-	29, 3, 29, 5, 29, 303, 10, 29, 3, 30, 3, 30, 3, 30, 3, 30, 3, 31, 3, 31,
-	5, 31, 311, 10, 31, 3, 32, 3, 32, 3, 32, 3, 32, 3, 33, 3, 33, 3, 33, 3,
-	33, 3, 33, 3, 34, 3, 34, 3, 35, 3, 35, 3, 36, 3, 36, 3, 36, 3, 36, 5, 36,
-	330, 10, 36, 3, 37, 3, 37, 3, 37, 3, 37, 3, 37, 5, 37, 337, 10, 37, 3,
-	37, 2, 3, 32, 38, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30,
-	32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66,
-	68, 70, 72, 2, 5, 4, 2, 4, 4, 7, 7, 3, 2, 5, 6, 4, 2, 35, 35, 38, 38, 2,
-	348, 2, 91, 3, 2, 2, 2, 4, 94, 3, 2, 2, 2, 6, 101, 3, 2, 2, 2, 8, 103,
-	3, 2, 2, 2, 10, 108, 3, 2, 2, 2, 12, 133, 3, 2, 2, 2, 14, 135, 3, 2, 2,
-	2, 16, 146, 3, 2, 2, 2, 18, 159, 3, 2, 2, 2, 20, 173, 3, 2, 2, 2, 22, 175,
-	3, 2, 2, 2, 24, 179, 3, 2, 2, 2, 26, 200, 3, 2, 2, 2, 28, 205, 3, 2, 2,
-	2, 30, 216, 3, 2, 2, 2, 32, 229, 3, 2, 2, 2, 34, 242, 3, 2, 2, 2, 36, 254,
-	3, 2, 2, 2, 38, 256, 3, 2, 2, 2, 40, 258, 3, 2, 2, 2, 42, 272, 3, 2, 2,
-	2, 44, 278, 3, 2, 2, 2, 46, 280, 3, 2, 2, 2, 48, 285, 3, 2, 2, 2, 50, 290,
-	3, 2, 2, 2, 52, 292, 3, 2, 2, 2, 54, 295, 3, 2, 2, 2, 56, 302, 3, 2, 2,
-	2, 58, 304, 3, 2, 2, 2, 60, 310, 3, 2, 2, 2, 62, 312, 3, 2, 2, 2, 64, 316,
-	3, 2, 2, 2, 66, 321, 3, 2, 2, 2, 68, 323, 3, 2, 2, 2, 70, 329, 3, 2, 2,
-	2, 72, 336, 3, 2, 2, 2, 74, 76, 7, 28, 2, 2, 75, 74, 3, 2, 2, 2, 75, 76,
-	3, 2, 2, 2, 76, 78, 3, 2, 2, 2, 77, 79, 5, 6, 4, 2, 78, 77, 3, 2, 2, 2,
-	78, 79, 3, 2, 2, 2, 79, 81, 3, 2, 2, 2, 80, 82, 7, 28, 2, 2, 81, 80, 3,
-	2, 2, 2, 81, 82, 3, 2, 2, 2, 82, 83, 3, 2, 2, 2, 83, 90, 7, 30, 2, 2, 84,
-	86, 7, 28, 2, 2, 85, 84, 3, 2, 2, 2, 85, 86, 3, 2, 2, 2, 86, 87, 3, 2,
-	2, 2, 87, 88, 7, 29, 2, 2, 88, 90, 7, 30, 2, 2, 89, 75, 3, 2, 2, 2, 89,
-	85, 3, 2, 2, 2, 90, 93, 3, 2, 2, 2, 91, 89, 3, 2, 2, 2, 91, 92, 3, 2, 2,
-	2, 92, 3, 3, 2, 2, 2, 93, 91, 3, 2, 2, 2, 94, 95, 5, 2, 2, 2, 95, 5, 3,
-	2, 2, 2, 96, 102, 5, 34, 18, 2, 97, 102, 5, 8, 5, 2, 98, 102, 5, 14, 8,
-	2, 99, 102, 5, 40, 21, 2, 100, 102, 5, 10, 6, 2, 101, 96, 3, 2, 2, 2, 101,
-	97, 3, 2, 2, 2, 101, 98, 3, 2, 2, 2, 101, 99, 3, 2, 2, 2, 101, 100, 3,
-	2, 2, 2, 102, 7, 3, 2, 2, 2, 103, 106, 7, 8, 2, 2, 104, 105, 7, 14, 2,
-	2, 105, 107, 5, 32, 17, 2, 106, 104, 3, 2, 2, 2, 106, 107, 3, 2, 2, 2,
-	107, 9, 3, 2, 2, 2, 108, 109, 7, 11, 2, 2, 109, 110, 7, 14, 2, 2, 110,
-	111, 7, 23, 2, 2, 111, 112, 5, 32, 17, 2, 112, 113, 7, 24, 2, 2, 113, 114,
-	7, 14, 2, 2, 114, 115, 7, 25, 2, 2, 115, 116, 7, 30, 2, 2, 116, 117, 5,
-	2, 2, 2, 117, 118, 7, 26, 2, 2, 118, 119, 5, 12, 7, 2, 119, 11, 3, 2, 2,
-	2, 120, 121, 7, 14, 2, 2, 121, 122, 7, 12, 2, 2, 122, 123, 7, 14, 2, 2,
-	123, 124, 7, 25, 2, 2, 124, 125, 7, 30, 2, 2, 125, 126, 5, 2, 2, 2, 126,
-	127, 7, 26, 2, 2, 127, 134, 3, 2, 2, 2, 128, 129, 7, 14, 2, 2, 129, 130,
-	7, 12, 2, 2, 130, 131, 7, 14, 2, 2, 131, 134, 5, 10, 6, 2, 132, 134, 3,
-	2, 2, 2, 133, 120, 3, 2, 2, 2, 133, 128, 3, 2, 2, 2, 133, 132, 3, 2, 2,
-	2, 134, 13, 3, 2, 2, 2, 135, 136, 7, 9, 2, 2, 136, 137, 7, 14, 2, 2, 137,
-	138, 7, 27, 2, 2, 138, 139, 7, 13, 2, 2, 139, 140, 7, 14, 2, 2, 140, 141,
-	5, 18, 10, 2, 141, 15, 3, 2, 2, 2, 142, 147, 7, 15, 2, 2, 143, 147, 7,
-	16, 2, 2, 144, 147, 7, 18, 2, 2, 145, 147, 7, 17, 2, 2, 146, 142, 3, 2,
-	2, 2, 146, 143, 3, 2, 2, 2, 146, 144, 3, 2, 2, 2, 146, 145, 3, 2, 2, 2,
-	147, 17, 3, 2, 2, 2, 148, 160, 5, 16, 9, 2, 149, 150, 5, 16, 9, 2, 150,
-	151, 7, 22, 2, 2, 151, 152, 5, 20, 11, 2, 152, 153, 7, 57, 2, 2, 153, 160,
-	3, 2, 2, 2, 154, 155, 5, 16, 9, 2, 155, 156, 7, 22, 2, 2, 156, 157, 5,
-	22, 12, 2, 157, 158, 7, 57, 2, 2, 158, 160, 3, 2, 2, 2, 159, 148, 3, 2,
-	2, 2, 159, 149, 3, 2, 2, 2, 159, 154, 3, 2, 2, 2, 160, 19, 3, 2, 2, 2,
-	161, 162, 7, 51, 2, 2, 162, 163, 7, 55, 2, 2, 163, 174, 7, 54, 2, 2, 164,
-	165, 7, 49, 2, 2, 165, 166, 7, 55, 2, 2, 166, 174, 7, 54, 2, 2, 167, 168,
-	7, 52, 2, 2, 168, 169, 7, 55, 2, 2, 169, 174, 7, 54, 2, 2, 170, 171, 7,
-	50, 2, 2, 171, 172, 7, 55, 2, 2, 172, 174, 7, 54, 2, 2, 173, 161, 3, 2,
-	2, 2, 173, 164, 3, 2, 2, 2, 173, 167, 3, 2, 2, 2, 173, 170, 3, 2, 2, 2,
-	174, 21, 3, 2, 2, 2, 175, 176, 7, 56, 2, 2, 176, 177, 5, 42, 22, 2, 177,
-	178, 7, 44, 2, 2, 178, 23, 3, 2, 2, 2, 179, 180, 7, 10, 2, 2, 180, 181,
-	7, 14, 2, 2, 181, 182, 7, 27, 2, 2, 182, 189, 7, 23, 2, 2, 183, 188, 5,
-	26, 14, 2, 184, 185, 5, 26, 14, 2, 185, 186, 7, 31, 2, 2, 186, 188, 3,
-	2, 2, 2, 187, 183, 3, 2, 2, 2, 187, 184, 3, 2, 2, 2, 188, 191, 3, 2, 2,
-	2, 189, 187, 3, 2, 2, 2, 189, 190, 3, 2, 2, 2, 190, 192, 3, 2, 2, 2, 191,
-	189, 3, 2, 2, 2, 192, 193, 7, 24, 2, 2, 193, 194, 7, 13, 2, 2, 194, 195,
-	7, 14, 2, 2, 195, 196, 5, 18, 10, 2, 196, 197, 7, 14, 2, 2, 197, 198, 7,
-	25, 2, 2, 198, 199, 7, 30, 2, 2, 199, 25, 3, 2, 2, 2, 200, 201, 7, 27,
-	2, 2, 201, 202, 7, 13, 2, 2, 202, 203, 7, 14, 2, 2, 203, 204, 5, 18, 10,
-	2, 204, 27, 3, 2, 2, 2, 205, 206, 5, 24, 13, 2, 206, 207, 5, 4, 3, 2, 207,
-	208, 7, 26, 2, 2, 208, 29, 3, 2, 2, 2, 209, 213, 5, 28, 15, 2, 210, 212,
-	7, 30, 2, 2, 211, 210, 3, 2, 2, 2, 212, 215, 3, 2, 2, 2, 213, 211, 3, 2,
-	2, 2, 213, 214, 3, 2, 2, 2, 214, 217, 3, 2, 2, 2, 215, 213, 3, 2, 2, 2,
-	216, 209, 3, 2, 2, 2, 217, 218, 3, 2, 2, 2, 218, 216, 3, 2, 2, 2, 218,
-	219, 3, 2, 2, 2, 219, 220, 3, 2, 2, 2, 220, 221, 7, 2, 2, 3, 221, 31, 3,
-	2, 2, 2, 222, 223, 8, 17, 1, 2, 223, 230, 5, 36, 19, 2, 224, 230, 5, 40,
-	21, 2, 225, 226, 7, 23, 2, 2, 226, 227, 5, 32, 17, 2, 227, 228, 7, 24,
-	2, 2, 228, 230, 3, 2, 2, 2, 229, 222, 3, 2, 2, 2, 229, 224, 3, 2, 2, 2,
-	229, 225, 3, 2, 2, 2, 230, 239, 3, 2, 2, 2, 231, 232, 12, 7, 2, 2, 232,
-	233, 9, 2, 2, 2, 233, 238, 5, 32, 17, 8, 234, 235, 12, 6, 2, 2, 235, 236,
-	9, 3, 2, 2, 236, 238, 5, 32, 17, 7, 237, 231, 3, 2, 2, 2, 237, 234, 3,
-	2, 2, 2, 238, 241, 3, 2, 2, 2, 239, 237, 3, 2, 2, 2, 239, 240, 3, 2, 2,
-	2, 240, 33, 3, 2, 2, 2, 241, 239, 3, 2, 2, 2, 242, 244, 7, 27, 2, 2, 243,
-	245, 7, 28, 2, 2, 244, 243, 3, 2, 2, 2, 244, 245, 3, 2, 2, 2, 245, 246,
-	3, 2, 2, 2, 246, 247, 7, 21, 2, 2, 247, 248, 5, 32, 17, 2, 248, 35, 3,
-	2, 2, 2, 249, 255, 7, 3, 2, 2, 250, 255, 7, 32, 2, 2, 251, 255, 7, 19,
-	2, 2, 252, 255, 7, 20, 2, 2, 253, 255, 5, 38, 20, 2, 254, 249, 3, 2, 2,
-	2, 254, 250, 3, 2, 2, 2, 254, 251, 3, 2, 2, 2, 254, 252, 3, 2, 2, 2, 254,
-	253, 3, 2, 2, 2, 255, 37, 3, 2, 2, 2, 256, 257, 7, 27, 2, 2, 257, 39, 3,
-	2, 2, 2, 258, 259, 7, 27, 2, 2, 259, 268, 7, 23, 2, 2, 260, 265, 5, 32,
-	17, 2, 261, 262, 7, 31, 2, 2, 262, 264, 5, 32, 17, 2, 263, 261, 3, 2, 2,
-	2, 264, 267, 3, 2, 2, 2, 265, 263, 3, 2, 2, 2, 265, 266, 3, 2, 2, 2, 266,
-	269, 3, 2, 2, 2, 267, 265, 3, 2, 2, 2, 268, 260, 3, 2, 2, 2, 268, 269,
-	3, 2, 2, 2, 269, 270, 3, 2, 2, 2, 270, 271, 7, 24, 2, 2, 271, 41, 3, 2,
-	2, 2, 272, 273, 5, 46, 24, 2, 273, 274, 5, 44, 23, 2, 274, 43, 3, 2, 2,
-	2, 275, 276, 7, 42, 2, 2, 276, 279, 5, 42, 22, 2, 277, 279, 3, 2, 2, 2,
-	278, 275, 3, 2, 2, 2, 278, 277, 3, 2, 2, 2, 279, 45, 3, 2, 2, 2, 280, 281,
-	5, 50, 26, 2, 281, 282, 5, 48, 25, 2, 282, 47, 3, 2, 2, 2, 283, 286, 5,
-	46, 24, 2, 284, 286, 3, 2, 2, 2, 285, 283, 3, 2, 2, 2, 285, 284, 3, 2,
-	2, 2, 286, 49, 3, 2, 2, 2, 287, 291, 5, 52, 27, 2, 288, 291, 5, 54, 28,
-	2, 289, 291, 5, 56, 29, 2, 290, 287, 3, 2, 2, 2, 290, 288, 3, 2, 2, 2,
-	290, 289, 3, 2, 2, 2, 291, 51, 3, 2, 2, 2, 292, 293, 5, 56, 29, 2, 293,
-	294, 7, 40, 2, 2, 294, 53, 3, 2, 2, 2, 295, 296, 5, 56, 29, 2, 296, 297,
-	7, 41, 2, 2, 297, 55, 3, 2, 2, 2, 298, 303, 5, 58, 30, 2, 299, 303, 7,
-	39, 2, 2, 300, 303, 5, 68, 35, 2, 301, 303, 5, 60, 31, 2, 302, 298, 3,
-	2, 2, 2, 302, 299, 3, 2, 2, 2, 302, 300, 3, 2, 2, 2, 302, 301, 3, 2, 2,
-	2, 303, 57, 3, 2, 2, 2, 304, 305, 7, 36, 2, 2, 305, 306, 5, 42, 22, 2,
-	306, 307, 7, 37, 2, 2, 307, 59, 3, 2, 2, 2, 308, 311, 5, 62, 32, 2, 309,
-	311, 5, 64, 33, 2, 310, 308, 3, 2, 2, 2, 310, 309, 3, 2, 2, 2, 311, 61,
-	3, 2, 2, 2, 312, 313, 7, 33, 2, 2, 313, 314, 5, 70, 36, 2, 314, 315, 7,
-	48, 2, 2, 315, 63, 3, 2, 2, 2, 316, 317, 7, 33, 2, 2, 317, 318, 7, 43,
-	2, 2, 318, 319, 5, 70, 36, 2, 319, 320, 7, 48, 2, 2, 320, 65, 3, 2, 2,
-	2, 321, 322, 7, 47, 2, 2, 322, 67, 3, 2, 2, 2, 323, 324, 9, 4, 2, 2, 324,
-	69, 3, 2, 2, 2, 325, 330, 5, 72, 37, 2, 326, 327, 5, 72, 37, 2, 327, 328,
-	5, 70, 36, 2, 328, 330, 3, 2, 2, 2, 329, 325, 3, 2, 2, 2, 329, 326, 3,
-	2, 2, 2, 330, 71, 3, 2, 2, 2, 331, 332, 5, 66, 34, 2, 332, 333, 7, 46,
-	2, 2, 333, 334, 5, 66, 34, 2, 334, 337, 3, 2, 2, 2, 335, 337, 5, 66, 34,
-	2, 336, 331, 3, 2, 2, 2, 336, 335, 3, 2, 2, 2, 337, 73, 3, 2, 2, 2, 32,
-	75, 78, 81, 85, 89, 91, 101, 106, 133, 146, 159, 173, 187, 189, 213, 218,
-	229, 237, 239, 244, 254, 265, 268, 278, 285, 290, 302, 310, 329, 336,
+	3, 17, 5, 17, 230, 10, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3,
+	17, 3, 17, 3, 17, 3, 17, 3, 17, 7, 17, 243, 10, 17, 12, 17, 14, 17, 246,
+	11, 17, 3, 18, 3, 18, 5, 18, 250, 10, 18, 3, 18, 3, 18, 3, 18, 3, 19, 3,
+	19, 3, 19, 3, 19, 3, 19, 5, 19, 260, 10, 19, 3, 20, 3, 20, 3, 21, 3, 21,
+	3, 21, 3, 21, 3, 21, 7, 21, 269, 10, 21, 12, 21, 14, 21, 272, 11, 21, 5,
+	21, 274, 10, 21, 3, 21, 3, 21, 3, 22, 3, 22, 3, 22, 3, 23, 3, 23, 3, 23,
+	5, 23, 284, 10, 23, 3, 24, 3, 24, 3, 24, 3, 25, 3, 25, 5, 25, 291, 10,
+	25, 3, 26, 3, 26, 3, 26, 5, 26, 296, 10, 26, 3, 27, 3, 27, 3, 27, 3, 28,
+	3, 28, 3, 28, 3, 29, 3, 29, 3, 29, 3, 29, 5, 29, 308, 10, 29, 3, 30, 3,
+	30, 3, 30, 3, 30, 3, 31, 3, 31, 5, 31, 316, 10, 31, 3, 32, 3, 32, 3, 32,
+	3, 32, 3, 33, 3, 33, 3, 33, 3, 33, 3, 33, 3, 34, 3, 34, 3, 35, 3, 35, 3,
+	36, 3, 36, 3, 36, 3, 36, 5, 36, 335, 10, 36, 3, 37, 3, 37, 3, 37, 3, 37,
+	3, 37, 5, 37, 342, 10, 37, 3, 37, 2, 3, 32, 38, 2, 4, 6, 8, 10, 12, 14,
+	16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50,
+	52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 2, 6, 4, 2, 4, 4, 7, 7, 3,
+	2, 5, 6, 3, 2, 21, 25, 4, 2, 40, 40, 43, 43, 2, 354, 2, 91, 3, 2, 2, 2,
+	4, 94, 3, 2, 2, 2, 6, 101, 3, 2, 2, 2, 8, 103, 3, 2, 2, 2, 10, 108, 3,
+	2, 2, 2, 12, 133, 3, 2, 2, 2, 14, 135, 3, 2, 2, 2, 16, 146, 3, 2, 2, 2,
+	18, 159, 3, 2, 2, 2, 20, 173, 3, 2, 2, 2, 22, 175, 3, 2, 2, 2, 24, 179,
+	3, 2, 2, 2, 26, 200, 3, 2, 2, 2, 28, 205, 3, 2, 2, 2, 30, 216, 3, 2, 2,
+	2, 32, 229, 3, 2, 2, 2, 34, 247, 3, 2, 2, 2, 36, 259, 3, 2, 2, 2, 38, 261,
+	3, 2, 2, 2, 40, 263, 3, 2, 2, 2, 42, 277, 3, 2, 2, 2, 44, 283, 3, 2, 2,
+	2, 46, 285, 3, 2, 2, 2, 48, 290, 3, 2, 2, 2, 50, 295, 3, 2, 2, 2, 52, 297,
+	3, 2, 2, 2, 54, 300, 3, 2, 2, 2, 56, 307, 3, 2, 2, 2, 58, 309, 3, 2, 2,
+	2, 60, 315, 3, 2, 2, 2, 62, 317, 3, 2, 2, 2, 64, 321, 3, 2, 2, 2, 66, 326,
+	3, 2, 2, 2, 68, 328, 3, 2, 2, 2, 70, 334, 3, 2, 2, 2, 72, 341, 3, 2, 2,
+	2, 74, 76, 7, 33, 2, 2, 75, 74, 3, 2, 2, 2, 75, 76, 3, 2, 2, 2, 76, 78,
+	3, 2, 2, 2, 77, 79, 5, 6, 4, 2, 78, 77, 3, 2, 2, 2, 78, 79, 3, 2, 2, 2,
+	79, 81, 3, 2, 2, 2, 80, 82, 7, 33, 2, 2, 81, 80, 3, 2, 2, 2, 81, 82, 3,
+	2, 2, 2, 82, 83, 3, 2, 2, 2, 83, 90, 7, 35, 2, 2, 84, 86, 7, 33, 2, 2,
+	85, 84, 3, 2, 2, 2, 85, 86, 3, 2, 2, 2, 86, 87, 3, 2, 2, 2, 87, 88, 7,
+	34, 2, 2, 88, 90, 7, 35, 2, 2, 89, 75, 3, 2, 2, 2, 89, 85, 3, 2, 2, 2,
+	90, 93, 3, 2, 2, 2, 91, 89, 3, 2, 2, 2, 91, 92, 3, 2, 2, 2, 92, 3, 3, 2,
+	2, 2, 93, 91, 3, 2, 2, 2, 94, 95, 5, 2, 2, 2, 95, 5, 3, 2, 2, 2, 96, 102,
+	5, 34, 18, 2, 97, 102, 5, 8, 5, 2, 98, 102, 5, 14, 8, 2, 99, 102, 5, 40,
+	21, 2, 100, 102, 5, 10, 6, 2, 101, 96, 3, 2, 2, 2, 101, 97, 3, 2, 2, 2,
+	101, 98, 3, 2, 2, 2, 101, 99, 3, 2, 2, 2, 101, 100, 3, 2, 2, 2, 102, 7,
+	3, 2, 2, 2, 103, 106, 7, 8, 2, 2, 104, 105, 7, 14, 2, 2, 105, 107, 5, 32,
+	17, 2, 106, 104, 3, 2, 2, 2, 106, 107, 3, 2, 2, 2, 107, 9, 3, 2, 2, 2,
+	108, 109, 7, 11, 2, 2, 109, 110, 7, 14, 2, 2, 110, 111, 7, 28, 2, 2, 111,
+	112, 5, 32, 17, 2, 112, 113, 7, 29, 2, 2, 113, 114, 7, 14, 2, 2, 114, 115,
+	7, 30, 2, 2, 115, 116, 7, 35, 2, 2, 116, 117, 5, 2, 2, 2, 117, 118, 7,
+	31, 2, 2, 118, 119, 5, 12, 7, 2, 119, 11, 3, 2, 2, 2, 120, 121, 7, 14,
+	2, 2, 121, 122, 7, 12, 2, 2, 122, 123, 7, 14, 2, 2, 123, 124, 7, 30, 2,
+	2, 124, 125, 7, 35, 2, 2, 125, 126, 5, 2, 2, 2, 126, 127, 7, 31, 2, 2,
+	127, 134, 3, 2, 2, 2, 128, 129, 7, 14, 2, 2, 129, 130, 7, 12, 2, 2, 130,
+	131, 7, 14, 2, 2, 131, 134, 5, 10, 6, 2, 132, 134, 3, 2, 2, 2, 133, 120,
+	3, 2, 2, 2, 133, 128, 3, 2, 2, 2, 133, 132, 3, 2, 2, 2, 134, 13, 3, 2,
+	2, 2, 135, 136, 7, 9, 2, 2, 136, 137, 7, 14, 2, 2, 137, 138, 7, 32, 2,
+	2, 138, 139, 7, 13, 2, 2, 139, 140, 7, 14, 2, 2, 140, 141, 5, 18, 10, 2,
+	141, 15, 3, 2, 2, 2, 142, 147, 7, 15, 2, 2, 143, 147, 7, 16, 2, 2, 144,
+	147, 7, 18, 2, 2, 145, 147, 7, 17, 2, 2, 146, 142, 3, 2, 2, 2, 146, 143,
+	3, 2, 2, 2, 146, 144, 3, 2, 2, 2, 146, 145, 3, 2, 2, 2, 147, 17, 3, 2,
+	2, 2, 148, 160, 5, 16, 9, 2, 149, 150, 5, 16, 9, 2, 150, 151, 7, 27, 2,
+	2, 151, 152, 5, 20, 11, 2, 152, 153, 7, 62, 2, 2, 153, 160, 3, 2, 2, 2,
+	154, 155, 5, 16, 9, 2, 155, 156, 7, 27, 2, 2, 156, 157, 5, 22, 12, 2, 157,
+	158, 7, 62, 2, 2, 158, 160, 3, 2, 2, 2, 159, 148, 3, 2, 2, 2, 159, 149,
+	3, 2, 2, 2, 159, 154, 3, 2, 2, 2, 160, 19, 3, 2, 2, 2, 161, 162, 7, 56,
+	2, 2, 162, 163, 7, 60, 2, 2, 163, 174, 7, 59, 2, 2, 164, 165, 7, 54, 2,
+	2, 165, 166, 7, 60, 2, 2, 166, 174, 7, 59, 2, 2, 167, 168, 7, 57, 2, 2,
+	168, 169, 7, 60, 2, 2, 169, 174, 7, 59, 2, 2, 170, 171, 7, 55, 2, 2, 171,
+	172, 7, 60, 2, 2, 172, 174, 7, 59, 2, 2, 173, 161, 3, 2, 2, 2, 173, 164,
+	3, 2, 2, 2, 173, 167, 3, 2, 2, 2, 173, 170, 3, 2, 2, 2, 174, 21, 3, 2,
+	2, 2, 175, 176, 7, 61, 2, 2, 176, 177, 5, 42, 22, 2, 177, 178, 7, 49, 2,
+	2, 178, 23, 3, 2, 2, 2, 179, 180, 7, 10, 2, 2, 180, 181, 7, 14, 2, 2, 181,
+	182, 7, 32, 2, 2, 182, 189, 7, 28, 2, 2, 183, 188, 5, 26, 14, 2, 184, 185,
+	5, 26, 14, 2, 185, 186, 7, 36, 2, 2, 186, 188, 3, 2, 2, 2, 187, 183, 3,
+	2, 2, 2, 187, 184, 3, 2, 2, 2, 188, 191, 3, 2, 2, 2, 189, 187, 3, 2, 2,
+	2, 189, 190, 3, 2, 2, 2, 190, 192, 3, 2, 2, 2, 191, 189, 3, 2, 2, 2, 192,
+	193, 7, 29, 2, 2, 193, 194, 7, 13, 2, 2, 194, 195, 7, 14, 2, 2, 195, 196,
+	5, 18, 10, 2, 196, 197, 7, 14, 2, 2, 197, 198, 7, 30, 2, 2, 198, 199, 7,
+	35, 2, 2, 199, 25, 3, 2, 2, 2, 200, 201, 7, 32, 2, 2, 201, 202, 7, 13,
+	2, 2, 202, 203, 7, 14, 2, 2, 203, 204, 5, 18, 10, 2, 204, 27, 3, 2, 2,
+	2, 205, 206, 5, 24, 13, 2, 206, 207, 5, 4, 3, 2, 207, 208, 7, 31, 2, 2,
+	208, 29, 3, 2, 2, 2, 209, 213, 5, 28, 15, 2, 210, 212, 7, 35, 2, 2, 211,
+	210, 3, 2, 2, 2, 212, 215, 3, 2, 2, 2, 213, 211, 3, 2, 2, 2, 213, 214,
+	3, 2, 2, 2, 214, 217, 3, 2, 2, 2, 215, 213, 3, 2, 2, 2, 216, 209, 3, 2,
+	2, 2, 217, 218, 3, 2, 2, 2, 218, 216, 3, 2, 2, 2, 218, 219, 3, 2, 2, 2,
+	219, 220, 3, 2, 2, 2, 220, 221, 7, 2, 2, 3, 221, 31, 3, 2, 2, 2, 222, 223,
+	8, 17, 1, 2, 223, 230, 5, 36, 19, 2, 224, 230, 5, 40, 21, 2, 225, 226,
+	7, 28, 2, 2, 226, 227, 5, 32, 17, 2, 227, 228, 7, 29, 2, 2, 228, 230, 3,
+	2, 2, 2, 229, 222, 3, 2, 2, 2, 229, 224, 3, 2, 2, 2, 229, 225, 3, 2, 2,
+	2, 230, 244, 3, 2, 2, 2, 231, 232, 12, 8, 2, 2, 232, 233, 9, 2, 2, 2, 233,
+	243, 5, 32, 17, 9, 234, 235, 12, 7, 2, 2, 235, 236, 9, 3, 2, 2, 236, 243,
+	5, 32, 17, 8, 237, 238, 12, 5, 2, 2, 238, 239, 7, 14, 2, 2, 239, 240, 9,
+	4, 2, 2, 240, 241, 7, 14, 2, 2, 241, 243, 5, 32, 17, 6, 242, 231, 3, 2,
+	2, 2, 242, 234, 3, 2, 2, 2, 242, 237, 3, 2, 2, 2, 243, 246, 3, 2, 2, 2,
+	244, 242, 3, 2, 2, 2, 244, 245, 3, 2, 2, 2, 245, 33, 3, 2, 2, 2, 246, 244,
+	3, 2, 2, 2, 247, 249, 7, 32, 2, 2, 248, 250, 7, 33, 2, 2, 249, 248, 3,
+	2, 2, 2, 249, 250, 3, 2, 2, 2, 250, 251, 3, 2, 2, 2, 251, 252, 7, 26, 2,
+	2, 252, 253, 5, 32, 17, 2, 253, 35, 3, 2, 2, 2, 254, 260, 7, 3, 2, 2, 255,
+	260, 7, 37, 2, 2, 256, 260, 7, 19, 2, 2, 257, 260, 7, 20, 2, 2, 258, 260,
+	5, 38, 20, 2, 259, 254, 3, 2, 2, 2, 259, 255, 3, 2, 2, 2, 259, 256, 3,
+	2, 2, 2, 259, 257, 3, 2, 2, 2, 259, 258, 3, 2, 2, 2, 260, 37, 3, 2, 2,
+	2, 261, 262, 7, 32, 2, 2, 262, 39, 3, 2, 2, 2, 263, 264, 7, 32, 2, 2, 264,
+	273, 7, 28, 2, 2, 265, 270, 5, 32, 17, 2, 266, 267, 7, 36, 2, 2, 267, 269,
+	5, 32, 17, 2, 268, 266, 3, 2, 2, 2, 269, 272, 3, 2, 2, 2, 270, 268, 3,
+	2, 2, 2, 270, 271, 3, 2, 2, 2, 271, 274, 3, 2, 2, 2, 272, 270, 3, 2, 2,
+	2, 273, 265, 3, 2, 2, 2, 273, 274, 3, 2, 2, 2, 274, 275, 3, 2, 2, 2, 275,
+	276, 7, 29, 2, 2, 276, 41, 3, 2, 2, 2, 277, 278, 5, 46, 24, 2, 278, 279,
+	5, 44, 23, 2, 279, 43, 3, 2, 2, 2, 280, 281, 7, 47, 2, 2, 281, 284, 5,
+	42, 22, 2, 282, 284, 3, 2, 2, 2, 283, 280, 3, 2, 2, 2, 283, 282, 3, 2,
+	2, 2, 284, 45, 3, 2, 2, 2, 285, 286, 5, 50, 26, 2, 286, 287, 5, 48, 25,
+	2, 287, 47, 3, 2, 2, 2, 288, 291, 5, 46, 24, 2, 289, 291, 3, 2, 2, 2, 290,
+	288, 3, 2, 2, 2, 290, 289, 3, 2, 2, 2, 291, 49, 3, 2, 2, 2, 292, 296, 5,
+	52, 27, 2, 293, 296, 5, 54, 28, 2, 294, 296, 5, 56, 29, 2, 295, 292, 3,
+	2, 2, 2, 295, 293, 3, 2, 2, 2, 295, 294, 3, 2, 2, 2, 296, 51, 3, 2, 2,
+	2, 297, 298, 5, 56, 29, 2, 298, 299, 7, 45, 2, 2, 299, 53, 3, 2, 2, 2,
+	300, 301, 5, 56, 29, 2, 301, 302, 7, 46, 2, 2, 302, 55, 3, 2, 2, 2, 303,
+	308, 5, 58, 30, 2, 304, 308, 7, 44, 2, 2, 305, 308, 5, 68, 35, 2, 306,
+	308, 5, 60, 31, 2, 307, 303, 3, 2, 2, 2, 307, 304, 3, 2, 2, 2, 307, 305,
+	3, 2, 2, 2, 307, 306, 3, 2, 2, 2, 308, 57, 3, 2, 2, 2, 309, 310, 7, 41,
+	2, 2, 310, 311, 5, 42, 22, 2, 311, 312, 7, 42, 2, 2, 312, 59, 3, 2, 2,
+	2, 313, 316, 5, 62, 32, 2, 314, 316, 5, 64, 33, 2, 315, 313, 3, 2, 2, 2,
+	315, 314, 3, 2, 2, 2, 316, 61, 3, 2, 2, 2, 317, 318, 7, 38, 2, 2, 318,
+	319, 5, 70, 36, 2, 319, 320, 7, 53, 2, 2, 320, 63, 3, 2, 2, 2, 321, 322,
+	7, 38, 2, 2, 322, 323, 7, 48, 2, 2, 323, 324, 5, 70, 36, 2, 324, 325, 7,
+	53, 2, 2, 325, 65, 3, 2, 2, 2, 326, 327, 7, 52, 2, 2, 327, 67, 3, 2, 2,
+	2, 328, 329, 9, 5, 2, 2, 329, 69, 3, 2, 2, 2, 330, 335, 5, 72, 37, 2, 331,
+	332, 5, 72, 37, 2, 332, 333, 5, 70, 36, 2, 333, 335, 3, 2, 2, 2, 334, 330,
+	3, 2, 2, 2, 334, 331, 3, 2, 2, 2, 335, 71, 3, 2, 2, 2, 336, 337, 5, 66,
+	34, 2, 337, 338, 7, 51, 2, 2, 338, 339, 5, 66, 34, 2, 339, 342, 3, 2, 2,
+	2, 340, 342, 5, 66, 34, 2, 341, 336, 3, 2, 2, 2, 341, 340, 3, 2, 2, 2,
+	342, 73, 3, 2, 2, 2, 32, 75, 78, 81, 85, 89, 91, 101, 106, 133, 146, 159,
+	173, 187, 189, 213, 218, 229, 242, 244, 249, 259, 270, 273, 283, 290, 295,
+	307, 315, 334, 341,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
@@ -169,14 +172,14 @@ var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 var literalNames = []string{
 	"", "", "", "", "", "", "'return'", "'var'", "'function'", "'if'", "'else'",
 	"':'", "", "'uint'", "'string'", "'bool'", "'void'", "'true'", "'false'",
-	"", "", "", "", "'{'", "'}'", "", "", "", "", "", "", "", "", "", "", "",
-	"", "'.'", "", "", "'|'", "'^'", "", "", "", "", "", "'>'", "'>='", "'<'",
-	"'<='",
+	"", "", "", "", "'=='", "", "", "", "", "'{'", "'}'", "", "", "", "", "",
+	"", "", "", "", "", "", "", "'.'", "", "", "'|'", "'^'",
 }
 var symbolicNames = []string{
 	"", "INT", "MULTIPLY", "ADD", "SUBTRACT", "DIVIDE", "RETURN", "VAR", "FUNCTION",
 	"IF", "ELSE", "COLON", "SPACE", "UINT_T", "STRING_T", "BOOL_T", "VOID_T",
-	"TRUE_LIT", "FALSE_LIT", "EQ_ASSIGNMENT", "BEGIN_CONSTRAINT", "BEGIN_GROUP",
+	"TRUE_LIT", "FALSE_LIT", "GT_CONDITION", "GE_CONDITION", "LT_CONDITION",
+	"LE_CONDITION", "EQ_CONDITION", "EQ_ASSIGNMENT", "BEGIN_CONSTRAINT", "BEGIN_GROUP",
 	"END_GROUP", "BEGIN_BODY", "END_BODY", "IDENTIFIER", "WS", "COMMENT_LINE",
 	"NEWLINE", "ARG_SEP", "STRING_LITERAL", "BEGIN_RE_RANGE", "END_RE_RANGE",
 	"CHARACTER", "BEGIN_RE_GROUP", "END_RE_GROUP", "MINUS", "DOT", "STAR",
@@ -242,43 +245,48 @@ const (
 	PocLangVOID_T             = 16
 	PocLangTRUE_LIT           = 17
 	PocLangFALSE_LIT          = 18
-	PocLangEQ_ASSIGNMENT      = 19
-	PocLangBEGIN_CONSTRAINT   = 20
-	PocLangBEGIN_GROUP        = 21
-	PocLangEND_GROUP          = 22
-	PocLangBEGIN_BODY         = 23
-	PocLangEND_BODY           = 24
-	PocLangIDENTIFIER         = 25
-	PocLangWS                 = 26
-	PocLangCOMMENT_LINE       = 27
-	PocLangNEWLINE            = 28
-	PocLangARG_SEP            = 29
-	PocLangSTRING_LITERAL     = 30
-	PocLangBEGIN_RE_RANGE     = 31
-	PocLangEND_RE_RANGE       = 32
-	PocLangCHARACTER          = 33
-	PocLangBEGIN_RE_GROUP     = 34
-	PocLangEND_RE_GROUP       = 35
-	PocLangMINUS              = 36
-	PocLangDOT                = 37
-	PocLangSTAR               = 38
-	PocLangPLUS               = 39
-	PocLangALTERNATION        = 40
-	PocLangRANGE_NEGATE       = 41
-	PocLangRE_DELIMITER_CLOSE = 42
-	PocLangMETA_CHAR          = 43
-	PocLangRANGE_SEPARATOR    = 44
-	PocLangRANGE_CHARACTER    = 45
-	PocLangRANGE_TERMINATE    = 46
-	PocLangGT                 = 47
-	PocLangGE                 = 48
-	PocLangLT                 = 49
-	PocLangLE                 = 50
-	PocLangEQ                 = 51
-	PocLangCONSTRAINT_UINT    = 52
-	PocLangCONSTRAINT_SPACE   = 53
-	PocLangRE_DELIMITER_OPEN  = 54
-	PocLangEND_CONSTRAINT     = 55
+	PocLangGT_CONDITION       = 19
+	PocLangGE_CONDITION       = 20
+	PocLangLT_CONDITION       = 21
+	PocLangLE_CONDITION       = 22
+	PocLangEQ_CONDITION       = 23
+	PocLangEQ_ASSIGNMENT      = 24
+	PocLangBEGIN_CONSTRAINT   = 25
+	PocLangBEGIN_GROUP        = 26
+	PocLangEND_GROUP          = 27
+	PocLangBEGIN_BODY         = 28
+	PocLangEND_BODY           = 29
+	PocLangIDENTIFIER         = 30
+	PocLangWS                 = 31
+	PocLangCOMMENT_LINE       = 32
+	PocLangNEWLINE            = 33
+	PocLangARG_SEP            = 34
+	PocLangSTRING_LITERAL     = 35
+	PocLangBEGIN_RE_RANGE     = 36
+	PocLangEND_RE_RANGE       = 37
+	PocLangCHARACTER          = 38
+	PocLangBEGIN_RE_GROUP     = 39
+	PocLangEND_RE_GROUP       = 40
+	PocLangMINUS              = 41
+	PocLangDOT                = 42
+	PocLangSTAR               = 43
+	PocLangPLUS               = 44
+	PocLangALTERNATION        = 45
+	PocLangRANGE_NEGATE       = 46
+	PocLangRE_DELIMITER_CLOSE = 47
+	PocLangMETA_CHAR          = 48
+	PocLangRANGE_SEPARATOR    = 49
+	PocLangRANGE_CHARACTER    = 50
+	PocLangRANGE_TERMINATE    = 51
+	PocLangGT                 = 52
+	PocLangGE                 = 53
+	PocLangLT                 = 54
+	PocLangLE                 = 55
+	PocLangEQ                 = 56
+	PocLangCONSTRAINT_UINT    = 57
+	PocLangCONSTRAINT_SPACE   = 58
+	PocLangRE_DELIMITER_OPEN  = 59
+	PocLangEND_CONSTRAINT     = 60
 )
 
 // PocLang rules.
@@ -462,7 +470,7 @@ func (p *PocLang) Body() (localctx IBodyContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangRETURN)|(1<<PocLangVAR)|(1<<PocLangIF)|(1<<PocLangIDENTIFIER)|(1<<PocLangWS)|(1<<PocLangCOMMENT_LINE)|(1<<PocLangNEWLINE))) != 0 {
+	for ((_la-6)&-(0x1f+1)) == 0 && ((1<<uint((_la-6)))&((1<<(PocLangRETURN-6))|(1<<(PocLangVAR-6))|(1<<(PocLangIF-6))|(1<<(PocLangIDENTIFIER-6))|(1<<(PocLangWS-6))|(1<<(PocLangCOMMENT_LINE-6))|(1<<(PocLangNEWLINE-6)))) != 0 {
 		p.SetState(87)
 		p.GetErrorHandler().Sync(p)
 		switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
@@ -3204,6 +3212,34 @@ func (s *ExprContext) SUBTRACT() antlr.TerminalNode {
 	return s.GetToken(PocLangSUBTRACT, 0)
 }
 
+func (s *ExprContext) AllSPACE() []antlr.TerminalNode {
+	return s.GetTokens(PocLangSPACE)
+}
+
+func (s *ExprContext) SPACE(i int) antlr.TerminalNode {
+	return s.GetToken(PocLangSPACE, i)
+}
+
+func (s *ExprContext) LT_CONDITION() antlr.TerminalNode {
+	return s.GetToken(PocLangLT_CONDITION, 0)
+}
+
+func (s *ExprContext) GT_CONDITION() antlr.TerminalNode {
+	return s.GetToken(PocLangGT_CONDITION, 0)
+}
+
+func (s *ExprContext) LE_CONDITION() antlr.TerminalNode {
+	return s.GetToken(PocLangLE_CONDITION, 0)
+}
+
+func (s *ExprContext) GE_CONDITION() antlr.TerminalNode {
+	return s.GetToken(PocLangGE_CONDITION, 0)
+}
+
+func (s *ExprContext) EQ_CONDITION() antlr.TerminalNode {
+	return s.GetToken(PocLangEQ_CONDITION, 0)
+}
+
 func (s *ExprContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -3298,7 +3334,7 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(237)
+	p.SetState(242)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 18, p.GetParserRuleContext())
 
@@ -3308,7 +3344,7 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(235)
+			p.SetState(240)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 17, p.GetParserRuleContext()) {
 			case 1:
@@ -3316,8 +3352,8 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
 				p.SetState(229)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				{
 					p.SetState(230)
@@ -3332,7 +3368,7 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				}
 				{
 					p.SetState(231)
-					p.expr(6)
+					p.expr(7)
 				}
 
 			case 2:
@@ -3340,8 +3376,8 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
 				p.SetState(232)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
-					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
 					p.SetState(233)
@@ -3356,13 +3392,45 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				}
 				{
 					p.SetState(234)
-					p.expr(5)
+					p.expr(6)
+				}
+
+			case 3:
+				localctx = NewExprContext(p, _parentctx, _parentState)
+				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
+				p.SetState(235)
+
+				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
+					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
+				}
+				{
+					p.SetState(236)
+					p.Match(PocLangSPACE)
+				}
+				{
+					p.SetState(237)
+					_la = p.GetTokenStream().LA(1)
+
+					if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangGT_CONDITION)|(1<<PocLangGE_CONDITION)|(1<<PocLangLT_CONDITION)|(1<<PocLangLE_CONDITION)|(1<<PocLangEQ_CONDITION))) != 0) {
+						p.GetErrorHandler().RecoverInline(p)
+					} else {
+						p.GetErrorHandler().ReportMatch(p)
+						p.Consume()
+					}
+				}
+				{
+					p.SetState(238)
+					p.Match(PocLangSPACE)
+				}
+				{
+					p.SetState(239)
+					p.expr(4)
 				}
 
 			}
 
 		}
-		p.SetState(239)
+		p.SetState(244)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 18, p.GetParserRuleContext())
 	}
@@ -3483,26 +3551,26 @@ func (p *PocLang) Var_assignment() (localctx IVar_assignmentContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(240)
+		p.SetState(245)
 		p.Match(PocLangIDENTIFIER)
 	}
-	p.SetState(242)
+	p.SetState(247)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == PocLangWS {
 		{
-			p.SetState(241)
+			p.SetState(246)
 			p.Match(PocLangWS)
 		}
 
 	}
 	{
-		p.SetState(244)
+		p.SetState(249)
 		p.Match(PocLangEQ_ASSIGNMENT)
 	}
 	{
-		p.SetState(245)
+		p.SetState(250)
 		p.expr(0)
 	}
 
@@ -3623,42 +3691,42 @@ func (p *PocLang) Value_ref() (localctx IValue_refContext) {
 		}
 	}()
 
-	p.SetState(252)
+	p.SetState(257)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangINT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(247)
+			p.SetState(252)
 			p.Match(PocLangINT)
 		}
 
 	case PocLangSTRING_LITERAL:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(248)
+			p.SetState(253)
 			p.Match(PocLangSTRING_LITERAL)
 		}
 
 	case PocLangTRUE_LIT:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(249)
+			p.SetState(254)
 			p.Match(PocLangTRUE_LIT)
 		}
 
 	case PocLangFALSE_LIT:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(250)
+			p.SetState(255)
 			p.Match(PocLangFALSE_LIT)
 		}
 
 	case PocLangIDENTIFIER:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(251)
+			p.SetState(256)
 			p.Identifier_ref()
 		}
 
@@ -3763,7 +3831,7 @@ func (p *PocLang) Identifier_ref() (localctx IIdentifier_refContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(254)
+		p.SetState(259)
 		p.Match(PocLangIDENTIFIER)
 	}
 
@@ -3904,44 +3972,44 @@ func (p *PocLang) Function_call() (localctx IFunction_callContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(256)
+		p.SetState(261)
 		p.Match(PocLangIDENTIFIER)
 	}
 	{
-		p.SetState(257)
+		p.SetState(262)
 		p.Match(PocLangBEGIN_GROUP)
 	}
-	p.SetState(266)
+	p.SetState(271)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangINT)|(1<<PocLangTRUE_LIT)|(1<<PocLangFALSE_LIT)|(1<<PocLangBEGIN_GROUP)|(1<<PocLangIDENTIFIER)|(1<<PocLangSTRING_LITERAL))) != 0 {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangINT)|(1<<PocLangTRUE_LIT)|(1<<PocLangFALSE_LIT)|(1<<PocLangBEGIN_GROUP)|(1<<PocLangIDENTIFIER))) != 0) || _la == PocLangSTRING_LITERAL {
 		{
-			p.SetState(258)
+			p.SetState(263)
 			p.expr(0)
 		}
-		p.SetState(263)
+		p.SetState(268)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == PocLangARG_SEP {
 			{
-				p.SetState(259)
+				p.SetState(264)
 				p.Match(PocLangARG_SEP)
 			}
 			{
-				p.SetState(260)
+				p.SetState(265)
 				p.expr(0)
 			}
 
-			p.SetState(265)
+			p.SetState(270)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 
 	}
 	{
-		p.SetState(268)
+		p.SetState(273)
 		p.Match(PocLangEND_GROUP)
 	}
 
@@ -4058,11 +4126,11 @@ func (p *PocLang) Re() (localctx IReContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(270)
+		p.SetState(275)
 		p.Simple_re()
 	}
 	{
-		p.SetState(271)
+		p.SetState(276)
 		p.Union_prime()
 	}
 
@@ -4171,18 +4239,18 @@ func (p *PocLang) Union_prime() (localctx IUnion_primeContext) {
 		}
 	}()
 
-	p.SetState(276)
+	p.SetState(281)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangALTERNATION:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(273)
+			p.SetState(278)
 			p.Match(PocLangALTERNATION)
 		}
 		{
-			p.SetState(274)
+			p.SetState(279)
 			p.Re()
 		}
 
@@ -4306,11 +4374,11 @@ func (p *PocLang) Simple_re() (localctx ISimple_reContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(278)
+		p.SetState(283)
 		p.Basic_re()
 	}
 	{
-		p.SetState(279)
+		p.SetState(284)
 		p.Concat_prime()
 	}
 
@@ -4415,14 +4483,14 @@ func (p *PocLang) Concat_prime() (localctx IConcat_primeContext) {
 		}
 	}()
 
-	p.SetState(283)
+	p.SetState(288)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangBEGIN_RE_RANGE, PocLangCHARACTER, PocLangBEGIN_RE_GROUP, PocLangMINUS, PocLangDOT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(281)
+			p.SetState(286)
 			p.Simple_re()
 		}
 
@@ -4554,27 +4622,27 @@ func (p *PocLang) Basic_re() (localctx IBasic_reContext) {
 		}
 	}()
 
-	p.SetState(288)
+	p.SetState(293)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 25, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(285)
+			p.SetState(290)
 			p.Kleene_star()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(286)
+			p.SetState(291)
 			p.Plus()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(287)
+			p.SetState(292)
 			p.Elementary_re()
 		}
 
@@ -4687,11 +4755,11 @@ func (p *PocLang) Kleene_star() (localctx IKleene_starContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(290)
+		p.SetState(295)
 		p.Elementary_re()
 	}
 	{
-		p.SetState(291)
+		p.SetState(296)
 		p.Match(PocLangSTAR)
 	}
 
@@ -4802,11 +4870,11 @@ func (p *PocLang) Plus() (localctx IPlusContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(293)
+		p.SetState(298)
 		p.Elementary_re()
 	}
 	{
-		p.SetState(294)
+		p.SetState(299)
 		p.Match(PocLangPLUS)
 	}
 
@@ -4935,35 +5003,35 @@ func (p *PocLang) Elementary_re() (localctx IElementary_reContext) {
 		}
 	}()
 
-	p.SetState(300)
+	p.SetState(305)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangBEGIN_RE_GROUP:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(296)
+			p.SetState(301)
 			p.Group()
 		}
 
 	case PocLangDOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(297)
+			p.SetState(302)
 			p.Match(PocLangDOT)
 		}
 
 	case PocLangCHARACTER, PocLangMINUS:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(298)
+			p.SetState(303)
 			p.Character()
 		}
 
 	case PocLangBEGIN_RE_RANGE:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(299)
+			p.SetState(304)
 			p.Range_re()
 		}
 
@@ -5082,15 +5150,15 @@ func (p *PocLang) Group() (localctx IGroupContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(302)
+		p.SetState(307)
 		p.Match(PocLangBEGIN_RE_GROUP)
 	}
 	{
-		p.SetState(303)
+		p.SetState(308)
 		p.Re()
 	}
 	{
-		p.SetState(304)
+		p.SetState(309)
 		p.Match(PocLangEND_RE_GROUP)
 	}
 
@@ -5205,20 +5273,20 @@ func (p *PocLang) Range_re() (localctx IRange_reContext) {
 		}
 	}()
 
-	p.SetState(308)
+	p.SetState(313)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 27, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(306)
+			p.SetState(311)
 			p.Positive_range()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(307)
+			p.SetState(312)
 			p.Negative_range()
 		}
 
@@ -5335,15 +5403,15 @@ func (p *PocLang) Positive_range() (localctx IPositive_rangeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(310)
+		p.SetState(315)
 		p.Match(PocLangBEGIN_RE_RANGE)
 	}
 	{
-		p.SetState(311)
+		p.SetState(316)
 		p.Range_items()
 	}
 	{
-		p.SetState(312)
+		p.SetState(317)
 		p.Match(PocLangRANGE_TERMINATE)
 	}
 
@@ -5462,19 +5530,19 @@ func (p *PocLang) Negative_range() (localctx INegative_rangeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(314)
+		p.SetState(319)
 		p.Match(PocLangBEGIN_RE_RANGE)
 	}
 	{
-		p.SetState(315)
+		p.SetState(320)
 		p.Match(PocLangRANGE_NEGATE)
 	}
 	{
-		p.SetState(316)
+		p.SetState(321)
 		p.Range_items()
 	}
 	{
-		p.SetState(317)
+		p.SetState(322)
 		p.Match(PocLangRANGE_TERMINATE)
 	}
 
@@ -5575,7 +5643,7 @@ func (p *PocLang) Lax_character() (localctx ILax_characterContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(319)
+		p.SetState(324)
 		p.Match(PocLangRANGE_CHARACTER)
 	}
 
@@ -5681,7 +5749,7 @@ func (p *PocLang) Character() (localctx ICharacterContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(321)
+		p.SetState(326)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == PocLangCHARACTER || _la == PocLangMINUS) {
@@ -5803,24 +5871,24 @@ func (p *PocLang) Range_items() (localctx IRange_itemsContext) {
 		}
 	}()
 
-	p.SetState(327)
+	p.SetState(332)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 28, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(323)
+			p.SetState(328)
 			p.Range_item()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(324)
+			p.SetState(329)
 			p.Range_item()
 		}
 		{
-			p.SetState(325)
+			p.SetState(330)
 			p.Range_items()
 		}
 
@@ -5944,28 +6012,28 @@ func (p *PocLang) Range_item() (localctx IRange_itemContext) {
 		}
 	}()
 
-	p.SetState(334)
+	p.SetState(339)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 29, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(329)
+			p.SetState(334)
 			p.Lax_character()
 		}
 		{
-			p.SetState(330)
+			p.SetState(335)
 			p.Match(PocLangRANGE_SEPARATOR)
 		}
 		{
-			p.SetState(331)
+			p.SetState(336)
 			p.Lax_character()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(333)
+			p.SetState(338)
 			p.Lax_character()
 		}
 
@@ -5991,10 +6059,13 @@ func (p *PocLang) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) 
 func (p *PocLang) Expr_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 5)
+		return p.Precpred(p.GetParserRuleContext(), 6)
 
 	case 1:
-		return p.Precpred(p.GetParserRuleContext(), 4)
+		return p.Precpred(p.GetParserRuleContext(), 5)
+
+	case 2:
+		return p.Precpred(p.GetParserRuleContext(), 3)
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))

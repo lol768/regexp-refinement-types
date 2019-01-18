@@ -312,6 +312,19 @@ public class ParsingTests {
         Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("Attempt to apply int constraint to string type"))));
     }
 
+    @Test
+    public void testIllegalIfCondition() {
+        String illegalConstraint = "function Test(name: string, number: uint): void {\n" +
+                "    if (name == number) {\n" +
+                "        return 1+1\n" +
+                "    }\n" +
+                "}\n";
+
+        ParseTree tree = getParseTree(illegalConstraint);
+        Application app = new Application();
+        Assert.assertTrue(app.doTypeChecks(tree).getReports().stream().anyMatch((errorReport -> errorReport.getMsg().contains("derive a type"))));
+    }
+
     public static ParseTree getParseTree(String basicProgram) {
         PocLex lexer = new PocLex(CharStreams.fromString(basicProgram));
         CommonTokenStream tokens = new CommonTokenStream(lexer);

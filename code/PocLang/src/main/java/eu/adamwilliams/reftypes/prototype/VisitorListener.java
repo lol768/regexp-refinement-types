@@ -277,6 +277,17 @@ public class VisitorListener extends PocLangBaseListener {
         }
 
         List<PocLang.ExprContext> binOpItems = expr.expr();
+
+
+        if ((binOpItems.stream().allMatch(e -> getExprType(e) != null && getExprType(e).getType() == Type.UNSIGNED_INTEGER)) && expr.LT_CONDITION() != null || expr.GT_CONDITION() != null || expr.GE_CONDITION() != null || expr.LE_CONDITION() != null) {
+            return new TypeContainer(Type.BOOLEAN, null);
+        }
+
+        boolean allSameType = (binOpItems.stream().map(this::getExprType).filter(Objects::nonNull).map(TypeContainer::getType).collect(Collectors.toSet())).size() == 1;
+        if (allSameType && expr.EQ_CONDITION() != null) {
+            return new TypeContainer(Type.BOOLEAN, null);
+        }
+
         if (binOpItems.stream().allMatch(e -> getExprType(e) != null && getExprType(e).getType() == Type.UNSIGNED_INTEGER)) {
             return new TypeContainer(Type.UNSIGNED_INTEGER, null); // TODO: We can infer a better refinement here..
         }
@@ -441,9 +452,13 @@ public class VisitorListener extends PocLangBaseListener {
                     isDivide ? BinaryOperationType.INT_DIVIDE : BinaryOperationType.INT_SUBTRACT
             )));
 
-            if (getExprType(exprCtx).getType() == Type.UNSIGNED_INTEGER) {
+            TypeContainer exprType = getExprType(exprCtx);
+            if (exprType == null) {
+                return new ErrorNode();
+            }
+            if (exprType.getType() == Type.UNSIGNED_INTEGER) {
                 return new BinaryOperationExpression(type, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
-            } else if (getExprType(exprCtx).getType() == Type.STRING && isAdd) {
+            } else if (exprType.getType() == Type.STRING && isAdd) {
                 return new BinaryOperationExpression(BinaryOperationType.STRING_CONCAT, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
             }
         } else if (exprCtx.function_call() != null) {
