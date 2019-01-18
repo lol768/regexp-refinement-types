@@ -106,6 +106,18 @@
         #syntax-error {
             cursor: pointer;
         }
+
+        .id7-left-border {
+            background-image: url("images/lhs.svg") !important;
+        }
+
+        .id7-right-border {
+            background-image: url("images/rhs.svg") !important;
+        }
+
+        .id7-utility-masthead {
+            background-image: url("images/masthead-image.svg") !important;
+        }
     </style>
     <script type="text/javascript" src="wasm_exec.js"></script>
     <script type="text/javascript">
@@ -286,6 +298,12 @@
 function Main(): string[/[A-Za-z ]+/] {
     return "Hello world"
 }</textarea>
+                    <a href="#" class="btn btn-default" id="do-type-checks"><i
+                                class="far fa-search type-checking-icon"></i> <i
+                                class="far fa-spin fa-spinner-third type-checking-loader hide"></i> Perform type checks</a>
+                    <a href="#" class="btn btn-default disabled" id="execute"><i
+                                class="far fa-cogs executing-icon"></i> <i
+                                class="far fa-spin fa-spinner-third executing-loader hide"></i> Execute</a>
                 </div>
                 <div class="col-sm-6">
                     <h2>Output
@@ -303,12 +321,7 @@ function Main(): string[/[A-Za-z ]+/] {
             </div>
             <div class="row">
                 <div class="col-sm-6">
-                    <a href="#" class="btn btn-default" id="do-type-checks"><i
-                                class="far fa-search type-checking-icon"></i> <i
-                                class="far fa-spin fa-spinner-third type-checking-loader hide"></i> Perform type checks</a>
-                    <a href="#" class="btn btn-default disabled" id="execute"><i
-                                class="far fa-cogs executing-icon"></i> <i
-                                class="far fa-spin fa-spinner-third executing-loader hide"></i> Execute</a>
+
 
                 </div>
                 <div class="col-sm-6">
@@ -326,7 +339,7 @@ function Main(): string[/[A-Za-z ]+/] {
               </div>
             -->
 
-            <h2>Contact us</h2>
+            <h2>About</h2>
             <p><a href="#">project@adamwilliams.eu</a></p>
         </div>
         <div class="id7-app-footer">
