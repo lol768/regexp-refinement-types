@@ -10,6 +10,7 @@ public class FunctionCallExpression extends Expression {
     public FunctionCallExpression(FunctionDeclaration callee, List<Expression> arguments) {
         this.callee = callee;
         this.arguments = arguments;
+        this.typeContainer = this.callee.getReturnType();
     }
 
     public FunctionDeclaration getCallee() {

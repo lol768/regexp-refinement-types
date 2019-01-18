@@ -54,7 +54,7 @@ public class IfStatement extends Statement {
         } else if (elseIf != null) {
             return elseIf.execute();
         }
-        throw new IllegalArgumentException("Illegal if");
+        return Optional.empty();
     }
 }
 

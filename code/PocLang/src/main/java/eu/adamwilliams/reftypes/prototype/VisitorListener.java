@@ -233,7 +233,8 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     private void checkExprType(PocLang.ExprContext expr, TypeContainer expected, Token symbol, ErrorReporter reporter) {
-        if (getExprType(expr) == null) {
+        TypeContainer tc = this.getExprType(expr);
+        if (tc == null) {
             reporter.reportError(new ErrorReport(symbol, "Couldn't derive a type for this expression, it's probably nonsensical."));
             return;
         }
@@ -241,14 +242,15 @@ public class VisitorListener extends PocLangBaseListener {
         PocLang.Value_refContext value_refContext = expr.value_ref();
         if (value_refContext != null) {
             try {
-                TypeContainer tc = this.getExprType(expr);
                 Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
                 if (!typeCheckResult.a) {
                     String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
                     reporter.reportError(new ErrorReport(symbol, tc + " didn't satisfy " + expected + supp));
+                    return;
                 }
             } catch (IllegalArgumentException ex) {
                 reporter.reportError(new ErrorReport(symbol, ex.getMessage()));
+                return;
             }
         }
 
@@ -256,12 +258,20 @@ public class VisitorListener extends PocLangBaseListener {
         PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
-            Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, getExprType(expr));
+            Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
             if (!typeCheckResult.a) {
                 String supp = typeCheckResult.b != null ? ", example violating value: " + typeCheckResult.b : "";
                 reporter.reportError(new ErrorReport(symbol, "Return type " + functionByIdentifier.getReturnType() + " of function " + functionByIdentifier.getIdentifier() + " didn't satisfy " + expected + supp));
+                return;
             }
         }
+
+        // catch all
+        Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
+        if (!typeCheckResult.a) {
+            reporter.reportError(new ErrorReport(symbol, tc + " didn't satisfy " + expected));
+        }
+
     }
 
     private TypeContainer getExprType(PocLang.ExprContext expr) {
@@ -274,6 +284,10 @@ public class VisitorListener extends PocLangBaseListener {
         PocLang.Function_callContext function_callContext = expr.function_call();
         if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             return this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText()).getReturnType();
+        }
+
+        if (expr.BEGIN_GROUP() != null && expr.END_GROUP() != null) {
+            return this.getExprType(expr.expr(0));
         }
 
         List<PocLang.ExprContext> binOpItems = expr.expr();
@@ -443,7 +457,16 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     private Expression getAstExpression(PocLang.ExprContext exprCtx) {
+        if (exprCtx.BEGIN_GROUP() != null && exprCtx.END_GROUP() != null) {
+            return this.getAstExpression(exprCtx.expr(0));
+        }
         if (!exprCtx.expr().isEmpty()) {
+
+            if (exprCtx.LT_CONDITION() != null || exprCtx.GT_CONDITION() != null || exprCtx.GE_CONDITION() != null ||
+                    exprCtx.LE_CONDITION() != null || exprCtx.EQ_CONDITION() != null) {
+                return handleComparisonAstExpression(exprCtx);
+            }
+
             boolean isAdd = exprCtx.ADD() != null;
             boolean isMultiply = exprCtx.MULTIPLY() != null;
             boolean isDivide = exprCtx.DIVIDE() != null;
@@ -485,6 +508,18 @@ public class VisitorListener extends PocLangBaseListener {
             }
         }
         throw new IllegalArgumentException("Can't handle this expression");
+    }
+
+    private Expression handleComparisonAstExpression(PocLang.ExprContext exprCtx) {
+        boolean isEquals = exprCtx.EQ_CONDITION() != null;
+        boolean isLt = exprCtx.LT_CONDITION() != null;
+        boolean isLe = exprCtx.LE_CONDITION() != null;
+        boolean isGt = exprCtx.GT_CONDITION() != null;
+        boolean isGe = exprCtx.GE_CONDITION() != null;
+        ComparisonOperationType type = (isEquals ? ComparisonOperationType.EQUALS : (isLt ? ComparisonOperationType.LT : (
+                isLe ? ComparisonOperationType.LE : (isGt ? ComparisonOperationType.GT : ComparisonOperationType.GE)
+        )));
+        return new ComparisonOperation(type, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
     }
 
     private FunctionCallExpression getAstExpressionForFunctionCall(PocLang.Function_callContext ctx) {
