@@ -196,7 +196,6 @@
                     document.querySelector("#do-type-checks").classList.remove("disabled");
 
                 });
-
             });
         });
     </script>
@@ -214,6 +213,20 @@
     <link href="css/id7-default-theme.css" rel="stylesheet">
 
     <script src="js/id7-bundle.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $(".example-trigger").click(function (e) {
+                console.log("click");
+                e.preventDefault();
+                let selector = $(this).data("selector");
+
+                $("#input").val($(selector).text());
+                $("#input").change();
+                return false;
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="id7-left-border"></div>
@@ -304,6 +317,14 @@ function Main(): string[/[A-Za-z ]+/] {
                     <a href="#" class="btn btn-default disabled" id="execute"><i
                                 class="far fa-cogs executing-icon"></i> <i
                                 class="far fa-spin fa-spinner-third executing-loader hide"></i> Execute</a>
+
+                    <p>
+
+                    </p>
+                    <a href="#" class="btn btn-primary example-trigger" data-selector="#example-1"><i
+                                class="far fa-wand-magic"></i> Example 1</a>
+                    <a href="#" class="btn btn-primary example-trigger" data-selector="#example-2"><i
+                                class="far fa-wand-magic"></i> Example 2</a>
                 </div>
                 <div class="col-sm-6">
                     <h2>Output
@@ -315,7 +336,10 @@ function Main(): string[/[A-Za-z ]+/] {
                     <div id="output">
                         <h3 id="loading">Loading...</h3></div>
                     <p></p>
-                    <div id="evalwrap" class="hide"><div class="alert alert-success"><i class="far fa-terminal"></i> <strong>Evaluation result</strong><br /><samp id="evaloutput"></samp></div></div>
+                    <div id="evalwrap" class="hide">
+                        <div class="alert alert-success"><i class="far fa-terminal"></i> <strong>Evaluation
+                                result</strong><br/><samp id="evaloutput"></samp></div>
+                    </div>
 
                 </div>
             </div>
@@ -359,5 +383,28 @@ function Main(): string[/[A-Za-z ]+/] {
     </footer>
 </div>
 <div class="id7-right-border"></div>
+<pre class="hide" id="example-1">
+function Main(): string[/[a-f]+/] {
+    return Secondary()
+}
+
+function Secondary(): string[/[a-z][a-z]/] {
+    return "ao"
+}
+</pre>
+<pre class="hide" id="example-2">
+function Main(): string {
+    // On the seventh day of Christmas..
+    return Secondary(5, "")
+}
+
+function Secondary(i: uint, s: string): string {
+    if (i == 0) {
+        return s
+    }
+    // 5 golden rings
+    return Secondary(i-1, s+"💍")
+}
+</pre>
 </body>
 </html>
