@@ -160,6 +160,24 @@ public class AstTests {
     }
 
     @Test
+    public void testJavaCall() {
+        String moreAdvancedProgram = "function Main(): uint {\n" +
+                "    var a: uint\n" +
+                "    a=!java.lang.Long.divideUnsigned(10,2)\n" +
+                "    return a\n" +
+                "}";
+
+        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
+        Application app = new Application();
+        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
+        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Main");
+        Optional<Expression> result = BodyEvaluator.evaluateBody(function.getBody());
+
+        Assert.assertEquals(5L, result.get().evaluate());
+    }
+
+
+    @Test
     public void testEvaluateWithFunctionCall() {
         String moreAdvancedProgram = "function Main(): uint {\n" +
                 "    return Secondary()\n" +
