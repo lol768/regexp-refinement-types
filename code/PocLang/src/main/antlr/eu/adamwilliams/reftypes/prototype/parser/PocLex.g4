@@ -39,6 +39,8 @@ BEGIN_BODY: '{' ;
 END_BODY: '}' ;
 
 IDENTIFIER     : [A-Za-z_] [A-Za-z_0-9]* ;
+JAVA_BEGIN     : '!' ;
+JAVA_SEP       : '.' ; // package separator
 
 
 WS                : (' ' | '\t')+ -> channel(HIDDEN) ;

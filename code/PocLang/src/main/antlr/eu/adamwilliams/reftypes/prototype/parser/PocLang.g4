@@ -36,7 +36,9 @@ expr              : expr (MULTIPLY|DIVIDE) expr
 var_assignment    : IDENTIFIER WS? EQ_ASSIGNMENT expr ;
 value_ref         : INT | STRING_LITERAL | TRUE_LIT | FALSE_LIT | identifier_ref ;
 identifier_ref    : IDENTIFIER ;
-function_call     : IDENTIFIER BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP ;
+function_call     : IDENTIFIER BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP  | JAVA_BEGIN java_call BEGIN_GROUP (expr (ARG_SEP expr)*)? END_GROUP;
+
+java_call         : (IDENTIFIER JAVA_SEP?)* ;
 
 re             : simple_re union_prime ;
 union_prime    : ALTERNATION re | /* ε */ ;
