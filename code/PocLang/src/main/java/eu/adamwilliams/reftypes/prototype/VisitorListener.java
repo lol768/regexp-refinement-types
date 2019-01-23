@@ -210,7 +210,7 @@ public class VisitorListener extends PocLangBaseListener {
 
     @Override
     public void enterFunction_call(PocLang.Function_callContext ctx) {
-        if (this.phase == VisitorPhase.CHECKING_TYPES) {
+        if (this.phase == VisitorPhase.CHECKING_TYPES && ctx.java_call() == null) {
             String idText = ctx.IDENTIFIER().getText();
             Token symbol = ctx.IDENTIFIER().getSymbol();
 
@@ -229,6 +229,11 @@ public class VisitorListener extends PocLangBaseListener {
                 FunctionCallExpression expr = getAstExpressionForFunctionCall(ctx);
                 this.currentFunction.getBody().getStatements().add(new FunctionCallStatement(expr));
             }
+        }
+
+        if (this.phase == VisitorPhase.CHECKING_TYPES && ctx.java_call() != null) {
+            // TODO: check args & ret type
+
         }
     }
 
@@ -256,7 +261,7 @@ public class VisitorListener extends PocLangBaseListener {
 
 
         PocLang.Function_callContext function_callContext = expr.function_call();
-        if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
+        if (function_callContext != null && function_callContext.java_call() == null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             FunctionDeclaration functionByIdentifier = this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText());
             Pair<Boolean, String> typeCheckResult = this.checkTypes(expected, tc);
             if (!typeCheckResult.a) {
@@ -282,8 +287,12 @@ public class VisitorListener extends PocLangBaseListener {
         }
 
         PocLang.Function_callContext function_callContext = expr.function_call();
-        if (function_callContext != null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
+        if (function_callContext != null && function_callContext.java_call() == null && this.table.hasFunction(function_callContext.IDENTIFIER().getText())) {
             return this.table.getFunctionByIdentifier(function_callContext.IDENTIFIER().getText()).getReturnType();
+        }
+
+        if (function_callContext != null && function_callContext.java_call() != null) {
+            return getAstExpressionForJavaCall(function_callContext).getTypeContainer();
         }
 
         if (expr.BEGIN_GROUP() != null && expr.END_GROUP() != null) {
@@ -484,9 +493,12 @@ public class VisitorListener extends PocLangBaseListener {
             } else if (exprType.getType() == Type.STRING && isAdd) {
                 return new BinaryOperationExpression(BinaryOperationType.STRING_CONCAT, getAstExpression(exprCtx.expr(0)), getAstExpression(exprCtx.expr(1)));
             }
-        } else if (exprCtx.function_call() != null) {
+        } else if (exprCtx.function_call() != null && exprCtx.function_call().java_call() == null) {
             PocLang.Function_callContext ctx = exprCtx.function_call();
             return getAstExpressionForFunctionCall(ctx);
+        } else if (exprCtx.function_call() != null && exprCtx.function_call().java_call() != null) {
+            PocLang.Function_callContext ctx = exprCtx.function_call();
+            return getAstExpressionForJavaCall(ctx);
         } else if (exprCtx.value_ref() != null) {
             PocLang.Value_refContext value_refContext = exprCtx.value_ref();
             if (value_refContext.FALSE_LIT() != null || value_refContext.TRUE_LIT() != null) {
@@ -510,6 +522,12 @@ public class VisitorListener extends PocLangBaseListener {
         throw new IllegalArgumentException("Can't handle this expression");
     }
 
+    private Expression getAstExpressionForJavaCall(PocLang.Function_callContext ctx) {
+        List<Expression> arguments = new ArrayList<>(ctx.expr().stream().map(e -> getAstExpression(e)).collect(Collectors.toList()));
+
+        return new JavaCallExpression( ctx.java_call().IDENTIFIER().stream().map(i -> i.getText()).collect(Collectors.toList()).toArray(String[]::new), arguments);
+    }
+
     private Expression handleComparisonAstExpression(PocLang.ExprContext exprCtx) {
         boolean isEquals = exprCtx.EQ_CONDITION() != null;
         boolean isLt = exprCtx.LT_CONDITION() != null;
@@ -523,8 +541,7 @@ public class VisitorListener extends PocLangBaseListener {
     }
 
     private FunctionCallExpression getAstExpressionForFunctionCall(PocLang.Function_callContext ctx) {
-        List<Expression> arguments = new ArrayList<>();
-        arguments.addAll(ctx.expr().stream().map(e -> getAstExpression(e)).collect(Collectors.toList()));
+        List<Expression> arguments = new ArrayList<>(ctx.expr().stream().map(e -> getAstExpression(e)).collect(Collectors.toList()));
         return new FunctionCallExpression(this.table.getFunctionByIdentifier(ctx.IDENTIFIER().getText()), arguments);
     }
     
