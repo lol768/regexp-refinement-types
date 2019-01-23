@@ -15,8 +15,7 @@ public class FunctionCallStatement extends Statement {
 
     @Override
     public Optional<Expression> execute() {
-        // TODO: set up args
-        BodyEvaluator.evaluateBody(this.getExpr().getCallee().getBody());
+        this.expr.evaluate();
         return Optional.empty();
     }
 }

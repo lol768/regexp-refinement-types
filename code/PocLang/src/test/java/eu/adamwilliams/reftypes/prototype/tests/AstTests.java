@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class AstTests {
@@ -216,6 +217,5 @@ public class AstTests {
 
         Assert.assertEquals(2L, result.get().evaluate());
     }
-}
 
-// End of term 2, start of Easter break
+}
