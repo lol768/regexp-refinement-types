@@ -194,8 +194,9 @@ public class VisitorListener extends PocLangBaseListener {
 
     @Override
     public void enterVar_decl(PocLang.Var_declContext ctx) {
+        String id = ctx.IDENTIFIER().getText();
+
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
-            String id = ctx.IDENTIFIER().getText();
             if (this.lookupIdentifierInScopes(id) != null) {
                 this.reporter.reportError(new ErrorReport(
                         ctx.IDENTIFIER().getSymbol(),
@@ -324,14 +325,14 @@ public class VisitorListener extends PocLangBaseListener {
 
     @Override
     public void enterVar_assignment(PocLang.Var_assignmentContext ctx) {
-        String variableId = ctx.IDENTIFIER().getText();
-        StackEntry identifierLookup = this.lookupIdentifierInScopes(variableId);
-        if (identifierLookup == null) {
-            this.reporter.reportError(new ErrorReport(ctx.getStart(), "Assignment to variable " + variableId + " which isn't in scope"));
-            return; // bail, we can't check types at this point
-        }
-        this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
         if (this.phase == VisitorPhase.CHECKING_TYPES) {
+            String variableId = ctx.IDENTIFIER().getText();
+            StackEntry identifierLookup = this.lookupIdentifierInScopes(variableId);
+            if (identifierLookup == null) {
+                this.reporter.reportError(new ErrorReport(ctx.getStart(), "Assignment to variable " + variableId + " which isn't in scope"));
+                return; // bail, we can't check types at this point
+            }
+            this.checkExprType(ctx.expr(), identifierLookup.getType(), ctx.getStart(), this.reporter);
             this.currentFunction.getBody().getStatements().add(new VariableAssignmentStatement(this.getAstExpression(ctx.expr()), variableId, identifierLookup));
         }
     }

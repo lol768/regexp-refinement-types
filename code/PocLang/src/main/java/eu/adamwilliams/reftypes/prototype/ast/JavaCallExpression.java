@@ -115,6 +115,9 @@ public class JavaCallExpression extends Expression {
 
     public static Object[] transformArguments(List<Expression> arguments, Class<?>[] parameterTypes) {
         Object[] argumentsToPassToJavaMethod = new Object[parameterTypes.length];
+        if (arguments.size() != argumentsToPassToJavaMethod.length) {
+            return null; // TODO: array support
+        }
         for (int i = 0; i < arguments.size(); i++) {
             Expression argument = arguments.get(i);
             Object resultAfterEvaluation = argument.evaluate();

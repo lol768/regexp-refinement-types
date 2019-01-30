@@ -62,6 +62,23 @@ public class ParsingTests {
     }
 
     @Test
+    public void testValidBariableAssignments() {
+        String basicProgram = "function LookupUserById(id: uint[> 1]): string {\n" +
+                "    var a: uint\n" +
+                "    var b: uint\n" +
+                "    a=5\n" +
+                "    b=5\n" +
+                "    return \"abc\"\n" +
+                "}";
+
+        ParseTree tree = getParseTree(basicProgram);
+        Assert.assertTrue(tree.getText().contains("LookupUserById"));
+        Application app = new Application();
+        List<ErrorReport> reports = app.doTypeChecks(tree).getReports();
+        Assert.assertEquals(0, reports.size());
+    }
+
+    @Test
     public void testBoolType() {
         String basicProgram = "function LookupUserById(id: uint[> 1]): bool {\n" +
                 "    return true\n" +
