@@ -1,0 +1,6 @@
+function SecondaryFunction(): string[/g+|f+/] {
+    return "f"
+}
+function Main(): string[/f+/] {
+    return SecondaryFunction()
+}

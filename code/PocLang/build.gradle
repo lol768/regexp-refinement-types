@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'antlr'
     id 'application'
+    id 'maven'
 }
 
 group 'eu.adamwilliams' // yet another problem with Brexit

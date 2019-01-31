@@ -1,0 +1,27 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven'
+}
+
+group 'eu.adamwilliams'
+version '0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'eu.adamwilliams.poclang-gradle-plugin'
+            implementationClass = 'eu.adamwilliams.SimplePlugin'
+        }
+    }
+}
+
+dependencies {
+    compile group: 'eu.adamwilliams', name: 'reftypes-prototype', version: '1.0-SNAPSHOT'
+}
