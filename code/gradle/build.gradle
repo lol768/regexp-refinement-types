@@ -17,11 +17,12 @@ gradlePlugin {
     plugins {
         simplePlugin {
             id = 'eu.adamwilliams.poclang-gradle-plugin'
-            implementationClass = 'eu.adamwilliams.SimplePlugin'
+            implementationClass = 'eu.adamwilliams.TypeCheckPlugin'
         }
     }
 }
 
 dependencies {
     compile group: 'eu.adamwilliams', name: 'reftypes-prototype', version: '1.0-SNAPSHOT'
+    compile group: 'eu.adamwilliams.z3', name: 'vendor-z3', version: '1.0.0'
 }
