@@ -2,14 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="77dbd3e3-716e-4a92-8a2f-31fb7024faa7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../gradle/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gradle/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gradle/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gradle/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gradle/src/main/java/eu/adamwilliams/SimplePlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PocLang/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../PocLang/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PocLang/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../PocLang/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../WasmParser/Test.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/../WasmParser/Test.wasm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../PocLang/src/main/java/eu/adamwilliams/reftypes/prototype/api/RegexRefinement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../report/prior_art_notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PocLang/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../PocLang/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/classes/java/main/eu/adamwilliams/SimplePlugin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/libs/poclang-gradle-plugin-0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/libs/poclang-gradle-plugin-0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/pluginDescriptors/eu.adamwilliams.poclang-gradle-plugin.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/pluginDescriptors/eu.adamwilliams.poclang-gradle-plugin.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/poms/pom-default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/poms/pom-default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/reports/task-properties/report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/reports/task-properties/report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/resources/main/META-INF/gradle-plugins/eu.adamwilliams.poclang-gradle-plugin.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/resources/main/META-INF/gradle-plugins/eu.adamwilliams.poclang-gradle-plugin.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -31,12 +34,21 @@
     </projectState>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+            <state relative-caret-position="425">
+              <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/rrt/type.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -49,14 +61,16 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/src/main/rrt/type.txt" />
         <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3200" />
-    <option name="width" value="640" />
-    <option name="height" value="1057" />
+    <option name="x" value="1918" />
+    <option name="y" value="-22" />
+    <option name="width" value="1924" />
+    <option name="height" value="1104" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -64,7 +78,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -84,10 +97,18 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
+            <path>
+              <item name="rrt-example-1" type="b2602c69:ProjectViewProjectNode" />
+              <item name="examples-1" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="rrt" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -114,27 +135,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1548925330560</updated>
-      <workItem from="1548925334571" duration="515000" />
+      <workItem from="1548925334571" duration="2719000" />
+      <workItem from="1549525631522" duration="4781000" />
+      <workItem from="1549920171462" duration="653000" />
+      <workItem from="1549921082365" duration="678000" />
+      <workItem from="1549922579489" duration="1543000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="379000" />
+    <option name="totallyTimeSpent" value="10374000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3200" y="0" width="640" height="1057" extended-state="0" />
+    <frame x="1918" y="-22" width="1924" height="1104" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Designer" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09008529" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.3464819" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Build" weight="0.3137056" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -142,12 +161,20 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Gradle" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info anchor="right" id="Database" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.32994923" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="Build" order="12" weight="0.3137056" />
+      <window_info anchor="bottom" id="Tool Output" order="13" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="14" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,8 +183,15 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+        <state relative-caret-position="425">
+          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/rrt/type.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
         </state>
       </provider>
     </entry>
