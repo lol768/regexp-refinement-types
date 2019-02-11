@@ -1,6 +1,7 @@
-function SecondaryFunction(): string[/g+|f+/] {
-    return "f"
+function Write(path: string, name: string[/A-Za-z+/]): void {
+    !eu.adamwilliams.rrt.example1.Application.writeToFile(path, name)
 }
-function Main(): string[/f+/] {
-    return SecondaryFunction()
+
+function WriteFfi(path: string, name: string): void {
+    Write(path, name)
 }
