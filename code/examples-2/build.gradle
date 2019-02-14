@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath "eu.adamwilliams:poclang-gradle-plugin:0.1-SNAPSHOT"
+        classpath 'eu.adamwilliams:reftypes-prototype:1.0-SNAPSHOT'
+        classpath group: 'eu.adamwilliams.z3', name: 'vendor-z3', version: '1.0.0'
+    }
+}
+plugins {
+    id 'java'
+}
+apply plugin: eu.adamwilliams.TypeCheckPlugin
+
+group 'eu.adamwilliams'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+build.dependsOn poc
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'eu.adamwilliams:reftypes-prototype:1.0-SNAPSHOT'
+}
