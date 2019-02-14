@@ -28,7 +28,7 @@ public class Application {
             PocLang.ProgramContext program = parser.program();
             eu.adamwilliams.reftypes.prototype.Application app = new eu.adamwilliams.reftypes.prototype.Application();
             FunctionDeclaration func = app.doTypeChecks(program).getFunctionTable().getFunctionByIdentifier("WriteFfi");
-            // FIXME: Friendly way to set arguments
+
             BodyEvaluator.evaluateBody(func.getBody());
         } catch (IOException e) {
             e.printStackTrace();

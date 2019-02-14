@@ -25,16 +25,7 @@ public class JavaCallExpression extends Expression {
     @Override
     public TypeContainer getTypeContainer() {
         Class<?> javaType = this.getTypeOfResult();
-        if (javaType.isAssignableFrom(Long.class) || javaType == Long.TYPE) {
-            return new TypeContainer(Type.UNSIGNED_INTEGER, null);
-        } else if (javaType.isAssignableFrom(Boolean.class) || javaType == Boolean.TYPE) {
-            return new TypeContainer(Type.BOOLEAN, null);
-        } else if (javaType.isAssignableFrom(String.class)) {
-            return new TypeContainer(Type.STRING, null);
-        } else if (javaType.isAssignableFrom(Void.class)) {
-            return new TypeContainer(Type.VOID, null);
-        }
-        return null;
+        return JavaCallExpression.getTypeContainerFromJavaObject(javaType);
     }
 
     public Class<?> getTypeOfResult() {
@@ -135,6 +126,19 @@ public class JavaCallExpression extends Expression {
             return null;
         }
         return argumentsToPassToJavaMethod;
+    }
+
+    public static TypeContainer getTypeContainerFromJavaObject(Class<?> javaType) {
+        if (javaType.isAssignableFrom(Long.class) || javaType == Long.TYPE) {
+            return new TypeContainer(Type.UNSIGNED_INTEGER, null);
+        } else if (javaType.isAssignableFrom(Boolean.class) || javaType == Boolean.TYPE) {
+            return new TypeContainer(Type.BOOLEAN, null);
+        } else if (javaType.isAssignableFrom(String.class)) {
+            return new TypeContainer(Type.STRING, null);
+        } else if (javaType.isAssignableFrom(Void.class)) {
+            return new TypeContainer(Type.VOID, null);
+        }
+        return null;
     }
 
     private class ClassResolutionResult {
