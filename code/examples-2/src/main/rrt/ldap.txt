@@ -2,6 +2,6 @@ function QueryUserImpl(universityId: string[/u[0-9]+/]): void {
     !java.lang.System.out.println("(&(objectclass=user)(warwickUniId="+universityId+")")
 }
 
-function QueryUser(universityId: string): void {
+function QueryUser(universityId: string[/u[0-9]+/]): void {
     QueryUserImpl(universityId)
 }

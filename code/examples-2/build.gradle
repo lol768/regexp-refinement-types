@@ -10,7 +10,10 @@ buildscript {
 }
 plugins {
     id 'java'
+    id 'application'
 }
+mainClassName = 'eu.adamwilliams.rtt.example2.Application'
+
 apply plugin: eu.adamwilliams.TypeCheckPlugin
 
 group 'eu.adamwilliams'
@@ -28,4 +31,8 @@ build.dependsOn poc
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'eu.adamwilliams:reftypes-prototype:1.0-SNAPSHOT'
+}
+
+run {
+    standardInput = System.in
 }

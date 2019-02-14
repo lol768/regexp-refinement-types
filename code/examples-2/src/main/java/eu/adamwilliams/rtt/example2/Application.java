@@ -23,7 +23,9 @@ public class Application {
     private static void exec(String name) {
         PocLex lexer = null;
         try {
-            lexer = new PocLex(CharStreams.fromFileName("src/rtt/ldap.txt"));
+            System.out.println("Working Directory = " +
+                    System.getProperty("user.dir"));
+            lexer = new PocLex(CharStreams.fromFileName("src/main/rrt/ldap.txt"));
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             PocLang parser = new PocLang(tokens);
             PocLang.ProgramContext program = parser.program();
