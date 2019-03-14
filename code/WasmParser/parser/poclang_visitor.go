@@ -86,6 +86,9 @@ type PocLangVisitor interface {
 	// Visit a parse tree produced by PocLang#function_call.
 	VisitFunction_call(ctx *Function_callContext) interface{}
 
+	// Visit a parse tree produced by PocLang#java_call.
+	VisitJava_call(ctx *Java_callContext) interface{}
+
 	// Visit a parse tree produced by PocLang#re.
 	VisitRe(ctx *ReContext) interface{}
 

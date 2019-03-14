@@ -86,6 +86,9 @@ type PocLangListener interface {
 	// EnterFunction_call is called when entering the function_call production.
 	EnterFunction_call(c *Function_callContext)
 
+	// EnterJava_call is called when entering the java_call production.
+	EnterJava_call(c *Java_callContext)
+
 	// EnterRe is called when entering the re production.
 	EnterRe(c *ReContext)
 
@@ -211,6 +214,9 @@ type PocLangListener interface {
 
 	// ExitFunction_call is called when exiting the function_call production.
 	ExitFunction_call(c *Function_callContext)
+
+	// ExitJava_call is called when exiting the java_call production.
+	ExitJava_call(c *Java_callContext)
 
 	// ExitRe is called when exiting the re production.
 	ExitRe(c *ReContext)

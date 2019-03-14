@@ -121,6 +121,7 @@
     </style>
     <script type="text/javascript" src="wasm_exec.js"></script>
     <script type="text/javascript">
+        let foo = true;
         const go = new Go();
         WebAssembly.instantiateStreaming(fetch("Test.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
@@ -222,7 +223,7 @@
                 let selector = $(this).data("selector");
 
                 $("#input").val($(selector).text());
-                $("#input").change();
+                highlightCallback();
                 return false;
             });
         });
@@ -307,7 +308,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Input</h2>
-                    <textarea id="input">
+                    <textarea id="input" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}">
 function Main(): string[/[A-Za-z ]+/] {
     return "Hello world"
 }</textarea>
@@ -322,9 +323,12 @@ function Main(): string[/[A-Za-z ]+/] {
 
                     </p>
                     <a href="#" class="btn btn-primary example-trigger" data-selector="#example-1"><i
-                                class="far fa-wand-magic"></i> Example 1</a>
+                                class="far fa-wand-magic"></i> Example 1 (RE)</a>
                     <a href="#" class="btn btn-primary example-trigger" data-selector="#example-2"><i
-                                class="far fa-wand-magic"></i> Example 2</a>
+                                class="far fa-wand-magic"></i> Example 2 (Fac)</a>
+                    <a href="#" class="btn btn-primary example-trigger" data-selector="#example-3"><i
+                                class="far fa-wand-magic"></i> Example 3 (FFI)</a>
+
                 </div>
                 <div class="col-sm-6">
                     <h2>Output
@@ -393,17 +397,20 @@ function Secondary(): string[/[a-z][a-z]/] {
 }
 </pre>
 <pre class="hide" id="example-2">
-function Main(): string {
-    // On the seventh day of Christmas..
-    return Secondary(5, "")
+function Factorial(n: uint): uint {
+    if (n == 0) {
+        return 1
+    }
+    return n*Factorial(n-1)
 }
 
-function Secondary(i: uint, s: string): string {
-    if (i == 0) {
-        return s
-    }
-    // 5 golden rings
-    return Secondary(i-1, s+"💍")
+function Main(): uint {
+    return Factorial(4)
+}
+</pre>
+<pre class="hide" id="example-3">
+function Main(): uint {
+    return !java.lang.Long.divideUnsigned(4, 2)
 }
 </pre>
 </body>

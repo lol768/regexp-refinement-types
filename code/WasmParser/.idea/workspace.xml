@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6d2fa95-c1aa-482a-bfa7-daabfac2a849" name="Default Changelist" comment="" />
+    <list default="true" id="a6d2fa95-c1aa-482a-bfa7-daabfac2a849" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../PocLang/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../PocLang/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test.go" beforeDir="false" afterPath="$PROJECT_DIR$/Test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/Test.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/PocLang.interp" beforeDir="false" afterPath="$PROJECT_DIR$/parser/PocLang.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/PocLang.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/parser/PocLang.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/PocLex.interp" beforeDir="false" afterPath="$PROJECT_DIR$/parser/PocLex.interp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/PocLex.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/parser/PocLex.tokens" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclang_base_listener.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclang_base_listener.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclang_base_visitor.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclang_base_visitor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclang_listener.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclang_listener.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclang_parser.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclang_parser.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclang_visitor.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclang_visitor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/poclex_lexer.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/poclex_lexer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../examples-1/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../examples-1/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../examples-1/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../examples-1/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../examples-1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../examples-1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/classes/java/main/eu/adamwilliams/SimplePlugin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/libs/poclang-gradle-plugin-0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/libs/poclang-gradle-plugin-0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/pluginDescriptors/eu.adamwilliams.poclang-gradle-plugin.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/pluginDescriptors/eu.adamwilliams.poclang-gradle-plugin.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/poms/pom-default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/poms/pom-default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/reports/task-properties/report.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/reports/task-properties/report.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle/build/resources/main/META-INF/gradle-plugins/eu.adamwilliams.poclang-gradle-plugin.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle/build/resources/main/META-INF/gradle-plugins/eu.adamwilliams.poclang-gradle-plugin.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../progress_report/progress_report.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../progress_report/progress_report.pdf" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -9,12 +35,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="403" column="32" selection-start-line="403" selection-start-column="32" selection-end-line="403" selection-end-column="32" />
+            <state relative-caret-position="348">
+              <caret line="317" column="80" lean-forward="true" selection-start-line="317" selection-start-column="80" selection-end-line="317" selection-end-column="80" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1309">
+              <caret line="78" column="29" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -49,6 +84,7 @@
       <find>evaloutput</find>
       <find>evalout</find>
       <find>Perform</find>
+      <find>example-trigg</find>
     </findStrings>
     <replaceStrings>
       <replace>.css</replace>
@@ -56,6 +92,9 @@
     </replaceStrings>
   </component>
   <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -68,15 +107,16 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="960" />
+    <option name="x" value="1280" />
+    <option name="width" value="640" />
     <option name="height" value="1057" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -87,12 +127,7 @@
             <path>
               <item name="WasmParser" type="b2602c69:ProjectViewProjectNode" />
               <item name="WasmParser" type="462c0819:PsiDirectoryNode" />
-              <item name="fonts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WasmParser" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WasmParser" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="WasmParser" type="b2602c69:ProjectViewProjectNode" />
@@ -107,18 +142,21 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go Application" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
     <property name="last.edited.regexp" value="foo" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Test.go" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
@@ -150,13 +188,29 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a6d2fa95-c1aa-482a-bfa7-daabfac2a849" name="Default Changelist" comment="" />
+      <created>1552511682222</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1552511682222</updated>
+      <workItem from="1552511684952" duration="597000" />
+      <workItem from="1552559134972" duration="5152000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="5749000" />
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1057" extended-state="0" />
+    <frame x="-2" y="-22" width="1924" height="1104" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.48535565" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2468017" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Designer" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3296146" />
@@ -167,12 +221,15 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.3620178" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.34416243" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="bottom" id="Tool Output" order="12" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.5245727" />
@@ -200,13 +257,7 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/char_stream.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="5" selection-start-line="6" selection-start-column="5" selection-end-line="6" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/char_stream.go" />
     <entry file="file://$PROJECT_DIR$/parser/poclang_base_visitor.go">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -225,13 +276,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/token.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/token.go" />
     <entry file="file://$PROJECT_DIR$/parser/poclang_base_listener.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -273,51 +318,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/recognizer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="61" column="58" lean-forward="true" selection-start-line="61" selection-start-column="58" selection-end-line="61" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/error_listener.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="30" column="132" selection-start-line="30" selection-start-column="132" selection-end-line="30" selection-end-column="132" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/errors.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="886">
-          <caret line="110" column="23" selection-start-line="110" selection-start-column="23" selection-end-line="110" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
-          <folding>
-            <element signature="e#14#113#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/recognizer.go" />
+    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/error_listener.go" />
+    <entry file="file://$PROJECT_DIR$/../github.com/antlr/antlr4/runtime/Go/antlr/errors.go" />
+    <entry file="file://$PROJECT_DIR$/test.html" />
     <entry file="file://$PROJECT_DIR$/images/lhs.svg">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/Test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1309">
+          <caret line="78" column="29" selection-start-line="78" selection-start-column="29" selection-end-line="78" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="403" column="32" selection-start-line="403" selection-start-column="32" selection-end-line="403" selection-end-column="32" />
+        <state relative-caret-position="348">
+          <caret line="317" column="80" lean-forward="true" selection-start-line="317" selection-start-column="80" selection-end-line="317" selection-end-column="80" />
         </state>
       </provider>
     </entry>

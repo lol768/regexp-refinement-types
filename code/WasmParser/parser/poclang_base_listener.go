@@ -179,6 +179,12 @@ func (s *BasePocLangListener) EnterFunction_call(ctx *Function_callContext) {}
 // ExitFunction_call is called when production function_call is exited.
 func (s *BasePocLangListener) ExitFunction_call(ctx *Function_callContext) {}
 
+// EnterJava_call is called when production java_call is entered.
+func (s *BasePocLangListener) EnterJava_call(ctx *Java_callContext) {}
+
+// ExitJava_call is called when production java_call is exited.
+func (s *BasePocLangListener) ExitJava_call(ctx *Java_callContext) {}
+
 // EnterRe is called when production re is entered.
 func (s *BasePocLangListener) EnterRe(ctx *ReContext) {}
 

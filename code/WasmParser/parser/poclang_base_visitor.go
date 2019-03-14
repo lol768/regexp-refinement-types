@@ -112,6 +112,10 @@ func (v *BasePocLangVisitor) VisitFunction_call(ctx *Function_callContext) inter
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePocLangVisitor) VisitJava_call(ctx *Java_callContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePocLangVisitor) VisitRe(ctx *ReContext) interface{} {
 	return v.VisitChildren(ctx)
 }

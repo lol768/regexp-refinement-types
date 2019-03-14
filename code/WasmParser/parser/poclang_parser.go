@@ -16,155 +16,168 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 62, 344,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 64, 371,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
 	18, 4, 19, 9, 19, 4, 20, 9, 20, 4, 21, 9, 21, 4, 22, 9, 22, 4, 23, 9, 23,
 	4, 24, 9, 24, 4, 25, 9, 25, 4, 26, 9, 26, 4, 27, 9, 27, 4, 28, 9, 28, 4,
 	29, 9, 29, 4, 30, 9, 30, 4, 31, 9, 31, 4, 32, 9, 32, 4, 33, 9, 33, 4, 34,
-	9, 34, 4, 35, 9, 35, 4, 36, 9, 36, 4, 37, 9, 37, 3, 2, 5, 2, 76, 10, 2,
-	3, 2, 5, 2, 79, 10, 2, 3, 2, 5, 2, 82, 10, 2, 3, 2, 3, 2, 5, 2, 86, 10,
-	2, 3, 2, 3, 2, 7, 2, 90, 10, 2, 12, 2, 14, 2, 93, 11, 2, 3, 3, 3, 3, 3,
-	4, 3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 102, 10, 4, 3, 5, 3, 5, 3, 5, 5, 5, 107,
-	10, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6,
-	3, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7,
-	3, 7, 3, 7, 5, 7, 134, 10, 7, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8, 3, 8,
-	3, 9, 3, 9, 3, 9, 3, 9, 5, 9, 147, 10, 9, 3, 10, 3, 10, 3, 10, 3, 10, 3,
-	10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 5, 10, 160, 10, 10, 3, 11,
-	3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3,
-	11, 5, 11, 174, 10, 11, 3, 12, 3, 12, 3, 12, 3, 12, 3, 13, 3, 13, 3, 13,
-	3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 7, 13, 188, 10, 13, 12, 13, 14, 13,
-	191, 11, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3,
-	14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 15, 3, 15, 3, 15, 3, 15, 3, 16, 3, 16,
-	7, 16, 212, 10, 16, 12, 16, 14, 16, 215, 11, 16, 6, 16, 217, 10, 16, 13,
-	16, 14, 16, 218, 3, 16, 3, 16, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17,
-	3, 17, 5, 17, 230, 10, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3,
-	17, 3, 17, 3, 17, 3, 17, 3, 17, 7, 17, 243, 10, 17, 12, 17, 14, 17, 246,
-	11, 17, 3, 18, 3, 18, 5, 18, 250, 10, 18, 3, 18, 3, 18, 3, 18, 3, 19, 3,
-	19, 3, 19, 3, 19, 3, 19, 5, 19, 260, 10, 19, 3, 20, 3, 20, 3, 21, 3, 21,
-	3, 21, 3, 21, 3, 21, 7, 21, 269, 10, 21, 12, 21, 14, 21, 272, 11, 21, 5,
-	21, 274, 10, 21, 3, 21, 3, 21, 3, 22, 3, 22, 3, 22, 3, 23, 3, 23, 3, 23,
-	5, 23, 284, 10, 23, 3, 24, 3, 24, 3, 24, 3, 25, 3, 25, 5, 25, 291, 10,
-	25, 3, 26, 3, 26, 3, 26, 5, 26, 296, 10, 26, 3, 27, 3, 27, 3, 27, 3, 28,
-	3, 28, 3, 28, 3, 29, 3, 29, 3, 29, 3, 29, 5, 29, 308, 10, 29, 3, 30, 3,
-	30, 3, 30, 3, 30, 3, 31, 3, 31, 5, 31, 316, 10, 31, 3, 32, 3, 32, 3, 32,
-	3, 32, 3, 33, 3, 33, 3, 33, 3, 33, 3, 33, 3, 34, 3, 34, 3, 35, 3, 35, 3,
-	36, 3, 36, 3, 36, 3, 36, 5, 36, 335, 10, 36, 3, 37, 3, 37, 3, 37, 3, 37,
-	3, 37, 5, 37, 342, 10, 37, 3, 37, 2, 3, 32, 38, 2, 4, 6, 8, 10, 12, 14,
-	16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50,
-	52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 2, 6, 4, 2, 4, 4, 7, 7, 3,
-	2, 5, 6, 3, 2, 21, 25, 4, 2, 40, 40, 43, 43, 2, 354, 2, 91, 3, 2, 2, 2,
-	4, 94, 3, 2, 2, 2, 6, 101, 3, 2, 2, 2, 8, 103, 3, 2, 2, 2, 10, 108, 3,
-	2, 2, 2, 12, 133, 3, 2, 2, 2, 14, 135, 3, 2, 2, 2, 16, 146, 3, 2, 2, 2,
-	18, 159, 3, 2, 2, 2, 20, 173, 3, 2, 2, 2, 22, 175, 3, 2, 2, 2, 24, 179,
-	3, 2, 2, 2, 26, 200, 3, 2, 2, 2, 28, 205, 3, 2, 2, 2, 30, 216, 3, 2, 2,
-	2, 32, 229, 3, 2, 2, 2, 34, 247, 3, 2, 2, 2, 36, 259, 3, 2, 2, 2, 38, 261,
-	3, 2, 2, 2, 40, 263, 3, 2, 2, 2, 42, 277, 3, 2, 2, 2, 44, 283, 3, 2, 2,
-	2, 46, 285, 3, 2, 2, 2, 48, 290, 3, 2, 2, 2, 50, 295, 3, 2, 2, 2, 52, 297,
-	3, 2, 2, 2, 54, 300, 3, 2, 2, 2, 56, 307, 3, 2, 2, 2, 58, 309, 3, 2, 2,
-	2, 60, 315, 3, 2, 2, 2, 62, 317, 3, 2, 2, 2, 64, 321, 3, 2, 2, 2, 66, 326,
-	3, 2, 2, 2, 68, 328, 3, 2, 2, 2, 70, 334, 3, 2, 2, 2, 72, 341, 3, 2, 2,
-	2, 74, 76, 7, 33, 2, 2, 75, 74, 3, 2, 2, 2, 75, 76, 3, 2, 2, 2, 76, 78,
-	3, 2, 2, 2, 77, 79, 5, 6, 4, 2, 78, 77, 3, 2, 2, 2, 78, 79, 3, 2, 2, 2,
-	79, 81, 3, 2, 2, 2, 80, 82, 7, 33, 2, 2, 81, 80, 3, 2, 2, 2, 81, 82, 3,
-	2, 2, 2, 82, 83, 3, 2, 2, 2, 83, 90, 7, 35, 2, 2, 84, 86, 7, 33, 2, 2,
-	85, 84, 3, 2, 2, 2, 85, 86, 3, 2, 2, 2, 86, 87, 3, 2, 2, 2, 87, 88, 7,
-	34, 2, 2, 88, 90, 7, 35, 2, 2, 89, 75, 3, 2, 2, 2, 89, 85, 3, 2, 2, 2,
-	90, 93, 3, 2, 2, 2, 91, 89, 3, 2, 2, 2, 91, 92, 3, 2, 2, 2, 92, 3, 3, 2,
-	2, 2, 93, 91, 3, 2, 2, 2, 94, 95, 5, 2, 2, 2, 95, 5, 3, 2, 2, 2, 96, 102,
-	5, 34, 18, 2, 97, 102, 5, 8, 5, 2, 98, 102, 5, 14, 8, 2, 99, 102, 5, 40,
-	21, 2, 100, 102, 5, 10, 6, 2, 101, 96, 3, 2, 2, 2, 101, 97, 3, 2, 2, 2,
-	101, 98, 3, 2, 2, 2, 101, 99, 3, 2, 2, 2, 101, 100, 3, 2, 2, 2, 102, 7,
-	3, 2, 2, 2, 103, 106, 7, 8, 2, 2, 104, 105, 7, 14, 2, 2, 105, 107, 5, 32,
-	17, 2, 106, 104, 3, 2, 2, 2, 106, 107, 3, 2, 2, 2, 107, 9, 3, 2, 2, 2,
-	108, 109, 7, 11, 2, 2, 109, 110, 7, 14, 2, 2, 110, 111, 7, 28, 2, 2, 111,
-	112, 5, 32, 17, 2, 112, 113, 7, 29, 2, 2, 113, 114, 7, 14, 2, 2, 114, 115,
-	7, 30, 2, 2, 115, 116, 7, 35, 2, 2, 116, 117, 5, 2, 2, 2, 117, 118, 7,
-	31, 2, 2, 118, 119, 5, 12, 7, 2, 119, 11, 3, 2, 2, 2, 120, 121, 7, 14,
-	2, 2, 121, 122, 7, 12, 2, 2, 122, 123, 7, 14, 2, 2, 123, 124, 7, 30, 2,
-	2, 124, 125, 7, 35, 2, 2, 125, 126, 5, 2, 2, 2, 126, 127, 7, 31, 2, 2,
-	127, 134, 3, 2, 2, 2, 128, 129, 7, 14, 2, 2, 129, 130, 7, 12, 2, 2, 130,
-	131, 7, 14, 2, 2, 131, 134, 5, 10, 6, 2, 132, 134, 3, 2, 2, 2, 133, 120,
-	3, 2, 2, 2, 133, 128, 3, 2, 2, 2, 133, 132, 3, 2, 2, 2, 134, 13, 3, 2,
-	2, 2, 135, 136, 7, 9, 2, 2, 136, 137, 7, 14, 2, 2, 137, 138, 7, 32, 2,
-	2, 138, 139, 7, 13, 2, 2, 139, 140, 7, 14, 2, 2, 140, 141, 5, 18, 10, 2,
-	141, 15, 3, 2, 2, 2, 142, 147, 7, 15, 2, 2, 143, 147, 7, 16, 2, 2, 144,
-	147, 7, 18, 2, 2, 145, 147, 7, 17, 2, 2, 146, 142, 3, 2, 2, 2, 146, 143,
-	3, 2, 2, 2, 146, 144, 3, 2, 2, 2, 146, 145, 3, 2, 2, 2, 147, 17, 3, 2,
-	2, 2, 148, 160, 5, 16, 9, 2, 149, 150, 5, 16, 9, 2, 150, 151, 7, 27, 2,
-	2, 151, 152, 5, 20, 11, 2, 152, 153, 7, 62, 2, 2, 153, 160, 3, 2, 2, 2,
-	154, 155, 5, 16, 9, 2, 155, 156, 7, 27, 2, 2, 156, 157, 5, 22, 12, 2, 157,
-	158, 7, 62, 2, 2, 158, 160, 3, 2, 2, 2, 159, 148, 3, 2, 2, 2, 159, 149,
-	3, 2, 2, 2, 159, 154, 3, 2, 2, 2, 160, 19, 3, 2, 2, 2, 161, 162, 7, 56,
-	2, 2, 162, 163, 7, 60, 2, 2, 163, 174, 7, 59, 2, 2, 164, 165, 7, 54, 2,
-	2, 165, 166, 7, 60, 2, 2, 166, 174, 7, 59, 2, 2, 167, 168, 7, 57, 2, 2,
-	168, 169, 7, 60, 2, 2, 169, 174, 7, 59, 2, 2, 170, 171, 7, 55, 2, 2, 171,
-	172, 7, 60, 2, 2, 172, 174, 7, 59, 2, 2, 173, 161, 3, 2, 2, 2, 173, 164,
-	3, 2, 2, 2, 173, 167, 3, 2, 2, 2, 173, 170, 3, 2, 2, 2, 174, 21, 3, 2,
-	2, 2, 175, 176, 7, 61, 2, 2, 176, 177, 5, 42, 22, 2, 177, 178, 7, 49, 2,
-	2, 178, 23, 3, 2, 2, 2, 179, 180, 7, 10, 2, 2, 180, 181, 7, 14, 2, 2, 181,
-	182, 7, 32, 2, 2, 182, 189, 7, 28, 2, 2, 183, 188, 5, 26, 14, 2, 184, 185,
-	5, 26, 14, 2, 185, 186, 7, 36, 2, 2, 186, 188, 3, 2, 2, 2, 187, 183, 3,
-	2, 2, 2, 187, 184, 3, 2, 2, 2, 188, 191, 3, 2, 2, 2, 189, 187, 3, 2, 2,
-	2, 189, 190, 3, 2, 2, 2, 190, 192, 3, 2, 2, 2, 191, 189, 3, 2, 2, 2, 192,
-	193, 7, 29, 2, 2, 193, 194, 7, 13, 2, 2, 194, 195, 7, 14, 2, 2, 195, 196,
-	5, 18, 10, 2, 196, 197, 7, 14, 2, 2, 197, 198, 7, 30, 2, 2, 198, 199, 7,
-	35, 2, 2, 199, 25, 3, 2, 2, 2, 200, 201, 7, 32, 2, 2, 201, 202, 7, 13,
-	2, 2, 202, 203, 7, 14, 2, 2, 203, 204, 5, 18, 10, 2, 204, 27, 3, 2, 2,
-	2, 205, 206, 5, 24, 13, 2, 206, 207, 5, 4, 3, 2, 207, 208, 7, 31, 2, 2,
-	208, 29, 3, 2, 2, 2, 209, 213, 5, 28, 15, 2, 210, 212, 7, 35, 2, 2, 211,
-	210, 3, 2, 2, 2, 212, 215, 3, 2, 2, 2, 213, 211, 3, 2, 2, 2, 213, 214,
-	3, 2, 2, 2, 214, 217, 3, 2, 2, 2, 215, 213, 3, 2, 2, 2, 216, 209, 3, 2,
-	2, 2, 217, 218, 3, 2, 2, 2, 218, 216, 3, 2, 2, 2, 218, 219, 3, 2, 2, 2,
-	219, 220, 3, 2, 2, 2, 220, 221, 7, 2, 2, 3, 221, 31, 3, 2, 2, 2, 222, 223,
-	8, 17, 1, 2, 223, 230, 5, 36, 19, 2, 224, 230, 5, 40, 21, 2, 225, 226,
-	7, 28, 2, 2, 226, 227, 5, 32, 17, 2, 227, 228, 7, 29, 2, 2, 228, 230, 3,
-	2, 2, 2, 229, 222, 3, 2, 2, 2, 229, 224, 3, 2, 2, 2, 229, 225, 3, 2, 2,
-	2, 230, 244, 3, 2, 2, 2, 231, 232, 12, 8, 2, 2, 232, 233, 9, 2, 2, 2, 233,
-	243, 5, 32, 17, 9, 234, 235, 12, 7, 2, 2, 235, 236, 9, 3, 2, 2, 236, 243,
-	5, 32, 17, 8, 237, 238, 12, 5, 2, 2, 238, 239, 7, 14, 2, 2, 239, 240, 9,
-	4, 2, 2, 240, 241, 7, 14, 2, 2, 241, 243, 5, 32, 17, 6, 242, 231, 3, 2,
-	2, 2, 242, 234, 3, 2, 2, 2, 242, 237, 3, 2, 2, 2, 243, 246, 3, 2, 2, 2,
-	244, 242, 3, 2, 2, 2, 244, 245, 3, 2, 2, 2, 245, 33, 3, 2, 2, 2, 246, 244,
-	3, 2, 2, 2, 247, 249, 7, 32, 2, 2, 248, 250, 7, 33, 2, 2, 249, 248, 3,
-	2, 2, 2, 249, 250, 3, 2, 2, 2, 250, 251, 3, 2, 2, 2, 251, 252, 7, 26, 2,
-	2, 252, 253, 5, 32, 17, 2, 253, 35, 3, 2, 2, 2, 254, 260, 7, 3, 2, 2, 255,
-	260, 7, 37, 2, 2, 256, 260, 7, 19, 2, 2, 257, 260, 7, 20, 2, 2, 258, 260,
-	5, 38, 20, 2, 259, 254, 3, 2, 2, 2, 259, 255, 3, 2, 2, 2, 259, 256, 3,
-	2, 2, 2, 259, 257, 3, 2, 2, 2, 259, 258, 3, 2, 2, 2, 260, 37, 3, 2, 2,
-	2, 261, 262, 7, 32, 2, 2, 262, 39, 3, 2, 2, 2, 263, 264, 7, 32, 2, 2, 264,
-	273, 7, 28, 2, 2, 265, 270, 5, 32, 17, 2, 266, 267, 7, 36, 2, 2, 267, 269,
-	5, 32, 17, 2, 268, 266, 3, 2, 2, 2, 269, 272, 3, 2, 2, 2, 270, 268, 3,
-	2, 2, 2, 270, 271, 3, 2, 2, 2, 271, 274, 3, 2, 2, 2, 272, 270, 3, 2, 2,
-	2, 273, 265, 3, 2, 2, 2, 273, 274, 3, 2, 2, 2, 274, 275, 3, 2, 2, 2, 275,
-	276, 7, 29, 2, 2, 276, 41, 3, 2, 2, 2, 277, 278, 5, 46, 24, 2, 278, 279,
-	5, 44, 23, 2, 279, 43, 3, 2, 2, 2, 280, 281, 7, 47, 2, 2, 281, 284, 5,
-	42, 22, 2, 282, 284, 3, 2, 2, 2, 283, 280, 3, 2, 2, 2, 283, 282, 3, 2,
-	2, 2, 284, 45, 3, 2, 2, 2, 285, 286, 5, 50, 26, 2, 286, 287, 5, 48, 25,
-	2, 287, 47, 3, 2, 2, 2, 288, 291, 5, 46, 24, 2, 289, 291, 3, 2, 2, 2, 290,
-	288, 3, 2, 2, 2, 290, 289, 3, 2, 2, 2, 291, 49, 3, 2, 2, 2, 292, 296, 5,
-	52, 27, 2, 293, 296, 5, 54, 28, 2, 294, 296, 5, 56, 29, 2, 295, 292, 3,
-	2, 2, 2, 295, 293, 3, 2, 2, 2, 295, 294, 3, 2, 2, 2, 296, 51, 3, 2, 2,
-	2, 297, 298, 5, 56, 29, 2, 298, 299, 7, 45, 2, 2, 299, 53, 3, 2, 2, 2,
-	300, 301, 5, 56, 29, 2, 301, 302, 7, 46, 2, 2, 302, 55, 3, 2, 2, 2, 303,
-	308, 5, 58, 30, 2, 304, 308, 7, 44, 2, 2, 305, 308, 5, 68, 35, 2, 306,
-	308, 5, 60, 31, 2, 307, 303, 3, 2, 2, 2, 307, 304, 3, 2, 2, 2, 307, 305,
-	3, 2, 2, 2, 307, 306, 3, 2, 2, 2, 308, 57, 3, 2, 2, 2, 309, 310, 7, 41,
-	2, 2, 310, 311, 5, 42, 22, 2, 311, 312, 7, 42, 2, 2, 312, 59, 3, 2, 2,
-	2, 313, 316, 5, 62, 32, 2, 314, 316, 5, 64, 33, 2, 315, 313, 3, 2, 2, 2,
-	315, 314, 3, 2, 2, 2, 316, 61, 3, 2, 2, 2, 317, 318, 7, 38, 2, 2, 318,
-	319, 5, 70, 36, 2, 319, 320, 7, 53, 2, 2, 320, 63, 3, 2, 2, 2, 321, 322,
-	7, 38, 2, 2, 322, 323, 7, 48, 2, 2, 323, 324, 5, 70, 36, 2, 324, 325, 7,
-	53, 2, 2, 325, 65, 3, 2, 2, 2, 326, 327, 7, 52, 2, 2, 327, 67, 3, 2, 2,
-	2, 328, 329, 9, 5, 2, 2, 329, 69, 3, 2, 2, 2, 330, 335, 5, 72, 37, 2, 331,
-	332, 5, 72, 37, 2, 332, 333, 5, 70, 36, 2, 333, 335, 3, 2, 2, 2, 334, 330,
-	3, 2, 2, 2, 334, 331, 3, 2, 2, 2, 335, 71, 3, 2, 2, 2, 336, 337, 5, 66,
-	34, 2, 337, 338, 7, 51, 2, 2, 338, 339, 5, 66, 34, 2, 339, 342, 3, 2, 2,
-	2, 340, 342, 5, 66, 34, 2, 341, 336, 3, 2, 2, 2, 341, 340, 3, 2, 2, 2,
-	342, 73, 3, 2, 2, 2, 32, 75, 78, 81, 85, 89, 91, 101, 106, 133, 146, 159,
-	173, 187, 189, 213, 218, 229, 242, 244, 249, 259, 270, 273, 283, 290, 295,
-	307, 315, 334, 341,
+	9, 34, 4, 35, 9, 35, 4, 36, 9, 36, 4, 37, 9, 37, 4, 38, 9, 38, 3, 2, 5,
+	2, 78, 10, 2, 3, 2, 5, 2, 81, 10, 2, 3, 2, 5, 2, 84, 10, 2, 3, 2, 3, 2,
+	5, 2, 88, 10, 2, 3, 2, 3, 2, 7, 2, 92, 10, 2, 12, 2, 14, 2, 95, 11, 2,
+	3, 3, 3, 3, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 5, 4, 104, 10, 4, 3, 5, 3, 5,
+	3, 5, 5, 5, 109, 10, 5, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6,
+	3, 6, 3, 6, 3, 6, 3, 6, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 3, 7,
+	3, 7, 3, 7, 3, 7, 3, 7, 3, 7, 5, 7, 136, 10, 7, 3, 8, 3, 8, 3, 8, 3, 8,
+	3, 8, 3, 8, 3, 8, 3, 9, 3, 9, 3, 9, 3, 9, 5, 9, 149, 10, 9, 3, 10, 3, 10,
+	3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 3, 10, 5, 10, 162,
+	10, 10, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11, 3, 11,
+	3, 11, 3, 11, 3, 11, 5, 11, 176, 10, 11, 3, 12, 3, 12, 3, 12, 3, 12, 3,
+	13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 7, 13, 190, 10, 13,
+	12, 13, 14, 13, 193, 11, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13, 3, 13,
+	3, 13, 3, 13, 3, 14, 3, 14, 3, 14, 3, 14, 3, 14, 3, 15, 3, 15, 3, 15, 3,
+	15, 3, 16, 3, 16, 7, 16, 214, 10, 16, 12, 16, 14, 16, 217, 11, 16, 6, 16,
+	219, 10, 16, 13, 16, 14, 16, 220, 3, 16, 3, 16, 3, 17, 3, 17, 3, 17, 3,
+	17, 3, 17, 3, 17, 3, 17, 5, 17, 232, 10, 17, 3, 17, 3, 17, 3, 17, 3, 17,
+	3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 3, 17, 7, 17, 245, 10, 17, 12,
+	17, 14, 17, 248, 11, 17, 3, 18, 3, 18, 5, 18, 252, 10, 18, 3, 18, 3, 18,
+	3, 18, 3, 19, 3, 19, 3, 19, 3, 19, 3, 19, 5, 19, 262, 10, 19, 3, 20, 3,
+	20, 3, 21, 3, 21, 3, 21, 3, 21, 3, 21, 7, 21, 271, 10, 21, 12, 21, 14,
+	21, 274, 11, 21, 5, 21, 276, 10, 21, 3, 21, 3, 21, 3, 21, 3, 21, 3, 21,
+	3, 21, 3, 21, 7, 21, 285, 10, 21, 12, 21, 14, 21, 288, 11, 21, 5, 21, 290,
+	10, 21, 3, 21, 3, 21, 5, 21, 294, 10, 21, 3, 22, 3, 22, 5, 22, 298, 10,
+	22, 7, 22, 300, 10, 22, 12, 22, 14, 22, 303, 11, 22, 3, 23, 3, 23, 3, 23,
+	3, 24, 3, 24, 3, 24, 5, 24, 311, 10, 24, 3, 25, 3, 25, 3, 25, 3, 26, 3,
+	26, 5, 26, 318, 10, 26, 3, 27, 3, 27, 3, 27, 5, 27, 323, 10, 27, 3, 28,
+	3, 28, 3, 28, 3, 29, 3, 29, 3, 29, 3, 30, 3, 30, 3, 30, 3, 30, 5, 30, 335,
+	10, 30, 3, 31, 3, 31, 3, 31, 3, 31, 3, 32, 3, 32, 5, 32, 343, 10, 32, 3,
+	33, 3, 33, 3, 33, 3, 33, 3, 34, 3, 34, 3, 34, 3, 34, 3, 34, 3, 35, 3, 35,
+	3, 36, 3, 36, 3, 37, 3, 37, 3, 37, 3, 37, 5, 37, 362, 10, 37, 3, 38, 3,
+	38, 3, 38, 3, 38, 3, 38, 5, 38, 369, 10, 38, 3, 38, 2, 3, 32, 39, 2, 4,
+	6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
+	44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 2, 6, 4,
+	2, 4, 4, 7, 7, 3, 2, 5, 6, 3, 2, 21, 25, 4, 2, 42, 42, 45, 45, 2, 385,
+	2, 93, 3, 2, 2, 2, 4, 96, 3, 2, 2, 2, 6, 103, 3, 2, 2, 2, 8, 105, 3, 2,
+	2, 2, 10, 110, 3, 2, 2, 2, 12, 135, 3, 2, 2, 2, 14, 137, 3, 2, 2, 2, 16,
+	148, 3, 2, 2, 2, 18, 161, 3, 2, 2, 2, 20, 175, 3, 2, 2, 2, 22, 177, 3,
+	2, 2, 2, 24, 181, 3, 2, 2, 2, 26, 202, 3, 2, 2, 2, 28, 207, 3, 2, 2, 2,
+	30, 218, 3, 2, 2, 2, 32, 231, 3, 2, 2, 2, 34, 249, 3, 2, 2, 2, 36, 261,
+	3, 2, 2, 2, 38, 263, 3, 2, 2, 2, 40, 293, 3, 2, 2, 2, 42, 301, 3, 2, 2,
+	2, 44, 304, 3, 2, 2, 2, 46, 310, 3, 2, 2, 2, 48, 312, 3, 2, 2, 2, 50, 317,
+	3, 2, 2, 2, 52, 322, 3, 2, 2, 2, 54, 324, 3, 2, 2, 2, 56, 327, 3, 2, 2,
+	2, 58, 334, 3, 2, 2, 2, 60, 336, 3, 2, 2, 2, 62, 342, 3, 2, 2, 2, 64, 344,
+	3, 2, 2, 2, 66, 348, 3, 2, 2, 2, 68, 353, 3, 2, 2, 2, 70, 355, 3, 2, 2,
+	2, 72, 361, 3, 2, 2, 2, 74, 368, 3, 2, 2, 2, 76, 78, 7, 35, 2, 2, 77, 76,
+	3, 2, 2, 2, 77, 78, 3, 2, 2, 2, 78, 80, 3, 2, 2, 2, 79, 81, 5, 6, 4, 2,
+	80, 79, 3, 2, 2, 2, 80, 81, 3, 2, 2, 2, 81, 83, 3, 2, 2, 2, 82, 84, 7,
+	35, 2, 2, 83, 82, 3, 2, 2, 2, 83, 84, 3, 2, 2, 2, 84, 85, 3, 2, 2, 2, 85,
+	92, 7, 37, 2, 2, 86, 88, 7, 35, 2, 2, 87, 86, 3, 2, 2, 2, 87, 88, 3, 2,
+	2, 2, 88, 89, 3, 2, 2, 2, 89, 90, 7, 36, 2, 2, 90, 92, 7, 37, 2, 2, 91,
+	77, 3, 2, 2, 2, 91, 87, 3, 2, 2, 2, 92, 95, 3, 2, 2, 2, 93, 91, 3, 2, 2,
+	2, 93, 94, 3, 2, 2, 2, 94, 3, 3, 2, 2, 2, 95, 93, 3, 2, 2, 2, 96, 97, 5,
+	2, 2, 2, 97, 5, 3, 2, 2, 2, 98, 104, 5, 34, 18, 2, 99, 104, 5, 8, 5, 2,
+	100, 104, 5, 14, 8, 2, 101, 104, 5, 40, 21, 2, 102, 104, 5, 10, 6, 2, 103,
+	98, 3, 2, 2, 2, 103, 99, 3, 2, 2, 2, 103, 100, 3, 2, 2, 2, 103, 101, 3,
+	2, 2, 2, 103, 102, 3, 2, 2, 2, 104, 7, 3, 2, 2, 2, 105, 108, 7, 8, 2, 2,
+	106, 107, 7, 14, 2, 2, 107, 109, 5, 32, 17, 2, 108, 106, 3, 2, 2, 2, 108,
+	109, 3, 2, 2, 2, 109, 9, 3, 2, 2, 2, 110, 111, 7, 11, 2, 2, 111, 112, 7,
+	14, 2, 2, 112, 113, 7, 28, 2, 2, 113, 114, 5, 32, 17, 2, 114, 115, 7, 29,
+	2, 2, 115, 116, 7, 14, 2, 2, 116, 117, 7, 30, 2, 2, 117, 118, 7, 37, 2,
+	2, 118, 119, 5, 2, 2, 2, 119, 120, 7, 31, 2, 2, 120, 121, 5, 12, 7, 2,
+	121, 11, 3, 2, 2, 2, 122, 123, 7, 14, 2, 2, 123, 124, 7, 12, 2, 2, 124,
+	125, 7, 14, 2, 2, 125, 126, 7, 30, 2, 2, 126, 127, 7, 37, 2, 2, 127, 128,
+	5, 2, 2, 2, 128, 129, 7, 31, 2, 2, 129, 136, 3, 2, 2, 2, 130, 131, 7, 14,
+	2, 2, 131, 132, 7, 12, 2, 2, 132, 133, 7, 14, 2, 2, 133, 136, 5, 10, 6,
+	2, 134, 136, 3, 2, 2, 2, 135, 122, 3, 2, 2, 2, 135, 130, 3, 2, 2, 2, 135,
+	134, 3, 2, 2, 2, 136, 13, 3, 2, 2, 2, 137, 138, 7, 9, 2, 2, 138, 139, 7,
+	14, 2, 2, 139, 140, 7, 32, 2, 2, 140, 141, 7, 13, 2, 2, 141, 142, 7, 14,
+	2, 2, 142, 143, 5, 18, 10, 2, 143, 15, 3, 2, 2, 2, 144, 149, 7, 15, 2,
+	2, 145, 149, 7, 16, 2, 2, 146, 149, 7, 18, 2, 2, 147, 149, 7, 17, 2, 2,
+	148, 144, 3, 2, 2, 2, 148, 145, 3, 2, 2, 2, 148, 146, 3, 2, 2, 2, 148,
+	147, 3, 2, 2, 2, 149, 17, 3, 2, 2, 2, 150, 162, 5, 16, 9, 2, 151, 152,
+	5, 16, 9, 2, 152, 153, 7, 27, 2, 2, 153, 154, 5, 20, 11, 2, 154, 155, 7,
+	64, 2, 2, 155, 162, 3, 2, 2, 2, 156, 157, 5, 16, 9, 2, 157, 158, 7, 27,
+	2, 2, 158, 159, 5, 22, 12, 2, 159, 160, 7, 64, 2, 2, 160, 162, 3, 2, 2,
+	2, 161, 150, 3, 2, 2, 2, 161, 151, 3, 2, 2, 2, 161, 156, 3, 2, 2, 2, 162,
+	19, 3, 2, 2, 2, 163, 164, 7, 58, 2, 2, 164, 165, 7, 62, 2, 2, 165, 176,
+	7, 61, 2, 2, 166, 167, 7, 56, 2, 2, 167, 168, 7, 62, 2, 2, 168, 176, 7,
+	61, 2, 2, 169, 170, 7, 59, 2, 2, 170, 171, 7, 62, 2, 2, 171, 176, 7, 61,
+	2, 2, 172, 173, 7, 57, 2, 2, 173, 174, 7, 62, 2, 2, 174, 176, 7, 61, 2,
+	2, 175, 163, 3, 2, 2, 2, 175, 166, 3, 2, 2, 2, 175, 169, 3, 2, 2, 2, 175,
+	172, 3, 2, 2, 2, 176, 21, 3, 2, 2, 2, 177, 178, 7, 63, 2, 2, 178, 179,
+	5, 44, 23, 2, 179, 180, 7, 51, 2, 2, 180, 23, 3, 2, 2, 2, 181, 182, 7,
+	10, 2, 2, 182, 183, 7, 14, 2, 2, 183, 184, 7, 32, 2, 2, 184, 191, 7, 28,
+	2, 2, 185, 190, 5, 26, 14, 2, 186, 187, 5, 26, 14, 2, 187, 188, 7, 38,
+	2, 2, 188, 190, 3, 2, 2, 2, 189, 185, 3, 2, 2, 2, 189, 186, 3, 2, 2, 2,
+	190, 193, 3, 2, 2, 2, 191, 189, 3, 2, 2, 2, 191, 192, 3, 2, 2, 2, 192,
+	194, 3, 2, 2, 2, 193, 191, 3, 2, 2, 2, 194, 195, 7, 29, 2, 2, 195, 196,
+	7, 13, 2, 2, 196, 197, 7, 14, 2, 2, 197, 198, 5, 18, 10, 2, 198, 199, 7,
+	14, 2, 2, 199, 200, 7, 30, 2, 2, 200, 201, 7, 37, 2, 2, 201, 25, 3, 2,
+	2, 2, 202, 203, 7, 32, 2, 2, 203, 204, 7, 13, 2, 2, 204, 205, 7, 14, 2,
+	2, 205, 206, 5, 18, 10, 2, 206, 27, 3, 2, 2, 2, 207, 208, 5, 24, 13, 2,
+	208, 209, 5, 4, 3, 2, 209, 210, 7, 31, 2, 2, 210, 29, 3, 2, 2, 2, 211,
+	215, 5, 28, 15, 2, 212, 214, 7, 37, 2, 2, 213, 212, 3, 2, 2, 2, 214, 217,
+	3, 2, 2, 2, 215, 213, 3, 2, 2, 2, 215, 216, 3, 2, 2, 2, 216, 219, 3, 2,
+	2, 2, 217, 215, 3, 2, 2, 2, 218, 211, 3, 2, 2, 2, 219, 220, 3, 2, 2, 2,
+	220, 218, 3, 2, 2, 2, 220, 221, 3, 2, 2, 2, 221, 222, 3, 2, 2, 2, 222,
+	223, 7, 2, 2, 3, 223, 31, 3, 2, 2, 2, 224, 225, 8, 17, 1, 2, 225, 232,
+	5, 36, 19, 2, 226, 232, 5, 40, 21, 2, 227, 228, 7, 28, 2, 2, 228, 229,
+	5, 32, 17, 2, 229, 230, 7, 29, 2, 2, 230, 232, 3, 2, 2, 2, 231, 224, 3,
+	2, 2, 2, 231, 226, 3, 2, 2, 2, 231, 227, 3, 2, 2, 2, 232, 246, 3, 2, 2,
+	2, 233, 234, 12, 8, 2, 2, 234, 235, 9, 2, 2, 2, 235, 245, 5, 32, 17, 9,
+	236, 237, 12, 7, 2, 2, 237, 238, 9, 3, 2, 2, 238, 245, 5, 32, 17, 8, 239,
+	240, 12, 5, 2, 2, 240, 241, 7, 14, 2, 2, 241, 242, 9, 4, 2, 2, 242, 243,
+	7, 14, 2, 2, 243, 245, 5, 32, 17, 6, 244, 233, 3, 2, 2, 2, 244, 236, 3,
+	2, 2, 2, 244, 239, 3, 2, 2, 2, 245, 248, 3, 2, 2, 2, 246, 244, 3, 2, 2,
+	2, 246, 247, 3, 2, 2, 2, 247, 33, 3, 2, 2, 2, 248, 246, 3, 2, 2, 2, 249,
+	251, 7, 32, 2, 2, 250, 252, 7, 35, 2, 2, 251, 250, 3, 2, 2, 2, 251, 252,
+	3, 2, 2, 2, 252, 253, 3, 2, 2, 2, 253, 254, 7, 26, 2, 2, 254, 255, 5, 32,
+	17, 2, 255, 35, 3, 2, 2, 2, 256, 262, 7, 3, 2, 2, 257, 262, 7, 39, 2, 2,
+	258, 262, 7, 19, 2, 2, 259, 262, 7, 20, 2, 2, 260, 262, 5, 38, 20, 2, 261,
+	256, 3, 2, 2, 2, 261, 257, 3, 2, 2, 2, 261, 258, 3, 2, 2, 2, 261, 259,
+	3, 2, 2, 2, 261, 260, 3, 2, 2, 2, 262, 37, 3, 2, 2, 2, 263, 264, 7, 32,
+	2, 2, 264, 39, 3, 2, 2, 2, 265, 266, 7, 32, 2, 2, 266, 275, 7, 28, 2, 2,
+	267, 272, 5, 32, 17, 2, 268, 269, 7, 38, 2, 2, 269, 271, 5, 32, 17, 2,
+	270, 268, 3, 2, 2, 2, 271, 274, 3, 2, 2, 2, 272, 270, 3, 2, 2, 2, 272,
+	273, 3, 2, 2, 2, 273, 276, 3, 2, 2, 2, 274, 272, 3, 2, 2, 2, 275, 267,
+	3, 2, 2, 2, 275, 276, 3, 2, 2, 2, 276, 277, 3, 2, 2, 2, 277, 294, 7, 29,
+	2, 2, 278, 279, 7, 33, 2, 2, 279, 280, 5, 42, 22, 2, 280, 289, 7, 28, 2,
+	2, 281, 286, 5, 32, 17, 2, 282, 283, 7, 38, 2, 2, 283, 285, 5, 32, 17,
+	2, 284, 282, 3, 2, 2, 2, 285, 288, 3, 2, 2, 2, 286, 284, 3, 2, 2, 2, 286,
+	287, 3, 2, 2, 2, 287, 290, 3, 2, 2, 2, 288, 286, 3, 2, 2, 2, 289, 281,
+	3, 2, 2, 2, 289, 290, 3, 2, 2, 2, 290, 291, 3, 2, 2, 2, 291, 292, 7, 29,
+	2, 2, 292, 294, 3, 2, 2, 2, 293, 265, 3, 2, 2, 2, 293, 278, 3, 2, 2, 2,
+	294, 41, 3, 2, 2, 2, 295, 297, 7, 32, 2, 2, 296, 298, 7, 34, 2, 2, 297,
+	296, 3, 2, 2, 2, 297, 298, 3, 2, 2, 2, 298, 300, 3, 2, 2, 2, 299, 295,
+	3, 2, 2, 2, 300, 303, 3, 2, 2, 2, 301, 299, 3, 2, 2, 2, 301, 302, 3, 2,
+	2, 2, 302, 43, 3, 2, 2, 2, 303, 301, 3, 2, 2, 2, 304, 305, 5, 48, 25, 2,
+	305, 306, 5, 46, 24, 2, 306, 45, 3, 2, 2, 2, 307, 308, 7, 49, 2, 2, 308,
+	311, 5, 44, 23, 2, 309, 311, 3, 2, 2, 2, 310, 307, 3, 2, 2, 2, 310, 309,
+	3, 2, 2, 2, 311, 47, 3, 2, 2, 2, 312, 313, 5, 52, 27, 2, 313, 314, 5, 50,
+	26, 2, 314, 49, 3, 2, 2, 2, 315, 318, 5, 48, 25, 2, 316, 318, 3, 2, 2,
+	2, 317, 315, 3, 2, 2, 2, 317, 316, 3, 2, 2, 2, 318, 51, 3, 2, 2, 2, 319,
+	323, 5, 54, 28, 2, 320, 323, 5, 56, 29, 2, 321, 323, 5, 58, 30, 2, 322,
+	319, 3, 2, 2, 2, 322, 320, 3, 2, 2, 2, 322, 321, 3, 2, 2, 2, 323, 53, 3,
+	2, 2, 2, 324, 325, 5, 58, 30, 2, 325, 326, 7, 47, 2, 2, 326, 55, 3, 2,
+	2, 2, 327, 328, 5, 58, 30, 2, 328, 329, 7, 48, 2, 2, 329, 57, 3, 2, 2,
+	2, 330, 335, 5, 60, 31, 2, 331, 335, 7, 46, 2, 2, 332, 335, 5, 70, 36,
+	2, 333, 335, 5, 62, 32, 2, 334, 330, 3, 2, 2, 2, 334, 331, 3, 2, 2, 2,
+	334, 332, 3, 2, 2, 2, 334, 333, 3, 2, 2, 2, 335, 59, 3, 2, 2, 2, 336, 337,
+	7, 43, 2, 2, 337, 338, 5, 44, 23, 2, 338, 339, 7, 44, 2, 2, 339, 61, 3,
+	2, 2, 2, 340, 343, 5, 64, 33, 2, 341, 343, 5, 66, 34, 2, 342, 340, 3, 2,
+	2, 2, 342, 341, 3, 2, 2, 2, 343, 63, 3, 2, 2, 2, 344, 345, 7, 40, 2, 2,
+	345, 346, 5, 72, 37, 2, 346, 347, 7, 55, 2, 2, 347, 65, 3, 2, 2, 2, 348,
+	349, 7, 40, 2, 2, 349, 350, 7, 50, 2, 2, 350, 351, 5, 72, 37, 2, 351, 352,
+	7, 55, 2, 2, 352, 67, 3, 2, 2, 2, 353, 354, 7, 54, 2, 2, 354, 69, 3, 2,
+	2, 2, 355, 356, 9, 5, 2, 2, 356, 71, 3, 2, 2, 2, 357, 362, 5, 74, 38, 2,
+	358, 359, 5, 74, 38, 2, 359, 360, 5, 72, 37, 2, 360, 362, 3, 2, 2, 2, 361,
+	357, 3, 2, 2, 2, 361, 358, 3, 2, 2, 2, 362, 73, 3, 2, 2, 2, 363, 364, 5,
+	68, 35, 2, 364, 365, 7, 53, 2, 2, 365, 366, 5, 68, 35, 2, 366, 369, 3,
+	2, 2, 2, 367, 369, 5, 68, 35, 2, 368, 363, 3, 2, 2, 2, 368, 367, 3, 2,
+	2, 2, 369, 75, 3, 2, 2, 2, 37, 77, 80, 83, 87, 91, 93, 103, 108, 135, 148,
+	161, 175, 189, 191, 215, 220, 231, 244, 246, 251, 261, 272, 275, 286, 289,
+	293, 297, 301, 310, 317, 322, 334, 342, 361, 368,
 }
 var deserializer = antlr.NewATNDeserializer(nil)
 var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
@@ -172,20 +185,20 @@ var deserializedATN = deserializer.DeserializeFromUInt16(parserATN)
 var literalNames = []string{
 	"", "", "", "", "", "", "'return'", "'var'", "'function'", "'if'", "'else'",
 	"':'", "", "'uint'", "'string'", "'bool'", "'void'", "'true'", "'false'",
-	"", "", "", "", "'=='", "", "", "", "", "'{'", "'}'", "", "", "", "", "",
-	"", "", "", "", "", "", "", "'.'", "", "", "'|'", "'^'",
+	"", "", "", "", "'=='", "", "", "", "", "'{'", "'}'", "", "'!'", "", "",
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "'|'", "'^'",
 }
 var symbolicNames = []string{
 	"", "INT", "MULTIPLY", "ADD", "SUBTRACT", "DIVIDE", "RETURN", "VAR", "FUNCTION",
 	"IF", "ELSE", "COLON", "SPACE", "UINT_T", "STRING_T", "BOOL_T", "VOID_T",
 	"TRUE_LIT", "FALSE_LIT", "GT_CONDITION", "GE_CONDITION", "LT_CONDITION",
 	"LE_CONDITION", "EQ_CONDITION", "EQ_ASSIGNMENT", "BEGIN_CONSTRAINT", "BEGIN_GROUP",
-	"END_GROUP", "BEGIN_BODY", "END_BODY", "IDENTIFIER", "WS", "COMMENT_LINE",
-	"NEWLINE", "ARG_SEP", "STRING_LITERAL", "BEGIN_RE_RANGE", "END_RE_RANGE",
-	"CHARACTER", "BEGIN_RE_GROUP", "END_RE_GROUP", "MINUS", "DOT", "STAR",
-	"PLUS", "ALTERNATION", "RANGE_NEGATE", "RE_DELIMITER_CLOSE", "META_CHAR",
-	"RANGE_SEPARATOR", "RANGE_CHARACTER", "RANGE_TERMINATE", "GT", "GE", "LT",
-	"LE", "EQ", "CONSTRAINT_UINT", "CONSTRAINT_SPACE", "RE_DELIMITER_OPEN",
+	"END_GROUP", "BEGIN_BODY", "END_BODY", "IDENTIFIER", "JAVA_BEGIN", "JAVA_SEP",
+	"WS", "COMMENT_LINE", "NEWLINE", "ARG_SEP", "STRING_LITERAL", "BEGIN_RE_RANGE",
+	"END_RE_RANGE", "CHARACTER", "BEGIN_RE_GROUP", "END_RE_GROUP", "MINUS",
+	"DOT", "STAR", "PLUS", "ALTERNATION", "RANGE_NEGATE", "RE_DELIMITER_CLOSE",
+	"META_CHAR", "RANGE_SEPARATOR", "RANGE_CHARACTER", "RANGE_TERMINATE", "GT",
+	"GE", "LT", "LE", "EQ", "CONSTRAINT_UINT", "CONSTRAINT_SPACE", "RE_DELIMITER_OPEN",
 	"END_CONSTRAINT",
 }
 
@@ -193,10 +206,10 @@ var ruleNames = []string{
 	"body", "function_body", "body_line", "return_stmt", "if_stmt", "optional_else",
 	"var_decl", "type_keyword", "type_specifier", "int_constraint", "string_constraint",
 	"function_sig", "argument_decl", "function", "program", "expr", "var_assignment",
-	"value_ref", "identifier_ref", "function_call", "re", "union_prime", "simple_re",
-	"concat_prime", "basic_re", "kleene_star", "plus", "elementary_re", "group",
-	"range_re", "positive_range", "negative_range", "lax_character", "character",
-	"range_items", "range_item",
+	"value_ref", "identifier_ref", "function_call", "java_call", "re", "union_prime",
+	"simple_re", "concat_prime", "basic_re", "kleene_star", "plus", "elementary_re",
+	"group", "range_re", "positive_range", "negative_range", "lax_character",
+	"character", "range_items", "range_item",
 }
 var decisionToDFA = make([]*antlr.DFA, len(deserializedATN.DecisionToState))
 
@@ -257,36 +270,38 @@ const (
 	PocLangBEGIN_BODY         = 28
 	PocLangEND_BODY           = 29
 	PocLangIDENTIFIER         = 30
-	PocLangWS                 = 31
-	PocLangCOMMENT_LINE       = 32
-	PocLangNEWLINE            = 33
-	PocLangARG_SEP            = 34
-	PocLangSTRING_LITERAL     = 35
-	PocLangBEGIN_RE_RANGE     = 36
-	PocLangEND_RE_RANGE       = 37
-	PocLangCHARACTER          = 38
-	PocLangBEGIN_RE_GROUP     = 39
-	PocLangEND_RE_GROUP       = 40
-	PocLangMINUS              = 41
-	PocLangDOT                = 42
-	PocLangSTAR               = 43
-	PocLangPLUS               = 44
-	PocLangALTERNATION        = 45
-	PocLangRANGE_NEGATE       = 46
-	PocLangRE_DELIMITER_CLOSE = 47
-	PocLangMETA_CHAR          = 48
-	PocLangRANGE_SEPARATOR    = 49
-	PocLangRANGE_CHARACTER    = 50
-	PocLangRANGE_TERMINATE    = 51
-	PocLangGT                 = 52
-	PocLangGE                 = 53
-	PocLangLT                 = 54
-	PocLangLE                 = 55
-	PocLangEQ                 = 56
-	PocLangCONSTRAINT_UINT    = 57
-	PocLangCONSTRAINT_SPACE   = 58
-	PocLangRE_DELIMITER_OPEN  = 59
-	PocLangEND_CONSTRAINT     = 60
+	PocLangJAVA_BEGIN         = 31
+	PocLangJAVA_SEP           = 32
+	PocLangWS                 = 33
+	PocLangCOMMENT_LINE       = 34
+	PocLangNEWLINE            = 35
+	PocLangARG_SEP            = 36
+	PocLangSTRING_LITERAL     = 37
+	PocLangBEGIN_RE_RANGE     = 38
+	PocLangEND_RE_RANGE       = 39
+	PocLangCHARACTER          = 40
+	PocLangBEGIN_RE_GROUP     = 41
+	PocLangEND_RE_GROUP       = 42
+	PocLangMINUS              = 43
+	PocLangDOT                = 44
+	PocLangSTAR               = 45
+	PocLangPLUS               = 46
+	PocLangALTERNATION        = 47
+	PocLangRANGE_NEGATE       = 48
+	PocLangRE_DELIMITER_CLOSE = 49
+	PocLangMETA_CHAR          = 50
+	PocLangRANGE_SEPARATOR    = 51
+	PocLangRANGE_CHARACTER    = 52
+	PocLangRANGE_TERMINATE    = 53
+	PocLangGT                 = 54
+	PocLangGE                 = 55
+	PocLangLT                 = 56
+	PocLangLE                 = 57
+	PocLangEQ                 = 58
+	PocLangCONSTRAINT_UINT    = 59
+	PocLangCONSTRAINT_SPACE   = 60
+	PocLangRE_DELIMITER_OPEN  = 61
+	PocLangEND_CONSTRAINT     = 62
 )
 
 // PocLang rules.
@@ -311,22 +326,23 @@ const (
 	PocLangRULE_value_ref         = 17
 	PocLangRULE_identifier_ref    = 18
 	PocLangRULE_function_call     = 19
-	PocLangRULE_re                = 20
-	PocLangRULE_union_prime       = 21
-	PocLangRULE_simple_re         = 22
-	PocLangRULE_concat_prime      = 23
-	PocLangRULE_basic_re          = 24
-	PocLangRULE_kleene_star       = 25
-	PocLangRULE_plus              = 26
-	PocLangRULE_elementary_re     = 27
-	PocLangRULE_group             = 28
-	PocLangRULE_range_re          = 29
-	PocLangRULE_positive_range    = 30
-	PocLangRULE_negative_range    = 31
-	PocLangRULE_lax_character     = 32
-	PocLangRULE_character         = 33
-	PocLangRULE_range_items       = 34
-	PocLangRULE_range_item        = 35
+	PocLangRULE_java_call         = 20
+	PocLangRULE_re                = 21
+	PocLangRULE_union_prime       = 22
+	PocLangRULE_simple_re         = 23
+	PocLangRULE_concat_prime      = 24
+	PocLangRULE_basic_re          = 25
+	PocLangRULE_kleene_star       = 26
+	PocLangRULE_plus              = 27
+	PocLangRULE_elementary_re     = 28
+	PocLangRULE_group             = 29
+	PocLangRULE_range_re          = 30
+	PocLangRULE_positive_range    = 31
+	PocLangRULE_negative_range    = 32
+	PocLangRULE_lax_character     = 33
+	PocLangRULE_character         = 34
+	PocLangRULE_range_items       = 35
+	PocLangRULE_range_item        = 36
 )
 
 // IBodyContext is an interface to support dynamic dispatch.
@@ -466,76 +482,76 @@ func (p *PocLang) Body() (localctx IBodyContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(89)
+	p.SetState(91)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ((_la-6)&-(0x1f+1)) == 0 && ((1<<uint((_la-6)))&((1<<(PocLangRETURN-6))|(1<<(PocLangVAR-6))|(1<<(PocLangIF-6))|(1<<(PocLangIDENTIFIER-6))|(1<<(PocLangWS-6))|(1<<(PocLangCOMMENT_LINE-6))|(1<<(PocLangNEWLINE-6)))) != 0 {
-		p.SetState(87)
+	for ((_la-6)&-(0x1f+1)) == 0 && ((1<<uint((_la-6)))&((1<<(PocLangRETURN-6))|(1<<(PocLangVAR-6))|(1<<(PocLangIF-6))|(1<<(PocLangIDENTIFIER-6))|(1<<(PocLangJAVA_BEGIN-6))|(1<<(PocLangWS-6))|(1<<(PocLangCOMMENT_LINE-6))|(1<<(PocLangNEWLINE-6)))) != 0 {
+		p.SetState(89)
 		p.GetErrorHandler().Sync(p)
 		switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
 		case 1:
-			p.SetState(73)
+			p.SetState(75)
 			p.GetErrorHandler().Sync(p)
 
 			if p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 0, p.GetParserRuleContext()) == 1 {
 				{
-					p.SetState(72)
+					p.SetState(74)
 					p.Match(PocLangWS)
 				}
 
 			}
-			p.SetState(76)
+			p.SetState(78)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 
-			if ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangRETURN)|(1<<PocLangVAR)|(1<<PocLangIF)|(1<<PocLangIDENTIFIER))) != 0 {
+			if ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangRETURN)|(1<<PocLangVAR)|(1<<PocLangIF)|(1<<PocLangIDENTIFIER)|(1<<PocLangJAVA_BEGIN))) != 0 {
 				{
-					p.SetState(75)
+					p.SetState(77)
 					p.Body_line()
 				}
 
 			}
-			p.SetState(79)
+			p.SetState(81)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 
 			if _la == PocLangWS {
 				{
-					p.SetState(78)
+					p.SetState(80)
 					p.Match(PocLangWS)
 				}
 
 			}
 			{
-				p.SetState(81)
+				p.SetState(83)
 				p.Match(PocLangNEWLINE)
 			}
 
 		case 2:
-			p.SetState(83)
+			p.SetState(85)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 
 			if _la == PocLangWS {
 				{
-					p.SetState(82)
+					p.SetState(84)
 					p.Match(PocLangWS)
 				}
 
 			}
 			{
-				p.SetState(85)
+				p.SetState(87)
 				p.Match(PocLangCOMMENT_LINE)
 			}
 			{
-				p.SetState(86)
+				p.SetState(88)
 				p.Match(PocLangNEWLINE)
 			}
 
 		}
 
-		p.SetState(91)
+		p.SetState(93)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -643,7 +659,7 @@ func (p *PocLang) Function_body() (localctx IFunction_bodyContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(92)
+		p.SetState(94)
 		p.Body()
 	}
 
@@ -789,36 +805,36 @@ func (p *PocLang) Body_line() (localctx IBody_lineContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(99)
+	p.SetState(101)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 6, p.GetParserRuleContext()) {
 	case 1:
 		{
-			p.SetState(94)
+			p.SetState(96)
 			p.Var_assignment()
 		}
 
 	case 2:
 		{
-			p.SetState(95)
+			p.SetState(97)
 			p.Return_stmt()
 		}
 
 	case 3:
 		{
-			p.SetState(96)
+			p.SetState(98)
 			p.Var_decl()
 		}
 
 	case 4:
 		{
-			p.SetState(97)
+			p.SetState(99)
 			p.Function_call()
 		}
 
 	case 5:
 		{
-			p.SetState(98)
+			p.SetState(100)
 			p.If_stmt()
 		}
 
@@ -936,20 +952,20 @@ func (p *PocLang) Return_stmt() (localctx IReturn_stmtContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(101)
+		p.SetState(103)
 		p.Match(PocLangRETURN)
 	}
-	p.SetState(104)
+	p.SetState(106)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == PocLangSPACE {
 		{
-			p.SetState(102)
+			p.SetState(104)
 			p.Match(PocLangSPACE)
 		}
 		{
-			p.SetState(103)
+			p.SetState(105)
 			p.expr(0)
 		}
 
@@ -1110,47 +1126,47 @@ func (p *PocLang) If_stmt() (localctx IIf_stmtContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(106)
+		p.SetState(108)
 		p.Match(PocLangIF)
 	}
 	{
-		p.SetState(107)
-		p.Match(PocLangSPACE)
-	}
-	{
-		p.SetState(108)
-		p.Match(PocLangBEGIN_GROUP)
-	}
-	{
 		p.SetState(109)
-		p.expr(0)
+		p.Match(PocLangSPACE)
 	}
 	{
 		p.SetState(110)
-		p.Match(PocLangEND_GROUP)
+		p.Match(PocLangBEGIN_GROUP)
 	}
 	{
 		p.SetState(111)
-		p.Match(PocLangSPACE)
+		p.expr(0)
 	}
 	{
 		p.SetState(112)
-		p.Match(PocLangBEGIN_BODY)
+		p.Match(PocLangEND_GROUP)
 	}
 	{
 		p.SetState(113)
-		p.Match(PocLangNEWLINE)
+		p.Match(PocLangSPACE)
 	}
 	{
 		p.SetState(114)
-		p.Body()
+		p.Match(PocLangBEGIN_BODY)
 	}
 	{
 		p.SetState(115)
-		p.Match(PocLangEND_BODY)
+		p.Match(PocLangNEWLINE)
 	}
 	{
 		p.SetState(116)
+		p.Body()
+	}
+	{
+		p.SetState(117)
+		p.Match(PocLangEND_BODY)
+	}
+	{
+		p.SetState(118)
 		p.Optional_else()
 	}
 
@@ -1289,56 +1305,56 @@ func (p *PocLang) Optional_else() (localctx IOptional_elseContext) {
 		}
 	}()
 
-	p.SetState(131)
+	p.SetState(133)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
-		{
-			p.SetState(118)
-			p.Match(PocLangSPACE)
-		}
-		{
-			p.SetState(119)
-			p.Match(PocLangELSE)
-		}
 		{
 			p.SetState(120)
 			p.Match(PocLangSPACE)
 		}
 		{
 			p.SetState(121)
-			p.Match(PocLangBEGIN_BODY)
+			p.Match(PocLangELSE)
 		}
 		{
 			p.SetState(122)
-			p.Match(PocLangNEWLINE)
+			p.Match(PocLangSPACE)
 		}
 		{
 			p.SetState(123)
-			p.Body()
+			p.Match(PocLangBEGIN_BODY)
 		}
 		{
 			p.SetState(124)
+			p.Match(PocLangNEWLINE)
+		}
+		{
+			p.SetState(125)
+			p.Body()
+		}
+		{
+			p.SetState(126)
 			p.Match(PocLangEND_BODY)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(126)
-			p.Match(PocLangSPACE)
-		}
-		{
-			p.SetState(127)
-			p.Match(PocLangELSE)
-		}
-		{
 			p.SetState(128)
 			p.Match(PocLangSPACE)
 		}
 		{
 			p.SetState(129)
+			p.Match(PocLangELSE)
+		}
+		{
+			p.SetState(130)
+			p.Match(PocLangSPACE)
+		}
+		{
+			p.SetState(131)
 			p.If_stmt()
 		}
 
@@ -1470,27 +1486,27 @@ func (p *PocLang) Var_decl() (localctx IVar_declContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(133)
+		p.SetState(135)
 		p.Match(PocLangVAR)
 	}
 	{
-		p.SetState(134)
-		p.Match(PocLangSPACE)
-	}
-	{
-		p.SetState(135)
-		p.Match(PocLangIDENTIFIER)
-	}
-	{
 		p.SetState(136)
-		p.Match(PocLangCOLON)
+		p.Match(PocLangSPACE)
 	}
 	{
 		p.SetState(137)
-		p.Match(PocLangSPACE)
+		p.Match(PocLangIDENTIFIER)
 	}
 	{
 		p.SetState(138)
+		p.Match(PocLangCOLON)
+	}
+	{
+		p.SetState(139)
+		p.Match(PocLangSPACE)
+	}
+	{
+		p.SetState(140)
 		p.Type_specifier()
 	}
 
@@ -1743,7 +1759,7 @@ func (p *PocLang) Type_keyword() (localctx IType_keywordContext) {
 		}
 	}()
 
-	p.SetState(144)
+	p.SetState(146)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -1751,7 +1767,7 @@ func (p *PocLang) Type_keyword() (localctx IType_keywordContext) {
 		localctx = NewUnsignedIntTypeContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(140)
+			p.SetState(142)
 			p.Match(PocLangUINT_T)
 		}
 
@@ -1759,7 +1775,7 @@ func (p *PocLang) Type_keyword() (localctx IType_keywordContext) {
 		localctx = NewStringTypeContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(141)
+			p.SetState(143)
 			p.Match(PocLangSTRING_T)
 		}
 
@@ -1767,7 +1783,7 @@ func (p *PocLang) Type_keyword() (localctx IType_keywordContext) {
 		localctx = NewVoidTypeContext(p, localctx)
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(142)
+			p.SetState(144)
 			p.Match(PocLangVOID_T)
 		}
 
@@ -1775,7 +1791,7 @@ func (p *PocLang) Type_keyword() (localctx IType_keywordContext) {
 		localctx = NewBoolTypeContext(p, localctx)
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(143)
+			p.SetState(145)
 			p.Match(PocLangBOOL_T)
 		}
 
@@ -1912,51 +1928,51 @@ func (p *PocLang) Type_specifier() (localctx IType_specifierContext) {
 		}
 	}()
 
-	p.SetState(157)
+	p.SetState(159)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(146)
+			p.SetState(148)
 			p.Type_keyword()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(147)
+			p.SetState(149)
 			p.Type_keyword()
 		}
 		{
-			p.SetState(148)
+			p.SetState(150)
 			p.Match(PocLangBEGIN_CONSTRAINT)
 		}
 		{
-			p.SetState(149)
+			p.SetState(151)
 			p.Int_constraint()
 		}
 		{
-			p.SetState(150)
+			p.SetState(152)
 			p.Match(PocLangEND_CONSTRAINT)
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(152)
+			p.SetState(154)
 			p.Type_keyword()
 		}
 		{
-			p.SetState(153)
+			p.SetState(155)
 			p.Match(PocLangBEGIN_CONSTRAINT)
 		}
 		{
-			p.SetState(154)
+			p.SetState(156)
 			p.String_constraint()
 		}
 		{
-			p.SetState(155)
+			p.SetState(157)
 			p.Match(PocLangEND_CONSTRAINT)
 		}
 
@@ -2243,7 +2259,7 @@ func (p *PocLang) Int_constraint() (localctx IInt_constraintContext) {
 		}
 	}()
 
-	p.SetState(171)
+	p.SetState(173)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
@@ -2251,15 +2267,15 @@ func (p *PocLang) Int_constraint() (localctx IInt_constraintContext) {
 		localctx = NewLessThanConstraintContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(159)
+			p.SetState(161)
 			p.Match(PocLangLT)
 		}
 		{
-			p.SetState(160)
+			p.SetState(162)
 			p.Match(PocLangCONSTRAINT_SPACE)
 		}
 		{
-			p.SetState(161)
+			p.SetState(163)
 			p.Match(PocLangCONSTRAINT_UINT)
 		}
 
@@ -2267,15 +2283,15 @@ func (p *PocLang) Int_constraint() (localctx IInt_constraintContext) {
 		localctx = NewGreaterThanConstraintContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(162)
+			p.SetState(164)
 			p.Match(PocLangGT)
 		}
 		{
-			p.SetState(163)
+			p.SetState(165)
 			p.Match(PocLangCONSTRAINT_SPACE)
 		}
 		{
-			p.SetState(164)
+			p.SetState(166)
 			p.Match(PocLangCONSTRAINT_UINT)
 		}
 
@@ -2283,15 +2299,15 @@ func (p *PocLang) Int_constraint() (localctx IInt_constraintContext) {
 		localctx = NewLessThanEqualsConstraintContext(p, localctx)
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(165)
+			p.SetState(167)
 			p.Match(PocLangLE)
 		}
 		{
-			p.SetState(166)
+			p.SetState(168)
 			p.Match(PocLangCONSTRAINT_SPACE)
 		}
 		{
-			p.SetState(167)
+			p.SetState(169)
 			p.Match(PocLangCONSTRAINT_UINT)
 		}
 
@@ -2299,15 +2315,15 @@ func (p *PocLang) Int_constraint() (localctx IInt_constraintContext) {
 		localctx = NewGreaterThanEqualsConstraintContext(p, localctx)
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(168)
+			p.SetState(170)
 			p.Match(PocLangGE)
 		}
 		{
-			p.SetState(169)
+			p.SetState(171)
 			p.Match(PocLangCONSTRAINT_SPACE)
 		}
 		{
-			p.SetState(170)
+			p.SetState(172)
 			p.Match(PocLangCONSTRAINT_UINT)
 		}
 
@@ -2426,15 +2442,15 @@ func (p *PocLang) String_constraint() (localctx IString_constraintContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(173)
+		p.SetState(175)
 		p.Match(PocLangRE_DELIMITER_OPEN)
 	}
 	{
-		p.SetState(174)
+		p.SetState(176)
 		p.Re()
 	}
 	{
-		p.SetState(175)
+		p.SetState(177)
 		p.Match(PocLangRE_DELIMITER_CLOSE)
 	}
 
@@ -2609,66 +2625,58 @@ func (p *PocLang) Function_sig() (localctx IFunction_sigContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(177)
+		p.SetState(179)
 		p.Match(PocLangFUNCTION)
 	}
 	{
-		p.SetState(178)
+		p.SetState(180)
 		p.Match(PocLangSPACE)
 	}
 	{
-		p.SetState(179)
+		p.SetState(181)
 		p.Match(PocLangIDENTIFIER)
 	}
 	{
-		p.SetState(180)
+		p.SetState(182)
 		p.Match(PocLangBEGIN_GROUP)
 	}
-	p.SetState(187)
+	p.SetState(189)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == PocLangIDENTIFIER {
-		p.SetState(185)
+		p.SetState(187)
 		p.GetErrorHandler().Sync(p)
 		switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 12, p.GetParserRuleContext()) {
 		case 1:
 			{
-				p.SetState(181)
+				p.SetState(183)
 				p.Argument_decl()
 			}
 
 		case 2:
 			{
-				p.SetState(182)
+				p.SetState(184)
 				p.Argument_decl()
 			}
 			{
-				p.SetState(183)
+				p.SetState(185)
 				p.Match(PocLangARG_SEP)
 			}
 
 		}
 
-		p.SetState(189)
+		p.SetState(191)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(190)
+		p.SetState(192)
 		p.Match(PocLangEND_GROUP)
 	}
 	{
-		p.SetState(191)
-		p.Match(PocLangCOLON)
-	}
-	{
-		p.SetState(192)
-		p.Match(PocLangSPACE)
-	}
-	{
 		p.SetState(193)
-		p.Type_specifier()
+		p.Match(PocLangCOLON)
 	}
 	{
 		p.SetState(194)
@@ -2676,10 +2684,18 @@ func (p *PocLang) Function_sig() (localctx IFunction_sigContext) {
 	}
 	{
 		p.SetState(195)
-		p.Match(PocLangBEGIN_BODY)
+		p.Type_specifier()
 	}
 	{
 		p.SetState(196)
+		p.Match(PocLangSPACE)
+	}
+	{
+		p.SetState(197)
+		p.Match(PocLangBEGIN_BODY)
+	}
+	{
+		p.SetState(198)
 		p.Match(PocLangNEWLINE)
 	}
 
@@ -2798,19 +2814,19 @@ func (p *PocLang) Argument_decl() (localctx IArgument_declContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(198)
+		p.SetState(200)
 		p.Match(PocLangIDENTIFIER)
 	}
 	{
-		p.SetState(199)
+		p.SetState(201)
 		p.Match(PocLangCOLON)
 	}
 	{
-		p.SetState(200)
+		p.SetState(202)
 		p.Match(PocLangSPACE)
 	}
 	{
-		p.SetState(201)
+		p.SetState(203)
 		p.Type_specifier()
 	}
 
@@ -2931,15 +2947,15 @@ func (p *PocLang) Function() (localctx IFunctionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(203)
+		p.SetState(205)
 		p.Function_sig()
 	}
 	{
-		p.SetState(204)
+		p.SetState(206)
 		p.Function_body()
 	}
 	{
-		p.SetState(205)
+		p.SetState(207)
 		p.Match(PocLangEND_BODY)
 	}
 
@@ -3071,36 +3087,36 @@ func (p *PocLang) Program() (localctx IProgramContext) {
 	}()
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(214)
+	p.SetState(216)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for ok := true; ok; ok = _la == PocLangFUNCTION {
 		{
-			p.SetState(207)
+			p.SetState(209)
 			p.Function()
 		}
-		p.SetState(211)
+		p.SetState(213)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
 		for _la == PocLangNEWLINE {
 			{
-				p.SetState(208)
+				p.SetState(210)
 				p.Match(PocLangNEWLINE)
 			}
 
-			p.SetState(213)
+			p.SetState(215)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 
-		p.SetState(216)
+		p.SetState(218)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(218)
+		p.SetState(220)
 		p.Match(PocLangEOF)
 	}
 
@@ -3303,38 +3319,38 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(227)
+	p.SetState(229)
 	p.GetErrorHandler().Sync(p)
 	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 16, p.GetParserRuleContext()) {
 	case 1:
 		{
-			p.SetState(221)
+			p.SetState(223)
 			p.Value_ref()
 		}
 
 	case 2:
 		{
-			p.SetState(222)
+			p.SetState(224)
 			p.Function_call()
 		}
 
 	case 3:
 		{
-			p.SetState(223)
+			p.SetState(225)
 			p.Match(PocLangBEGIN_GROUP)
 		}
 		{
-			p.SetState(224)
+			p.SetState(226)
 			p.expr(0)
 		}
 		{
-			p.SetState(225)
+			p.SetState(227)
 			p.Match(PocLangEND_GROUP)
 		}
 
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(242)
+	p.SetState(244)
 	p.GetErrorHandler().Sync(p)
 	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 18, p.GetParserRuleContext())
 
@@ -3344,19 +3360,19 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(240)
+			p.SetState(242)
 			p.GetErrorHandler().Sync(p)
 			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 17, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewExprContext(p, _parentctx, _parentState)
 				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
-				p.SetState(229)
+				p.SetState(231)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				{
-					p.SetState(230)
+					p.SetState(232)
 					_la = p.GetTokenStream().LA(1)
 
 					if !(_la == PocLangMULTIPLY || _la == PocLangDIVIDE) {
@@ -3367,20 +3383,20 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(231)
+					p.SetState(233)
 					p.expr(7)
 				}
 
 			case 2:
 				localctx = NewExprContext(p, _parentctx, _parentState)
 				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
-				p.SetState(232)
+				p.SetState(234)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(233)
+					p.SetState(235)
 					_la = p.GetTokenStream().LA(1)
 
 					if !(_la == PocLangADD || _la == PocLangSUBTRACT) {
@@ -3391,24 +3407,24 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(234)
+					p.SetState(236)
 					p.expr(6)
 				}
 
 			case 3:
 				localctx = NewExprContext(p, _parentctx, _parentState)
 				p.PushNewRecursionContext(localctx, _startState, PocLangRULE_expr)
-				p.SetState(235)
+				p.SetState(237)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 				}
 				{
-					p.SetState(236)
+					p.SetState(238)
 					p.Match(PocLangSPACE)
 				}
 				{
-					p.SetState(237)
+					p.SetState(239)
 					_la = p.GetTokenStream().LA(1)
 
 					if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangGT_CONDITION)|(1<<PocLangGE_CONDITION)|(1<<PocLangLT_CONDITION)|(1<<PocLangLE_CONDITION)|(1<<PocLangEQ_CONDITION))) != 0) {
@@ -3419,18 +3435,18 @@ func (p *PocLang) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(238)
+					p.SetState(240)
 					p.Match(PocLangSPACE)
 				}
 				{
-					p.SetState(239)
+					p.SetState(241)
 					p.expr(4)
 				}
 
 			}
 
 		}
-		p.SetState(244)
+		p.SetState(246)
 		p.GetErrorHandler().Sync(p)
 		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 18, p.GetParserRuleContext())
 	}
@@ -3551,26 +3567,26 @@ func (p *PocLang) Var_assignment() (localctx IVar_assignmentContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(245)
+		p.SetState(247)
 		p.Match(PocLangIDENTIFIER)
 	}
-	p.SetState(247)
+	p.SetState(249)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == PocLangWS {
 		{
-			p.SetState(246)
+			p.SetState(248)
 			p.Match(PocLangWS)
 		}
 
 	}
 	{
-		p.SetState(249)
+		p.SetState(251)
 		p.Match(PocLangEQ_ASSIGNMENT)
 	}
 	{
-		p.SetState(250)
+		p.SetState(252)
 		p.expr(0)
 	}
 
@@ -3691,42 +3707,42 @@ func (p *PocLang) Value_ref() (localctx IValue_refContext) {
 		}
 	}()
 
-	p.SetState(257)
+	p.SetState(259)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangINT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(252)
+			p.SetState(254)
 			p.Match(PocLangINT)
 		}
 
 	case PocLangSTRING_LITERAL:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(253)
+			p.SetState(255)
 			p.Match(PocLangSTRING_LITERAL)
 		}
 
 	case PocLangTRUE_LIT:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(254)
+			p.SetState(256)
 			p.Match(PocLangTRUE_LIT)
 		}
 
 	case PocLangFALSE_LIT:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(255)
+			p.SetState(257)
 			p.Match(PocLangFALSE_LIT)
 		}
 
 	case PocLangIDENTIFIER:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(256)
+			p.SetState(258)
 			p.Identifier_ref()
 		}
 
@@ -3831,7 +3847,7 @@ func (p *PocLang) Identifier_ref() (localctx IIdentifier_refContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(259)
+		p.SetState(261)
 		p.Match(PocLangIDENTIFIER)
 	}
 
@@ -3919,6 +3935,20 @@ func (s *Function_callContext) ARG_SEP(i int) antlr.TerminalNode {
 	return s.GetToken(PocLangARG_SEP, i)
 }
 
+func (s *Function_callContext) JAVA_BEGIN() antlr.TerminalNode {
+	return s.GetToken(PocLangJAVA_BEGIN, 0)
+}
+
+func (s *Function_callContext) Java_call() IJava_callContext {
+	var t = s.GetTypedRuleContext(reflect.TypeOf((*IJava_callContext)(nil)).Elem(), 0)
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IJava_callContext)
+}
+
 func (s *Function_callContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -3970,47 +4000,239 @@ func (p *PocLang) Function_call() (localctx IFunction_callContext) {
 		}
 	}()
 
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(261)
-		p.Match(PocLangIDENTIFIER)
-	}
-	{
-		p.SetState(262)
-		p.Match(PocLangBEGIN_GROUP)
-	}
-	p.SetState(271)
+	p.SetState(291)
 	p.GetErrorHandler().Sync(p)
-	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangINT)|(1<<PocLangTRUE_LIT)|(1<<PocLangFALSE_LIT)|(1<<PocLangBEGIN_GROUP)|(1<<PocLangIDENTIFIER))) != 0) || _la == PocLangSTRING_LITERAL {
+	switch p.GetTokenStream().LA(1) {
+	case PocLangIDENTIFIER:
+		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(263)
-			p.expr(0)
+			p.Match(PocLangIDENTIFIER)
 		}
-		p.SetState(268)
+		{
+			p.SetState(264)
+			p.Match(PocLangBEGIN_GROUP)
+		}
+		p.SetState(273)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == PocLangARG_SEP {
-			{
-				p.SetState(264)
-				p.Match(PocLangARG_SEP)
-			}
+		if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangINT)|(1<<PocLangTRUE_LIT)|(1<<PocLangFALSE_LIT)|(1<<PocLangBEGIN_GROUP)|(1<<PocLangIDENTIFIER)|(1<<PocLangJAVA_BEGIN))) != 0) || _la == PocLangSTRING_LITERAL {
 			{
 				p.SetState(265)
 				p.expr(0)
 			}
-
 			p.SetState(270)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
+
+			for _la == PocLangARG_SEP {
+				{
+					p.SetState(266)
+					p.Match(PocLangARG_SEP)
+				}
+				{
+					p.SetState(267)
+					p.expr(0)
+				}
+
+				p.SetState(272)
+				p.GetErrorHandler().Sync(p)
+				_la = p.GetTokenStream().LA(1)
+			}
+
+		}
+		{
+			p.SetState(275)
+			p.Match(PocLangEND_GROUP)
 		}
 
+	case PocLangJAVA_BEGIN:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(276)
+			p.Match(PocLangJAVA_BEGIN)
+		}
+		{
+			p.SetState(277)
+			p.Java_call()
+		}
+		{
+			p.SetState(278)
+			p.Match(PocLangBEGIN_GROUP)
+		}
+		p.SetState(287)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<PocLangINT)|(1<<PocLangTRUE_LIT)|(1<<PocLangFALSE_LIT)|(1<<PocLangBEGIN_GROUP)|(1<<PocLangIDENTIFIER)|(1<<PocLangJAVA_BEGIN))) != 0) || _la == PocLangSTRING_LITERAL {
+			{
+				p.SetState(279)
+				p.expr(0)
+			}
+			p.SetState(284)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
+
+			for _la == PocLangARG_SEP {
+				{
+					p.SetState(280)
+					p.Match(PocLangARG_SEP)
+				}
+				{
+					p.SetState(281)
+					p.expr(0)
+				}
+
+				p.SetState(286)
+				p.GetErrorHandler().Sync(p)
+				_la = p.GetTokenStream().LA(1)
+			}
+
+		}
+		{
+			p.SetState(289)
+			p.Match(PocLangEND_GROUP)
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
-	{
-		p.SetState(273)
-		p.Match(PocLangEND_GROUP)
+
+	return localctx
+}
+
+// IJava_callContext is an interface to support dynamic dispatch.
+type IJava_callContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsJava_callContext differentiates from other interfaces.
+	IsJava_callContext()
+}
+
+type Java_callContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyJava_callContext() *Java_callContext {
+	var p = new(Java_callContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = PocLangRULE_java_call
+	return p
+}
+
+func (*Java_callContext) IsJava_callContext() {}
+
+func NewJava_callContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Java_callContext {
+	var p = new(Java_callContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PocLangRULE_java_call
+
+	return p
+}
+
+func (s *Java_callContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Java_callContext) AllIDENTIFIER() []antlr.TerminalNode {
+	return s.GetTokens(PocLangIDENTIFIER)
+}
+
+func (s *Java_callContext) IDENTIFIER(i int) antlr.TerminalNode {
+	return s.GetToken(PocLangIDENTIFIER, i)
+}
+
+func (s *Java_callContext) AllJAVA_SEP() []antlr.TerminalNode {
+	return s.GetTokens(PocLangJAVA_SEP)
+}
+
+func (s *Java_callContext) JAVA_SEP(i int) antlr.TerminalNode {
+	return s.GetToken(PocLangJAVA_SEP, i)
+}
+
+func (s *Java_callContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Java_callContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Java_callContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PocLangListener); ok {
+		listenerT.EnterJava_call(s)
+	}
+}
+
+func (s *Java_callContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PocLangListener); ok {
+		listenerT.ExitJava_call(s)
+	}
+}
+
+func (s *Java_callContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PocLangVisitor:
+		return t.VisitJava_call(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PocLang) Java_call() (localctx IJava_callContext) {
+	localctx = NewJava_callContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 40, PocLangRULE_java_call)
+	var _la int
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(299)
+	p.GetErrorHandler().Sync(p)
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == PocLangIDENTIFIER {
+		{
+			p.SetState(293)
+			p.Match(PocLangIDENTIFIER)
+		}
+		p.SetState(295)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == PocLangJAVA_SEP {
+			{
+				p.SetState(294)
+				p.Match(PocLangJAVA_SEP)
+			}
+
+		}
+
+		p.SetState(301)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
 	}
 
 	return localctx
@@ -4106,7 +4328,7 @@ func (s *ReContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Re() (localctx IReContext) {
 	localctx = NewReContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 40, PocLangRULE_re)
+	p.EnterRule(localctx, 42, PocLangRULE_re)
 
 	defer func() {
 		p.ExitRule()
@@ -4126,11 +4348,11 @@ func (p *PocLang) Re() (localctx IReContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(275)
+		p.SetState(302)
 		p.Simple_re()
 	}
 	{
-		p.SetState(276)
+		p.SetState(303)
 		p.Union_prime()
 	}
 
@@ -4221,7 +4443,7 @@ func (s *Union_primeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PocLang) Union_prime() (localctx IUnion_primeContext) {
 	localctx = NewUnion_primeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 42, PocLangRULE_union_prime)
+	p.EnterRule(localctx, 44, PocLangRULE_union_prime)
 
 	defer func() {
 		p.ExitRule()
@@ -4239,18 +4461,18 @@ func (p *PocLang) Union_prime() (localctx IUnion_primeContext) {
 		}
 	}()
 
-	p.SetState(281)
+	p.SetState(308)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangALTERNATION:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(278)
+			p.SetState(305)
 			p.Match(PocLangALTERNATION)
 		}
 		{
-			p.SetState(279)
+			p.SetState(306)
 			p.Re()
 		}
 
@@ -4354,7 +4576,7 @@ func (s *Simple_reContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Simple_re() (localctx ISimple_reContext) {
 	localctx = NewSimple_reContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 44, PocLangRULE_simple_re)
+	p.EnterRule(localctx, 46, PocLangRULE_simple_re)
 
 	defer func() {
 		p.ExitRule()
@@ -4374,11 +4596,11 @@ func (p *PocLang) Simple_re() (localctx ISimple_reContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(283)
+		p.SetState(310)
 		p.Basic_re()
 	}
 	{
-		p.SetState(284)
+		p.SetState(311)
 		p.Concat_prime()
 	}
 
@@ -4465,7 +4687,7 @@ func (s *Concat_primeContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *PocLang) Concat_prime() (localctx IConcat_primeContext) {
 	localctx = NewConcat_primeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 46, PocLangRULE_concat_prime)
+	p.EnterRule(localctx, 48, PocLangRULE_concat_prime)
 
 	defer func() {
 		p.ExitRule()
@@ -4483,14 +4705,14 @@ func (p *PocLang) Concat_prime() (localctx IConcat_primeContext) {
 		}
 	}()
 
-	p.SetState(288)
+	p.SetState(315)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangBEGIN_RE_RANGE, PocLangCHARACTER, PocLangBEGIN_RE_GROUP, PocLangMINUS, PocLangDOT:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(286)
+			p.SetState(313)
 			p.Simple_re()
 		}
 
@@ -4604,7 +4826,7 @@ func (s *Basic_reContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Basic_re() (localctx IBasic_reContext) {
 	localctx = NewBasic_reContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 48, PocLangRULE_basic_re)
+	p.EnterRule(localctx, 50, PocLangRULE_basic_re)
 
 	defer func() {
 		p.ExitRule()
@@ -4622,27 +4844,27 @@ func (p *PocLang) Basic_re() (localctx IBasic_reContext) {
 		}
 	}()
 
-	p.SetState(293)
+	p.SetState(320)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 25, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 30, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(290)
+			p.SetState(317)
 			p.Kleene_star()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(291)
+			p.SetState(318)
 			p.Plus()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(292)
+			p.SetState(319)
 			p.Elementary_re()
 		}
 
@@ -4735,7 +4957,7 @@ func (s *Kleene_starContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PocLang) Kleene_star() (localctx IKleene_starContext) {
 	localctx = NewKleene_starContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 50, PocLangRULE_kleene_star)
+	p.EnterRule(localctx, 52, PocLangRULE_kleene_star)
 
 	defer func() {
 		p.ExitRule()
@@ -4755,11 +4977,11 @@ func (p *PocLang) Kleene_star() (localctx IKleene_starContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(295)
+		p.SetState(322)
 		p.Elementary_re()
 	}
 	{
-		p.SetState(296)
+		p.SetState(323)
 		p.Match(PocLangSTAR)
 	}
 
@@ -4850,7 +5072,7 @@ func (s *PlusContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Plus() (localctx IPlusContext) {
 	localctx = NewPlusContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 52, PocLangRULE_plus)
+	p.EnterRule(localctx, 54, PocLangRULE_plus)
 
 	defer func() {
 		p.ExitRule()
@@ -4870,11 +5092,11 @@ func (p *PocLang) Plus() (localctx IPlusContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(298)
+		p.SetState(325)
 		p.Elementary_re()
 	}
 	{
-		p.SetState(299)
+		p.SetState(326)
 		p.Match(PocLangPLUS)
 	}
 
@@ -4985,7 +5207,7 @@ func (s *Elementary_reContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *PocLang) Elementary_re() (localctx IElementary_reContext) {
 	localctx = NewElementary_reContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 54, PocLangRULE_elementary_re)
+	p.EnterRule(localctx, 56, PocLangRULE_elementary_re)
 
 	defer func() {
 		p.ExitRule()
@@ -5003,35 +5225,35 @@ func (p *PocLang) Elementary_re() (localctx IElementary_reContext) {
 		}
 	}()
 
-	p.SetState(305)
+	p.SetState(332)
 	p.GetErrorHandler().Sync(p)
 
 	switch p.GetTokenStream().LA(1) {
 	case PocLangBEGIN_RE_GROUP:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(301)
+			p.SetState(328)
 			p.Group()
 		}
 
 	case PocLangDOT:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(302)
+			p.SetState(329)
 			p.Match(PocLangDOT)
 		}
 
 	case PocLangCHARACTER, PocLangMINUS:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(303)
+			p.SetState(330)
 			p.Character()
 		}
 
 	case PocLangBEGIN_RE_RANGE:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(304)
+			p.SetState(331)
 			p.Range_re()
 		}
 
@@ -5130,7 +5352,7 @@ func (s *GroupContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Group() (localctx IGroupContext) {
 	localctx = NewGroupContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 56, PocLangRULE_group)
+	p.EnterRule(localctx, 58, PocLangRULE_group)
 
 	defer func() {
 		p.ExitRule()
@@ -5150,15 +5372,15 @@ func (p *PocLang) Group() (localctx IGroupContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(307)
+		p.SetState(334)
 		p.Match(PocLangBEGIN_RE_GROUP)
 	}
 	{
-		p.SetState(308)
+		p.SetState(335)
 		p.Re()
 	}
 	{
-		p.SetState(309)
+		p.SetState(336)
 		p.Match(PocLangEND_RE_GROUP)
 	}
 
@@ -5255,7 +5477,7 @@ func (s *Range_reContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Range_re() (localctx IRange_reContext) {
 	localctx = NewRange_reContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 58, PocLangRULE_range_re)
+	p.EnterRule(localctx, 60, PocLangRULE_range_re)
 
 	defer func() {
 		p.ExitRule()
@@ -5273,20 +5495,20 @@ func (p *PocLang) Range_re() (localctx IRange_reContext) {
 		}
 	}()
 
-	p.SetState(313)
+	p.SetState(340)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 27, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 32, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(311)
+			p.SetState(338)
 			p.Positive_range()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(312)
+			p.SetState(339)
 			p.Negative_range()
 		}
 
@@ -5383,7 +5605,7 @@ func (s *Positive_rangeContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *PocLang) Positive_range() (localctx IPositive_rangeContext) {
 	localctx = NewPositive_rangeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 60, PocLangRULE_positive_range)
+	p.EnterRule(localctx, 62, PocLangRULE_positive_range)
 
 	defer func() {
 		p.ExitRule()
@@ -5403,15 +5625,15 @@ func (p *PocLang) Positive_range() (localctx IPositive_rangeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(315)
+		p.SetState(342)
 		p.Match(PocLangBEGIN_RE_RANGE)
 	}
 	{
-		p.SetState(316)
+		p.SetState(343)
 		p.Range_items()
 	}
 	{
-		p.SetState(317)
+		p.SetState(344)
 		p.Match(PocLangRANGE_TERMINATE)
 	}
 
@@ -5510,7 +5732,7 @@ func (s *Negative_rangeContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *PocLang) Negative_range() (localctx INegative_rangeContext) {
 	localctx = NewNegative_rangeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 62, PocLangRULE_negative_range)
+	p.EnterRule(localctx, 64, PocLangRULE_negative_range)
 
 	defer func() {
 		p.ExitRule()
@@ -5530,19 +5752,19 @@ func (p *PocLang) Negative_range() (localctx INegative_rangeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(319)
+		p.SetState(346)
 		p.Match(PocLangBEGIN_RE_RANGE)
 	}
 	{
-		p.SetState(320)
+		p.SetState(347)
 		p.Match(PocLangRANGE_NEGATE)
 	}
 	{
-		p.SetState(321)
+		p.SetState(348)
 		p.Range_items()
 	}
 	{
-		p.SetState(322)
+		p.SetState(349)
 		p.Match(PocLangRANGE_TERMINATE)
 	}
 
@@ -5623,7 +5845,7 @@ func (s *Lax_characterContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *PocLang) Lax_character() (localctx ILax_characterContext) {
 	localctx = NewLax_characterContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 64, PocLangRULE_lax_character)
+	p.EnterRule(localctx, 66, PocLangRULE_lax_character)
 
 	defer func() {
 		p.ExitRule()
@@ -5643,7 +5865,7 @@ func (p *PocLang) Lax_character() (localctx ILax_characterContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(324)
+		p.SetState(351)
 		p.Match(PocLangRANGE_CHARACTER)
 	}
 
@@ -5728,7 +5950,7 @@ func (s *CharacterContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Character() (localctx ICharacterContext) {
 	localctx = NewCharacterContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 66, PocLangRULE_character)
+	p.EnterRule(localctx, 68, PocLangRULE_character)
 	var _la int
 
 	defer func() {
@@ -5749,7 +5971,7 @@ func (p *PocLang) Character() (localctx ICharacterContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(326)
+		p.SetState(353)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == PocLangCHARACTER || _la == PocLangMINUS) {
@@ -5853,7 +6075,7 @@ func (s *Range_itemsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PocLang) Range_items() (localctx IRange_itemsContext) {
 	localctx = NewRange_itemsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 68, PocLangRULE_range_items)
+	p.EnterRule(localctx, 70, PocLangRULE_range_items)
 
 	defer func() {
 		p.ExitRule()
@@ -5871,24 +6093,24 @@ func (p *PocLang) Range_items() (localctx IRange_itemsContext) {
 		}
 	}()
 
-	p.SetState(332)
+	p.SetState(359)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 28, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 33, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(328)
+			p.SetState(355)
 			p.Range_item()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(329)
+			p.SetState(356)
 			p.Range_item()
 		}
 		{
-			p.SetState(330)
+			p.SetState(357)
 			p.Range_items()
 		}
 
@@ -5994,7 +6216,7 @@ func (s *Range_itemContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PocLang) Range_item() (localctx IRange_itemContext) {
 	localctx = NewRange_itemContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 70, PocLangRULE_range_item)
+	p.EnterRule(localctx, 72, PocLangRULE_range_item)
 
 	defer func() {
 		p.ExitRule()
@@ -6012,28 +6234,28 @@ func (p *PocLang) Range_item() (localctx IRange_itemContext) {
 		}
 	}()
 
-	p.SetState(339)
+	p.SetState(366)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 29, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 34, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(334)
+			p.SetState(361)
 			p.Lax_character()
 		}
 		{
-			p.SetState(335)
+			p.SetState(362)
 			p.Match(PocLangRANGE_SEPARATOR)
 		}
 		{
-			p.SetState(336)
+			p.SetState(363)
 			p.Lax_character()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(338)
+			p.SetState(365)
 			p.Lax_character()
 		}
 
