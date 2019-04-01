@@ -9,9 +9,13 @@
 \usepackage{ragged2e}
 \usepackage{titlesec}
 \usepackage{tikz}
+\usepackage{amsmath}
+\usepackage[printwatermark]{xwatermark}
+\usepackage{amssymb}
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
 \usepackage{etoolbox}
+\usepackage{algpseudocode}
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
@@ -94,7 +98,7 @@ Scale=MatchLowercase
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
 \definecolor{todocolor}{rgb}{0.688,0.8176,0.93137}
-\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{lightbulb-o} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\dimexpr \linewidth-\columnsep}{\vspace{.75\baselineskip}\centering\parbox{0.95\linewidth}{\faIcon{lightbulb} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
 \newcommand{\readbox}[1] {\colorbox{infogreen}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\textcolor{white}{\faicon{book} \textbf{#1}\vspace{.75\baselineskip}}}}}}
 \def\labelitemi{\textcolor{id7-aubergine}{\textbullet}}
 \def\labelitemii{\textcolor{id7-aubergine}{\circ}}
@@ -175,10 +179,11 @@ Scale=MatchLowercase
 
 \newenvironment{example}[1]
 {\begin{exampleflt}[tb]
-		\begin{mdframed}
+		\begin{mdframed} \setlength{\parskip}{1em}
 			\captionsetup{name=\faPuzzlePiece{} Example, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
 			\vspace{0.5em}
-			 \caption{#1}\hfill 
+			\caption{#1}\hfill
+			\vspace{-1.8em}
 			\rmfamily
 			\captionsetup{style=default}
 
@@ -193,15 +198,17 @@ Scale=MatchLowercase
 
 \newenvironment{algbox}[1]
 {\begin{algorithmflt}[tb]
-		\begin{mdframed}
+		\begin{mdframed} \setlength{\parskip}{1em}
 			\captionsetup{name=\faCogs{} Algorithm, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
 			\vspace{0.5em}
-			\caption{#1}\hfill 
+			\caption{#1}\hfill
+			\vspace{-1.8em}
+
 			\rmfamily
 			\captionsetup{style=default}
 			
 		}
-		{\end{mdframed}\end{algorithmflt}
+		{\vspace{0.5em}\end{mdframed}\end{algorithmflt}
 }
 
 % And code boxes
@@ -233,6 +240,18 @@ Scale=MatchLowercase
 			\inputminted{#2}{#5}}
 			{\vspace{0.5em}\end{mdframed}\end{codeflt}}
 	
+\usepackage[printwatermark]{xwatermark}
+\newsavebox\mybox
+\savebox\mybox{\tikz[color=id7-aubergine,opacity=0.3]\node{\sffamily DRAFT 1};}
+\newwatermark*[
+allpages,
+angle=45,
+scale=6,
+xpos=-20,
+ypos=15,
+]{\usebox\mybox}
+
+
 % ======================
 
 \begin{document}
@@ -293,22 +312,37 @@ Scale=MatchLowercase
 
 \chapter{Motivation}
 
+Over the last decade, use of web and thick client applications globally has greatly increased. People increasingly access services online--to manage their finances \citep{jayawardhena2000changes}, use government services \citep{fox2010directgov} and communicate using social media \citep{boulianne2015social}. On a daily basis users entrust these systems with maintaining the privacy of their personal information and safeguarding their finances. With the transition from a web centred primarily around exchanging documents to a platform for deploying complex applications, security is increasingly important.
+
 \section{Application Security}
 
-\begin{itemize}
-	\item What is it?
-	\item Example vulnerabilities
-	\item Case studies, impact
-\end{itemize}
+Application security is of particular interest because it transcends the underlying infrastructure on which applications are deployed. Despite the popularity of cloud IaaS (infrastructure-as-a-service) and PaaS (platform-as-a-service) offerings which can substantially improve infrastructure security, applications will continue to be vulnerable.
+
+The predominant cause of these vulnerabilities is improper user input handling \citep{schneier2011secrets}. The \emph{Open Web Application Security Project} (OWASP) regularly publishes a list of the top ten most critical security issues, and a subset of these are described below \citep{owasp10}:
+
+\begin{description}
+	\item[Injection] Covers query injection, where user input is improperly interpolated into a e.g. a database SQL query or a directory LDAP search. Malicious user input can retrieve or modify sensitive data, bypass authorisation controls and (in some cases) run arbitrary code \citep[p.~291]{stuttard2011web}.
+	\item[Broken Authentication] Covers vulnerabilities such as insecure direct object access (IDOR) where authorisation checks are not implemented consistently and the user's request is trusted in one or more parts of the application \citep[p.~257]{stuttard2011web}.
+	\item[XML External Entities (XXE)] A vulnerability which involves improperly handling user encoded in the XML interchange format. XML supports functionality to reference entities from an external location. Exploitation may allow arbitrary files to be read, sensitive data to be exposed or code to be executed  \citep[p.~384]{stuttard2011web}.
+	\item[Cross-Site Scripting (XSS)] When user input is not properly handled in the context of a HTML web page or inside JavaScript, a user can provide malicious input that can run arbitrary code on the client. This can be used by an attacker to steal or misuse a victim's session \citep[p.~431]{stuttard2011web}.
+	\item[Insecure Deserialization] Results from insecurely converting user input into a language object.
+\end{description}
+
+Many of these vulnerabilities--and the necessary techniques for preventing them--have been well-established for a number of years, and yet they continue to be regularly discovered in production applications \citep[p.~2]{schneier2011secrets}.
 
 \section{Static Analysis}
 
-\begin{itemize}
-	\item Why static analysis over runtime/dynamic analysis?
-	\item SAST/DAST
-	\item Benefits for developers
-\end{itemize}
+Static analysis tools can detect some classes of vulnerability by examining code at rest. Within application security, static analysis tools are grouped under the \emph{Static Application Security Testing} SAST denomination in contrast to \emph{Dynamic Application Security Testing} (DAST) tools which operate at runtime. These tools work by either independently parsing the developer's code or analysing an \emph{abstract syntax tree} (AST) and using a series of inspections to check and log common problems. Some more advanced tools use \emph{taint tracking} combined with information flow analysis to mark and track variables and parameters that have been influenced by user input \citep{denning1977certification}. A list of sinks that are deemed potentially dangerous (such as database query functions) is maintained, and user input flowing to any of these sinks results in an issue being logged.
 
+As discussed in \citet{sadowski2018lessons}, it is preferable to detect issues in a static fashion--ideally integrated into the build process--to ensure that problems are actioned by developers. The false positive rate should also be minimised to avoid the risk of \emph{alert fatigue}, a problem which occurs in a variety of different contexts where the value of alerts is decreased due to a perception that often, there is no real substance to the warnings \citep{kesselheim2011clinical}.
+
+If reliable and properly implemented, static analysis tooling has been shown to be able to prevent whole classes of bugs from making it into production \citep{sadowski2018lessons}.
+
+\section{A Better Approach}
+
+Existing static analysis are often unable to evaluate the effectiveness of input validation code that may already be in place--leading to false positives. This is because the tools consider code in isolation and cannot reason about the form of user input. Taint tracking is similarly binary, where data originates from user input and is assumed dangerous or originates elsewhere and assumed benign.
+
+We have therefore built a system which uses \emph{refinement types} in order to determine whether existing regular expression based input validation is effective. This happens at compile time, using an SMT solver to find situations where input could fail to be matched by a regular expression. This allows for potential security issues to be surfaced during type-checking.
 
 \chapter{Background}
 This chapter discusses the theory underpinning the techniques used in the implementation.
@@ -339,10 +373,10 @@ Some (or all) of the following operations are available to use when building a r
 	\sffamily \textcolor{id7-aubergine}{\textbf{\faIcon{brackets-curly} Code Listing \hfill C\#}}
 	
 	\begin{minted}{csharp}
-	// Match: exactly two occurrences of a character in range A-Z
-	//        then at least one digit in 0-9 and optionally one more
-	string pattern = r"[A-Z]{2}[0-9][0-9]?";
-	var matchCollection = System.Text.RegularExpressions.Regex.Matches("CV31", pattern);
+// Match: exactly two occurrences of a character in range A-Z
+//        then at least one digit in 0-9 and optionally one more
+string pattern = r"[A-Z]{2}[0-9][0-9]?";
+var matchCollection = System.Text.RegularExpressions.Regex.Matches("CV31", pattern);
 	\end{minted}
 	\vspace{0.5em}
 	\label{example:regex:1}
@@ -554,9 +588,9 @@ However, as the second formula in example \ref{example:sat:3} illustrates, there
 
 \subsection{Cook-Levin and NP Completeness}
 
-SAT is NP complete. It is computationally straightforward (i.e. possible in linear time) to check if a given valuation of variables is satisfying by evaluating the entire formula. Furthermore, it has been shown that any problem in NP can be reduced to SAT by way of a nondeterministic Turing machine encoding \citep{Cook:1971:CTP:800157.805047} -- this is the statement of the Cook-Levin theorem.
+SAT is NP complete. It is computationally straightforward (i.e. possible in linear time) to check if a given valuation of variables is satisfying by evaluating the clauses within the entire formula. Furthermore, it has been shown that any problem in NP can be reduced to SAT by way of a nondeterministic Turing machine encoding \citep{Cook:1971:CTP:800157.805047} -- this is the statement of the Cook-Levin theorem.
 
-This has an impact on the practical application of SAT solvers and the reliability of such applications. Whilst heuristics can be used to efficiently solve some SAT problems, there is no guarantee that a particular problem will be able to be solved in a reasonable timeframe.
+This has an impact on the practical application of SAT solvers and the reliability of such applications. Whilst heuristics can be used to efficiently solve some SAT problems, there is no guarantee that a particular problem will be able to be solved in a reasonable timeframe. Generally though, if a solver returns SAT/UNSAT instead of timing out, it can be assumed that the result is correct with a good degree of confidence.
 
 
 \begin{algbox}{Knuth's SAT0}
@@ -572,15 +606,90 @@ A more advanced approach than Knuth's SAT0 (discussed in algorithm \ref{algorith
 
 For an arbitrary CNF SAT problem, the algorithm uses a process known as \emph{unitary resolution}. If all previous variables in a CNF clause are false, the disjunctive nature implies that the last literal \emph{must} be true. DPLL applies this process recursively. As briefly mentioned in algorithm \ref{algorithm:knuth:sat0}, DPLL also uses the concept of a ``pure literal'' which is defined as a literal for which its negation does not appear in the Boolean formula.
 
+Two operations are used:
+
+\begin{description}
+	\item[\textsc{UnitPropagate}] If the clause contains \emph{one} unassigned literal, set the valuation for the variable in order to satisfy it.
+	\item[\textsc{PureLiteralAssign}] Pure literals do not impact the search space, because they can always be satisfied with one truth value. This operation simplifies the clause using this fact.
+\end{description}
+
+\begin{algbox}{Davis-Putnam-Logemann-Loveland}
+		DPLL's input is a set of clauses $\phi$ and the algorithm returns a Boolean value representing whether the problem is satisfiable or not. The algorithm proceeds as follows:
+		
+\begin{algorithmic}
+\Function{DPLL}{$\phi$}
+	\If{\Call{IsConsistent}{$\phi$}} \Comment Clause contains no $x_1$ and $\neg x_1$
+		\State ${\bf return}~\textsc{true}$
+	\EndIf
+	
+	\If{\Call{IsEmpty}{$\phi$}}
+		\State ${\bf return}~\textsc{false}$
+	\EndIf
+	
+	\For{unit clause $\{l\} \in \phi$} \Comment Unit clauses contain one unassigned literal
+		\State $\phi = $ \Call{UnitPropagate}{$l, ~ \phi$}
+	\EndFor
+	
+	\For{pure literal $l \in \phi$} \Comment Pure literals are never negated
+		\State $\phi = $ \Call{PureLiteralAssign}{$l, ~ \phi$}
+	\EndFor
+	
+	\State ${\bf return}$~\Call{DPLL}{$\phi[T/l]$}~${\bf or}$~\Call{DPLL}{$\phi[F/l]$}
+
+\EndFunction
+\end{algorithmic}	
+\vspace{0.5em}
+	
+	\label{algorithm:sat:dpll}
+\end{algbox}
+
+
+\todobox{It would be nice to visualise the algorithm's operation on a toy problem here.}
 
 
 \subsection{Satisfiability Modulo Theories (SMT)}
 
+\begin{mycodefile}{python}{\label{code:z3:1}Solving a simple multivariate equation with Z3}{Python}{multivariate.py}
+	
+	Using the Python bindings for Z3, we solve the equation $y^2 + x^2 = 20$ for integer $x$ and $y$. When executed, the solver yields the valuation $x = 2,~y = 4$.
+	
+
+	\vspace{0.5em}
+\end{mycodefile}
+
+Thus far, we have only considered solving problems involving Boolean variables and their negation. With SMT, we extend the problem to satisfiability of arbitrary first-order logic theories. This is more flexible and reduces the need for encoding work to formulate problems in terms of CNF formulae. With an SMT solver, such as Z3, we can solve systems of equations as shown in code listing \ref{code:z3:1}.
+
+We define a theory $T$ as a tuple $(\Sigma_T, I_T)$ where $\Sigma_T$ is the alphabet/list of function symbols within the theory $T$ and $I_T$ defines the \emph{interpretations} or meaning in the theory. For example, consider the theory defining less-than and greater-than on positive integer numbers:
+
+\(
+T = (\{0,1,2,3,4,5,6,7,8,9,<,>,x,y\}, I_T)
+\)
+
+Then $x < 4$ for $x = 2$ is $T$ under $I_T$.
+
+Using CNF as before, a simple problem under this theory could require the clauses $(x > y \lor x < 10) \land (y < 5) \land (4 > x)$ to be satisfied. Most SMT solvers would then provide a \emph{model}, assigning possible satisfying values to the variables in the problem. In this example, $x = 4,~y=4$ would suffice.
+
+
 \subsection{DPLL(T): Extending DPLL to Arbitrary Theories}
 
-\section{Static Analysis}
+First described in \citet{ganzinger2004dpll} and presented in \citet{presdpllt}, DPLL(T) extends the power of DPLL to a theory $T$ (as defined above) using a repeated two-phase approach:
 
-\section{Parsing}
+\begin{itemize}
+	\item First, all functions under the theory $T$ in the problem are replaced with a Boolean variable. DPLL then proceeds as described earlier to find a satisfying valuation for the Boolean variables.
+	\item Once a full set of valuations are available, a specialised \emph{theory solver} attempts to determine if the valuations can be satisfied under the theory $T$. If these valuations yield logical constraints that are contradictory, the original formula $\phi$ is augmented with an additional clause to reflect the requirement that the two constraints cannot both be true.
+	\item If the formula has been modified as the result of a contradiction, the SAT solver is executed again to retrieve a new valuation -- assuming it is possible to backtrack.
+	\item If at any stage it is not possible to backtrack and the functions required to be true contradict each other, the entire problem is unsatisfiable.
+\end{itemize}
+
+In DPLL(T), the theory solver is queried as an oracle and used each time the SAT solver has found a valuation. Although we have discussed theories relating to linear integer inequalities, this approach is equally applicable to other theories. Z3str3, which powers string solving in Z3, is built on this principle and uses a theory solver that is equipped with knowledge of non-deterministic finite automata \citep{berzish2017z3str3}.
+
+\section{Refinement Types}
+
+Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type. \citeauthor{benjaminpierce2002} describes them as ``a restricted form of intersection types'' that ``preserve type inference and allow more errors to be detected at compile time'' \citeyearpar{benjaminpierce2002}.
+
+A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 3\}$; only $\{0, 1, 2, 3\}$ would then be permitted for values of $n$ under this constraint. Equally, this type can be applied to strings. A length constraint could be written as $\{s : \Sigma^* \mid \left| s \right| = 4 \}$.
+
+In order to model common input validation practice, we allow regular expression membership to be expressed using refinement types. For example, $\{s: \Sigma^* \mid s \in L(ba+)\}$ would allow \texttt{"baa"} to be assigned as a value of some variable $s$, but not \texttt{"a"}. This refinement type can then be applied to local variables as well as function return types and parameter types.
 
 \chapter{Prior Art}
 
@@ -590,41 +699,83 @@ There is a wealth of existing work within the areas of static analysis and progr
 
 \subsection{Dafny}
 
-Dafny is a language designed by Microsoft Research with built-in static verification functionality and modern programming language features. The language itself is imperative and allows programmers to specify functions with pre and post-conditions which are verified at compile time \citep{dafny2}. Recent versions of Dafny allow programs to be compiled into executables targetting the .NET framework \citet{dafny}.
+Dafny is a language designed by Microsoft Research with built-in static verification functionality and modern programming language features (including polymorphic types). The language itself is imperative and allows programmers to specify functions with pre and post-conditions which are verified at compile time \citep{dafny2}. Recent versions of Dafny allow programs to be compiled into executables targetting the .NET framework \citet{dafny}.
 
-The language uses an intermediate representation language known as \emph{Boogie} which is able to derive constraints. These constraints are passed to the Z3 SMT solver to verify the user's program.
+\begin{mycodefile}{javascript}{\label{code:dafny:1}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
+	
+	In this sample, we define a function called \texttt{Fac} which calculates the factorial of a given input integer $n$. For example, \texttt{Fac(3)} yields $3 \times 2 \times 1 = 6$. Using the \texttt{requires} keyword, we specify a pre-condition on the function to ensure that any argument must satisfy $n \ge 1$. The \texttt{Main} function then calls \texttt{Fac} with a negative number, which causes a verification error at compile time.
+	\vspace{1em}\\
+	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
+	\vspace{0.5em}
+\end{mycodefile}
 
-\begin{mycode}{csharp}{Factorial function and a pre-condition violation}{Dafny}
-function Fac(n: int): int
-requires n >= 1 // pre-condition
-{
-	// base case          recursion
-	if n == 1 then 1 else n * Fac(n - 1)
-}
+The language uses an intermediate representation language known as \emph{Boogie} which is able to derive constraints. These constraints are passed to the Z3 SMT solver to verify the user's program. Listing \ref{code:dafny:1} shows an example Dafny program which causes a compile-time verification error.
 
-function Main(): int
-{
-	Fac(-2) // violation
-}
-\end{mycode}
+Dafny has some limited string support. An example is shown in listing \ref{code:dafny:2} with a function pre-condition on the length of a string. Strings in Dafny are treated as equivalent to the type \texttt{seq<char>} (that is, a sequence of characters) so whilst it is possible to retrieve e.g. the length of such a sequence, there does not appear to be any built-in regular expression support. Whilst it \emph{is} possible to write a helper function and call it from within a pre-condition or post-condition, it then becomes necessary to manually implement the regular expression check in imperative code (as in listing \ref{code:dafny:3})
 
-\subsection{LiquidHaskell}
+\begin{mycodefile}{javascript}{\label{code:dafny:2}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
+	
+	In this sample, we define a function called \texttt{Fac} which calculates the factorial of a given input integer $n$. For example, \texttt{Fac(3)} yields $3 \times 2 \times 1 = 6$. Using the \texttt{requires} keyword, we specify a pre-condition on the function to ensure that any argument must satisfy $n \ge 1$. The \texttt{Main} function then calls \texttt{Fac} with a negative number, which causes a verification error at compile time.
+	\vspace{1em}
+	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
+	\vspace{0.5em}
+\end{mycodefile}
+
+\begin{mycodefile}{javascript}{\label{code:dafny:3}Manually implementing a regular expression pre-condition}{Dafny}{regex.dfy}
+	
+	It should be immediately apparent how much more verbose this approach is than a refinement type. For more complex regular expressions, it becomes difficult to manually implement the DFA/NFA required to check the string which increases the likelihood of implementation bugs in the verification part of the program. This should be avoided at all costs, since it can cause false confidence in the correctness of the code.
+
+	\vspace{1em}
+	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
+	\vspace{0.5em}
+\end{mycodefile}
+
+
+There is some limited interoperability support with other .NET code, but the general lack of a standard library or input/output support limits Dafny's potential to an existence as an interesting research language.
+
+\subsection{Liquid Haskell}
+
+Liquid Haskell is a program verifier for Haskell. Refinement types are supported in the form of special nested comments which specify \emph{liquid types}.
+
+The logic available for use in these type specifications is limited to ensure that the derived \emph{verifiable conditions} that are eventually passed to the SMT solver are \emph{decidable}. Thus, whilst Liquid Haskell supports basic logical expressions, relations and operators, there is no support for regular expression membership checks or arbitrary code execution to implement such functionality.
+
+Listing \ref{code:liquidhaskell:1} shows an example of a type constrained using Liquid Haskell to only permit odd integer members.
+
+\begin{mycodefile}{haskell}{\label{code:liquidhaskell:1}An \texttt{Odd} type to model odd numbers}{Haskell}{odds.hs}
+	
+	A violation is triggered by \texttt{oddNumberThatIsActuallyEven} which, although a member of the \texttt{Odd} data type, has been assigned a value of 8.
+	\vspace{0.5em}
+\end{mycodefile}
 
 \section{Static Analysis and Security Tooling}
 
 \subsection{Roslyn Security Guard}
 
+\todobox{Not actively maintained, but includes some interesting inspections to talk about. Generally rather limited, unable to tell if validation has happened, can only recognise hardcoded method names.}
+
 \subsection{Snyk}
+
+\todobox{Snyk is mainly included here because it's bad and produces lots of false positives--e.g. Jackson databind vulns in WebSignOn that are never real.}
 
 \chapter{Design and Implementation}
 
+\todobox{Language design (syntax), architecture of type checker and interpreter, libraries used (Z3, ANTLR4, introductions to both with code samples), Gradle plugin, syntax highlighting with WASM}
+
 \chapter{Testing}
+
+\todobox{Unit testing, manual testing (boundary conditions, adversarial input), integration testing (lexer, parser, interpreter)}
 
 \chapter{Evaluation and Conclusions}
 
-\section{}
+\todobox{This needs to be completed by evaluating not just the performance of the tool against existing static analysis software, but also the scheduling of the project and project management.}
 
 \chapter{Future Work}
+\todobox{Flesh this out:\begin{itemize}
+		\item Non-regular ``regular expressions'' like we see in PHP, Perl etc
+		\item Integration with languages such as C\#--take advantage of Roslyn? Scala/Java could also work by using annotations.
+		\item Extend Dafny/Haskell to take advantage of Z3str3?
+		\item Or, continue working on the proof of concept language to make it more palatable for serious use (more types, generics, .. objects)
+\end{itemize}}
 
 
 \titleformat{\chapter}[display]
