@@ -4,7 +4,8 @@ requires |name| == 4
   "Hello " + name
 }
 
-method Main() {
+method Main()
+{
   print Strings("Adam"); // passes compile
   print Strings("Jonathan"); // violation
 }
