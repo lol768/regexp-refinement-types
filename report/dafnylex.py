@@ -46,10 +46,11 @@ class DafnyLexer(RegexLexer):
             (r'(\.\d+|[0-9]+\.[0-9]*)([eE][-+]?[0-9]+)?', Number.Float),
             (r'[0-9]+', Number.Integer),
             (r'\.\.\.|=>', Punctuation),
-            (r'\+\+|--|~|&&|\?|:|\|\||\\(?=\n)|'
+            (r'\+\+|--|~|&&|\?|::|:|\|\||\\(?=\n)|'
              r'(<<|>>>?|==?|!=?|[-<>+*%&|^\/:])=?', Operator),
             (r'[{(\[;,]', Punctuation),
             (r'[})\].]', Punctuation),
+            (r'(forall)(\s*)([A-Za-z][A-Za-z0-9]*)(\s*)(:)(\s*)(.*?)(\s+)(::)', bygroups(Keyword, Text, Name.Identifier, Text, Punctuation, Text, Keyword.Type, Text, Operator)),
             (r'(in|while|do|return|if|else|then|requires|print|decreases|ensures|var)\b', Keyword),
             (r'(function method\b|function\b|method\b)(\s*)(.*?)(\()',
              bygroups(Keyword.Declaration, Text, Name.Identifier, Punctuation), 'arguments'),
@@ -57,6 +58,7 @@ class DafnyLexer(RegexLexer):
 
             (r'(true|false)\b', Keyword.Constant),
             (r'"(\\\\|\\"|[^"])*"', String.Double),
+            (r'\'[^\']\'', String.Char),
             (r'[A-Za-z][A-Za-z0-9]*', Name.Identifier),
 
         ],
