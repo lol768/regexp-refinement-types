@@ -22,6 +22,7 @@
 \usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc}
 \usepackage{shellesc}
 \usepackage{minted}
+\usemintedstyle{idseven}
 \usepackage{listings}
 \usepackage[hidelinks]{hyperref}
 %\usepackage[osfigures]{opensans}
@@ -41,6 +42,7 @@
 \usepackage{nameref}
 \usepackage{fontspec}
 \setsansfont{Proxima Nova}
+\setmonofont{Ubuntu Mono}
 \newfontfamily\warwickfont[
 Scale=MatchLowercase
 %  Path = fonts/
@@ -243,13 +245,13 @@ Scale=MatchLowercase
 \usepackage[printwatermark]{xwatermark}
 \newsavebox\mybox
 \savebox\mybox{\tikz[color=id7-aubergine,opacity=0.3]\node{\sffamily DRAFT 1};}
-\newwatermark*[
-allpages,
-angle=45,
-scale=6,
-xpos=-20,
-ypos=15,
-]{\usebox\mybox}
+%\newwatermark*[
+%allpages,
+%angle=45,
+%scale=6,
+%xpos=-20,
+%ypos=15,
+%]{\usebox\mybox}
 
 
 % ======================
@@ -701,11 +703,10 @@ There is a wealth of existing work within the areas of static analysis and progr
 
 Dafny is a language designed by Microsoft Research with built-in static verification functionality and modern programming language features (including polymorphic types). The language itself is imperative and allows programmers to specify functions with pre and post-conditions which are verified at compile time \citep{dafny2}. Recent versions of Dafny allow programs to be compiled into executables targetting the .NET framework \citet{dafny}.
 
-\begin{mycodefile}{javascript}{\label{code:dafny:1}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
+\begin{mycodefile}{dafnylex.py:DafnyLexer -x}{\label{code:dafny:1}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
 	
 	In this sample, we define a function called \texttt{Fac} which calculates the factorial of a given input integer $n$. For example, \texttt{Fac(3)} yields $3 \times 2 \times 1 = 6$. Using the \texttt{requires} keyword, we specify a pre-condition on the function to ensure that any argument must satisfy $n \ge 1$. The \texttt{Main} function then calls \texttt{Fac} with a negative number, which causes a verification error at compile time.
-	\vspace{1em}\\
-	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
+
 	\vspace{0.5em}
 \end{mycodefile}
 
@@ -713,25 +714,22 @@ The language uses an intermediate representation language known as \emph{Boogie}
 
 Dafny has some limited string support. An example is shown in listing \ref{code:dafny:2} with a function pre-condition on the length of a string. Strings in Dafny are treated as equivalent to the type \texttt{seq<char>} (that is, a sequence of characters) so whilst it is possible to retrieve e.g. the length of such a sequence, there does not appear to be any built-in regular expression support. Whilst it \emph{is} possible to write a helper function and call it from within a pre-condition or post-condition, it then becomes necessary to manually implement the regular expression check in imperative code (as in listing \ref{code:dafny:3})
 
-\begin{mycodefile}{javascript}{\label{code:dafny:2}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
+\begin{mycodefile}{dafnylex.py:DafnyLexer -x}{\label{code:dafny:2}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
 	
 	In this sample, we define a function called \texttt{Fac} which calculates the factorial of a given input integer $n$. For example, \texttt{Fac(3)} yields $3 \times 2 \times 1 = 6$. Using the \texttt{requires} keyword, we specify a pre-condition on the function to ensure that any argument must satisfy $n \ge 1$. The \texttt{Main} function then calls \texttt{Fac} with a negative number, which causes a verification error at compile time.
-	\vspace{1em}
-	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
+
 	\vspace{0.5em}
 \end{mycodefile}
 
-\begin{mycodefile}{javascript}{\label{code:dafny:3}Manually implementing a regular expression pre-condition}{Dafny}{regex.dfy}
+\begin{mycodefile}{dafnylex.py:DafnyLexer -x}{\label{code:dafny:3}Manually implementing a regular expression pre-condition}{Dafny}{regex.dfy}
 	
 	It should be immediately apparent how much more verbose this approach is than a refinement type. For more complex regular expressions, it becomes difficult to manually implement the DFA/NFA required to check the string which increases the likelihood of implementation bugs in the verification part of the program. This should be avoided at all costs, since it can cause false confidence in the correctness of the code.
 
-	\vspace{1em}
-	\todobox{Fix highlighting here before final report submission. Write a simple lexer or something..}
 	\vspace{0.5em}
 \end{mycodefile}
 
 
-There is some limited interoperability support with other .NET code, but the general lack of a standard library or input/output support limits Dafny's potential to an existence as an interesting research language.
+There is some limited interoperability support with other .NET code \citep{wilcowio}, but the absence of a standard library or input/output support limits Dafny's potential to an existence as an interesting research language.
 
 \subsection{Liquid Haskell}
 
@@ -755,11 +753,20 @@ Listing \ref{code:liquidhaskell:1} shows an example of a type constrained using 
 
 \subsection{Snyk}
 
-\todobox{Snyk is mainly included here because it's bad and produces lots of false positives--e.g. Jackson databind vulns in WebSignOn that are never real.}
+\begin{mycodefile}{groovy}{\label{code:gradle:1}Specifying dependencies using a build tool}{Gradle}{build.gradle}
+
+\end{mycodefile}
+
+Snyk is a polyglot tool which analyses system dependencies to find components with known security vulnerabilities. Build files which specify dependencies (example in listing \ref{code:gradle:1}) are parsed and analysed.
 
 \chapter{Design and Implementation}
 
 \todobox{Language design (syntax), architecture of type checker and interpreter, libraries used (Z3, ANTLR4, introductions to both with code samples), Gradle plugin, syntax highlighting with WASM}
+
+
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}
+	\vspace{0.5em}
+\end{mycodefile}
 
 \chapter{Testing}
 
