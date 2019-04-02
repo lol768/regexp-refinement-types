@@ -615,28 +615,33 @@ Two operations are used:
 	\item[\textsc{PureLiteralAssign}] Pure literals do not impact the search space, because they can always be satisfied with one truth value. This operation simplifies the clause using this fact.
 \end{description}
 
+The algorithm terminates in one of two cases \footnote{These DPLL termination conditions are taken verbatim from an encyclopedic description written previously by the author in \emph{Williams, A. (2019), `DPLL algorithm (section: algorithm termination)'}.}. Either the CNF formula $\phi$ is found to comprise a consistent set of literals -- that is, there is no $l$ and $\neg l$ for any literal l in the formula. If this is the case, the variables can be trivially satisfied by setting them to the respective polarity of the encompassing literal in the valuation. Otherwise, when the formula contains an empty clause, the clause is vacuously false because a disjunction requires at least one member that is true. In this case, the existence of such a clause implies that the formula (evaluated as a \emph{conjunction} of all clauses) therefore cannot evaluate to true and must be unsatisfiable.
+
 \begin{algbox}{Davis-Putnam-Logemann-Loveland}
 		DPLL's input is a set of clauses $\phi$ and the algorithm returns a Boolean value representing whether the problem is satisfiable or not. The algorithm proceeds as follows:
 		
 \begin{algorithmic}
 \Function{DPLL}{$\phi$}
-	\If{\Call{IsConsistent}{$\phi$}} \Comment Clause contains no $x_1$ and $\neg x_1$
-		\State ${\bf return}~\textsc{true}$
+	\If{\Call{IsConsistent}{$\phi$}} \Comment Clauses contain no $x_1$ and $\neg x_1$
+		\State ${\bf return}~\textsc{true}$ \Comment We were able to find a satisfying valuation
 	\EndIf
 	
-	\If{\Call{IsEmpty}{$\phi$}}
+	\If{\Call{HasEmpty}{$\phi$}} \Comment At least one clause in the formula is empty/unsatisfiable
 		\State ${\bf return}~\textsc{false}$
 	\EndIf
 	
-	\For{unit clause $\{l\} \in \phi$} \Comment Unit clauses contain one unassigned literal
-		\State $\phi = $ \Call{UnitPropagate}{$l, ~ \phi$}
+	\For{unit clause $\{l\} \in \phi$} \Comment Unit clauses containing one unassigned literal
+		\State $\phi = $ \Call{UnitPropagate}{$l, ~ \phi$} \Comment Apply unit propagation operation
 	\EndFor
 	
 	\For{pure literal $l \in \phi$} \Comment Pure literals are never negated
-		\State $\phi = $ \Call{PureLiteralAssign}{$l, ~ \phi$}
+		\State $\phi = $ \Call{PureLiteralAssign}{$l, ~ \phi$} \Comment Delete pure literals, these do not impact search 
 	\EndFor
 	
-	\State ${\bf return}$~\Call{DPLL}{$\phi[T/l]$}~${\bf or}$~\Call{DPLL}{$\phi[F/l]$}
+    \State $l = $ \Call{PickLiteral}{$\phi$} \Comment Arbitrarily pick an unassigned literal 
+    
+   
+	\State ${\bf return}$~\Call{DPLL}{$\phi[T/l]$}~${\bf or}$~\Call{DPLL}{$\phi[F/l]$}  \Comment Try literal set to true, short circuit success, otherwise try false
 
 \EndFunction
 \end{algorithmic}	
@@ -646,8 +651,87 @@ Two operations are used:
 \end{algbox}
 
 
-\todobox{It would be nice to visualise the algorithm's operation on a toy problem here.}
+Consider the following problem adapted from \citep{presdpllt}:
 
+
+\begin{center}
+\emph{Is the propositional logic formula below satisfiable?}
+
+\(
+    (A \lor B) \land (C \lor D) \land \neg B
+\)
+
+\end{center}
+
+
+\begin{enumerate}
+    \item We first check if the formula $\phi$ is consistent. There should be no $x_1$ and $\neg x_1$ within the formula if this is the case. $B$ violates this property, so the formula is not yet consistent.
+    \item We proceed to check if any clauses are empty which would indicate an unsatisfiable problem. This is not the case, there are no empty clauses.
+    \item The unit clauses in the formula at this stage are $\{\neg B\}$. We apply the unit propagation rule and adjust clause $(A \lor B)$.
+\end{enumerate}
+
+\begin{center}
+\setlength{\fboxsep}{2pt}
+\(
+(A \lor \)\colorbox{id7-aubergine}{$ \textcolor{white}{B}$}\() \land (C \lor D) \land \neg B\)
+
+\emph{unit propagation}
+
+\(A ~\land (C \lor D) \land \neg B\)
+
+\end{center}
+
+\begin{enumerate}
+      \setcounter{enumi}{3}
+      \item We now look for all pure literals. Recall that a pure literal is one that is never negated elsewhere in the formula. The first pure literal we consider is $A$. It appears as $A$ on its own in the formula, so we assign it a value of $T$.
+\end{enumerate}
+
+\begin{center}
+    \setlength{\fboxsep}{2pt}
+    \(
+    (\)\colorbox{id7-aubergine}{$ \textcolor{white}{T}$}\() \land (C \lor D) \land \neg B\)
+    
+    \emph{simplify}
+    
+    \((C \lor D) \land \neg B\)
+\end{center}
+
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item We repeat for $\neg B$, $C$ and $D$ .
+\end{enumerate}
+
+\begin{center}
+    \setlength{\fboxsep}{2pt}
+    
+    \((C \lor D) \land \neg ~ \)\colorbox{id7-aubergine}{$ \textcolor{white}{F}$}
+    
+    \emph{simplify}
+    
+    \((C \lor D) \land \)\colorbox{id7-aubergine}{$ \textcolor{white}{T}$}
+        
+    \emph{simplify}
+    
+    \((C \lor D)\)
+    
+    \emph{pure literal $C$}
+    
+    \((\)\colorbox{id7-aubergine}{$ \textcolor{white}{T}$}\( \lor D)\)
+        
+    \emph{simplify}
+    
+    \(D\)
+    
+    \emph{pure literal $D$}
+    
+    \colorbox{id7-aubergine}{$ \textcolor{white}{T}$}
+\end{center}
+
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item No unassigned literals remain. The satisfying valuation is $A=T, B=F, C=T, D=T$.
+\end{enumerate}
 
 \subsection{Satisfiability Modulo Theories (SMT)}
 
