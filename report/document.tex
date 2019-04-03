@@ -1,4 +1,4 @@
-\documentclass[a4paper,openany]{book}
+\documentclass[a4paper,openany,12pt]{book}
 \usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=0.5cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
@@ -370,8 +370,6 @@ Some (or all) of the following operations are available to use when building a r
 We now consider an example regular language. In the UK, the first part of most postcodes matches the format of two letters followed by up to two numbers. For example, \texttt{CV8}, \texttt{CV4} or \texttt{SW1}. If we define the alphabet of uppercase letters $\Sigma_{A-Z} = \{A, B, C, \ldots, Z\}$ and digits $\Sigma_\mathcal{N} = \{0,1,2,3,4,5,6,7,8,9\}$ then we can formally describe a language $L(\Sigma_{A-Z} \Sigma_{A-Z}(\Sigma_\mathcal{N} | \Sigma_\mathcal{N} \Sigma_\mathcal{N})$.
 
 As discussed, the syntax used in most programming languages differs somewhat and offers some convenience features for defining ranges of characters and specifying the desired number of occurrences of a particular expression:\\
-\vspace{0.5em}\\
-\sffamily \textcolor{id7-aubergine}{\textbf{\faIcon{brackets-curly} Code Listing \hfill C\#}}
 
 \begin{minted}{csharp}
 // Match: exactly two occurrences of a character in range A-Z
