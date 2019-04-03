@@ -498,56 +498,72 @@ For example, recall the balanced parentheses language. In PCRE (a library provid
 
 The SAT decision problem involves a propositional Boolean logic formula built from a number of variables and operations conjunction $\land$, disjunction $\lor$ and negation $\neg$. The question concerns whether the formula is \emph{satisfiable}--i.e. is there a set of \emph{valuations} for each of the variables which results in the overall formula evaluating to true?
 
-If a formula \emph{cannot} be satisfied, there is no valuation for which the formula will evaluate to true. For example, the clauses may contradict each other as in $(a) \land (\neg a)$. Example \ref{example:sat:1} shows a satisfiable formula comprising 2 clauses and 3 variables; example \ref{example:sat:2} shows, by exhaustive evaluation, a problem which cannot be satisfied.
+If a formula \emph{cannot} be satisfied, there is no valuation for which the formula will evaluate to true. For example, the clauses may contradict each other as in $(a) \land (\neg a)$. The example below shows a satisfiable formula comprising 2 clauses and 3 variables:
 
 
+\emph{Can the} \(
+	(a \lor b \lor c) \land (\neg b \lor c)
+\) \emph{propositional logic formula be satisfied?}\\
 
-\begin{example}{A simple SAT problem, with satisfying valuation}
- Can the \(
-			(a \lor b \lor c) \land (\neg b \lor c)
-		\) propositional logic formula be satisfied?\\
-		
-		\textcolor{id7-emerald-green}{\textbf{Yes}}, set $a = T$, $b=F$, $c=T$. Then clause 1 evaluates to $(T \lor F \lor T) = T$ and clause 2 evaluates to $(\neg F \lor T) = T$. The whole formula evaluates to $T \land T = T$.
-\vspace{0.5em}
-\label{example:sat:1}
-\end{example}
+\textcolor{id7-emerald-green}{\textbf{Yes}}, set $a = T$, $b=F$, $c=T$. Then clause 1 evaluates to $(T \lor F \lor T) = T$ and clause 2 evaluates to $(\neg F \lor T) = T$. The whole formula evaluates to $T \land T = T$.
 
+By exhaustive evaluation, we can prove a problem cannot be satisfied:
 
-\begin{example}{A formula which cannot be satisfied}
-	Can the \(
-	(a \lor b) \land (\neg a \lor b) \land (\neg b)
-	\) propositional logic formula be satisfied?\\
-	
-	\textcolor{id7-ruby-red}{\textbf{No}}, the clauses are contradictory. The table below shows exhaustively that no valuation of the variables result in the formula evaluating to true:
-	
-	\arrayrulecolor{lightgrey} % <---
-	\def\arraystretch{1.5}%  1 is the default, change whatever you need
-	\begin{table}[H]
-		\centering
-		\rowcolors{1}{}{lightgrey}
-		\begin{tabular}[t]{|p{0.05\linewidth}|p{0.05\linewidth}|p{0.1\linewidth}|}
-			\hline
-			\rowcolor{id7-aubergine}
-			{\color[HTML]{FFFFFF} $\mathbf{a}$} & {\color[HTML]{FFFFFF} $\mathbf{b}$} & {\color[HTML]{FFFFFF} \sffamily  \textbf{Result}} \\ \hline
-			$F$ & $F$ & $F$  \\ \hline
-			$F$ & $T$ & $F$  \\ \hline
-			$T$ & $F$ & $F$  \\ \hline
-			$T$ & $T$ & $F$  \\ \hline
-		\end{tabular}
-		\caption{Enumerating all possible valuations for the variables $\{a, b\}$ used in the formula.}
-		\label{table:landingredesign}
-	\end{table}
-\label{example:sat:2}
-\end{example}
+\emph{Can the} \(
+    (a \lor b) \land (\neg a \lor b) \land (\neg b)
+\) \emph{propositional logic formula be satisfied?}\\
 
+\textcolor{id7-ruby-red}{\textbf{No}}, the clauses are contradictory. The table below shows exhaustively that no valuation of the variables result in the formula evaluating to true:
+
+\arrayrulecolor{lightgrey} % <---
+\def\arraystretch{1.5}%  1 is the default, change whatever you need
+\begin{table}[H]
+	\centering
+	\rowcolors{1}{}{lightgrey}
+	\begin{tabular}[t]{|p{0.05\linewidth}|p{0.05\linewidth}|p{0.1\linewidth}|}
+		\hline
+		\rowcolor{id7-aubergine}
+		{\color[HTML]{FFFFFF} $\mathbf{a}$} & {\color[HTML]{FFFFFF} $\mathbf{b}$} & {\color[HTML]{FFFFFF} \sffamily  \textbf{Result}} \\ \hline
+		$F$ & $F$ & $F$  \\ \hline
+		$F$ & $T$ & $F$  \\ \hline
+		$T$ & $F$ & $F$  \\ \hline
+		$T$ & $T$ & $F$  \\ \hline
+	\end{tabular}
+	\caption{Enumerating all possible valuations for the variables $\{a, b\}$ used in the formula.}
+	\label{table:landingredesign}
+\end{table}
 
 \subsubsection{Normal Forms}
 
 Examples of formulae up to this point have been given in \emph{Conjunctive Normal Form} (CNF). That is, they are provided as a conjunction of disjunctive clauses. It is possible to convert any Boolean logic formula into this form. To \emph{evaluate} a given formula using a valuation of Boolean variables and values, we simply consider each clause in turn and enumerate the literals within each clause. Once any one literal has been found to be true, the disjunctive nature of the clauses allows us to ignore any remaining terms and move onto the next. Similarly we can skip all remaining clauses if one clause in a CNF formula is found to evaluate to $F$, since all clauses must be true.
 
-To solve SAT, we could devise a naïve algorithm considering all possible assignments and evaluating the formula at each stage (as we did in example \ref{example:sat:2}). Clearly such an approach would be inefficient--for Boolean variables with two possible assignment values, this algorithm would work in $\mathcal{O}(2^n)$.
+To solve SAT, we could devise a naïve algorithm considering all possible assignments and evaluating the formula at each stage (as we did in the second example). Clearly such an approach would be inefficient--for Boolean variables with two possible assignment values, this algorithm would work in $\mathcal{O}(2^n)$.
 
-As discussed in \citet{miltersen2005converting}, it is also possible to convert formulae to \emph{Disjunctive Normal Form} (DNF) using De Morgan's law. Example \ref{example:sat:3} illustrates the conversion process. This is of some note, because SAT restricted to formulae in DNF can be solved in linear time using the procedure below:
+As discussed in \citet{miltersen2005converting}, it is also possible to convert formulae to \emph{Disjunctive Normal Form} (DNF) using De Morgan's law. Using the formula from the original example, we can concert to DNF:
+
+    \begin{description}
+        \item[CNF] \(
+        (a \lor b \lor c) \land (\neg b \lor c)
+        \)
+        \item[DNF] \(
+        (a \land \neg b) \lor (c)
+        \)
+    \end{description}
+    
+    \spacedrule{}
+    
+    A more interesting example might comprise a formula of structure  \(
+    (a \lor b) \land (c \lor d) \land (e \lor f)
+    \), which is converted to the lengthy DNF formula below:
+    
+    \[
+    (a \land c \land e) \lor (a \land c \land f) \lor (a \land d \land e) \lor (a \land d \land 
+    f) \lor (b \land c \land e) \lor (b \land c \land f) \lor (b \land d \land e) \lor (b \land d \land
+    f)
+    \]
+    \vspace{0.25em}
+
+This is of some note, because SAT restricted to formulae in DNF can be solved in linear time using the procedure below:
 
 
 \begin{outline}
@@ -560,33 +576,9 @@ As discussed in \citet{miltersen2005converting}, it is also possible to convert 
 	\1 If no clauses are satisfiable, the problem cannot be satisfied.
 \end{outline}
 
-\begin{example}{Conjunctive and disjunctive normal forms}
-	Here we use the formula from example \ref{example:sat:1} and show the DNF equivalent:
-	\begin{description}
-		\item[CNF] \(
-		(a \lor b \lor c) \land (\neg b \lor c)
-		\)
-		\item[DNF] \(
-		(a \land \neg b) \lor (c)
-		\)
-	\end{description}
 
-\spacedrule{}
 
-	A more interesting example might comprise a formula of structure  \(
-	(a \lor b) \land (c \lor d) \land (e \lor f)
-	\), which can be converted to the DNF formula below:
-	
-	\[
-	(a \land c \land e) \lor (a \land c \land f) \lor (a \land d \land e) \lor (a \land d \land 
-	f) \lor (b \land c \land e) \lor (b \land c \land f) \lor (b \land d \land e) \lor (b \land d \land
-	f)
-	\]
-\vspace{0.25em}
-\label{example:sat:3}
-\end{example}
-
-However, as the second formula in example \ref{example:sat:3} illustrates, there can be an \emph{exponential increase} in size for an arbitrary propositional logic formula written in CNF. Hence, in the general case, we cannot use this conversion procedure to solve SAT in linear time for any Boolean logic formula.
+However, as the second formula we converted illustrates, there can be an \emph{exponential increase} in size for an arbitrary propositional logic formula written in CNF. Hence, in the general case, we cannot use this conversion procedure to solve SAT in linear time for any Boolean logic formula.
 
 \subsection{Cook-Levin and NP Completeness}
 
