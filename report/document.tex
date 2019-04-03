@@ -367,28 +367,20 @@ Some (or all) of the following operations are available to use when building a r
 \end{description}
 
 
-\begin{example}{A simple regular language and some matching strings}
-	In the UK, the first part of most postcodes matches the format of two letters followed by up to two numbers. For example, \texttt{CV8}, \texttt{CV4} or \texttt{SW1}. If we define the alphabet of uppercase letters $\Sigma_{A-Z} = \{A, B, C, \ldots, Z\}$ and digits $\Sigma_\mathcal{N} = \{0,1,2,3,4,5,6,7,8,9\}$ then we can formally describe a language $L(\Sigma_{A-Z} \Sigma_{A-Z}(\Sigma_\mathcal{N} | \Sigma_\mathcal{N} \Sigma_\mathcal{N})$.
-	
-	As discussed, the syntax used in most programming languages differs somewhat and offers some convenience features for defining ranges of characters and specifying the desired number of occurrences of a particular expression:\\
-	\vspace{0.5em}\\
-	\sffamily \textcolor{id7-aubergine}{\textbf{\faIcon{brackets-curly} Code Listing \hfill C\#}}
-	
-	\begin{minted}{csharp}
+We now consider an example regular language. In the UK, the first part of most postcodes matches the format of two letters followed by up to two numbers. For example, \texttt{CV8}, \texttt{CV4} or \texttt{SW1}. If we define the alphabet of uppercase letters $\Sigma_{A-Z} = \{A, B, C, \ldots, Z\}$ and digits $\Sigma_\mathcal{N} = \{0,1,2,3,4,5,6,7,8,9\}$ then we can formally describe a language $L(\Sigma_{A-Z} \Sigma_{A-Z}(\Sigma_\mathcal{N} | \Sigma_\mathcal{N} \Sigma_\mathcal{N})$.
+
+As discussed, the syntax used in most programming languages differs somewhat and offers some convenience features for defining ranges of characters and specifying the desired number of occurrences of a particular expression:\\
+\vspace{0.5em}\\
+\sffamily \textcolor{id7-aubergine}{\textbf{\faIcon{brackets-curly} Code Listing \hfill C\#}}
+
+\begin{minted}{csharp}
 // Match: exactly two occurrences of a character in range A-Z
 //        then at least one digit in 0-9 and optionally one more
 string pattern = r"[A-Z]{2}[0-9][0-9]?";
 var matchCollection = System.Text.RegularExpressions.Regex.Matches("CV31", pattern);
-	\end{minted}
-	\vspace{0.5em}
-	\label{example:regex:1}
-\end{example}
-
-Example \ref{example:regex:1} introduces a small regular language and the regular expression to recognise it by using the constructs above.
+\end{minted}
 
 Regular expressions are used extensively as an initial step when validating user input. For example, the popular web development framework \emph{ASP.NET MVC} natively allows developers to specify validation rules by way of a regular expression attribute. When user data is submitted in e.g. a form, the framework is able to automatically perform validation and reject input which does not match the expression.
-
-
 
 \begin{mycodefile}{csharp}{Entity fields can be validated using regular expressions in ASP.NET MVC}{C\#}{codesample-csharp-regex.cs}
 \end{mycodefile}
