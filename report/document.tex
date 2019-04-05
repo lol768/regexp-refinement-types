@@ -363,7 +363,7 @@ This chapter discusses the theory underpinning the techniques used in the implem
 
 
 \section{Regular Expressions}
-
+\label{regexbg}
 Most programming languages include support for using \emph{regular expressions} to match strings. Formally, regular expressions are a means to specify a \emph{regular} language -- equivalent in power to the \emph{deterministic finite automaton} (DFA) and \emph{non-deterministic finite automaton} (NFA).
 
 
@@ -434,7 +434,7 @@ As described in \citet[p.~35]{sipser2012introduction}, we can formalise the defi
 
 A simple DFA that accepts $2n$ occurrences of the character \texttt{a} is shown in figure \ref{figure:dfa:1}. We can define $M = (\{q_a,q_b\}, \{a\}, \delta, q_a, \{q_a\})$ and informally describe the transition function $\delta$ as mapping $(q_a, 'a') \rightarrow q_b$ and $(q_a, 'a') \rightarrow q_a$. The automaton alternates between states $q_a$ and $q_b$ every time a new character is processed -- whist the length is even, $q_a$ will be active and the string will be considered in the language.
 
-Non-deterministic finite automata are equivalent in language recognition ability to the DFAs discussed above, but use a different processing model \citep[p.~46]{sipser2012introduction}. There is no requirement to account for every possible character from the alphabet $\Sigma$ and there is a new concept of an $\epsilon$-transition which can always be followed; such a transition is depicted by an edge labelled $\epsilon$ in automata diagrams. NFAs can be thought of as being able to process multiple ``paths'' in parallel. Figure \ref{figure:nfa:1} illustrates an NFA using $\epsilon$-transitions to capture \emph{alternation}.
+Non-deterministic finite automata are equivalent in language recognition ability to the DFAs discussed above, but use a different processing model \citep[p.~46]{sipser2012introduction}. There is no requirement to account for every possible character from the alphabet $\Sigma$ and there is a new concept of an $\epsilon$-transition which can always be followed; such a transition is depicted by an edge labelled $\epsilon$ in automata diagrams. NFAs can be thought of as being able to process multiple ``paths'' in parallel. Figure \ref{figure:nfa:1} illustrates an NFA using $\epsilon$-transitions to capture \emph{alternation} between the languages $g^+$ and $f^+$ as defined at the beginning of section \ref{regexbg}.
 
 We can formalise the definition of an NFA in terms of a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where the elements of the tuple are described below. Note that the transition function has changed.
 
@@ -490,9 +490,9 @@ The initial state is $q_0$. As this automaton is non-deterministic, it can be vi
 
 \subsection{Programming Language Support}
 
-Most programming languages include a regular expression engine and offer syntax inspired by Perl's regular expressions. These ``regular'' expressions are often more powerful than the formal regular expressions discussed previously and can match non-regular languages.
+Most programming languages include a regular expression engine and offer syntax inspired by Perl's regular expressions. These ``regular'' expressions are often more powerful than the formal regular expressions discussed at the start of section \ref{regexbg} and can match non-regular languages.
 
-For example, recall the balanced parentheses language. In PCRE (a library providing a regular expression engine inspired by Perl), the \texttt{(?n)} pattern can be used to recursively match using the n\textsuperscript{th} capture group. It is possible to then write an expression which will match balanced parentheses. Micosoft's .NET platform includes an extension to support \emph{balancing group definitions} which would also allow for balanced parentheses to be matched. Regular expressions using these language features and extensions are \emph{regular} in the formal sense. Throughout this project, we only consider regular expressions according to their formal definition.
+For example, recall the balanced parentheses language. In PCRE (a library providing a regular expression engine inspired by Perl), the \texttt{(?n)} pattern can be used to recursively match using the n\textsuperscript{th} capture group. It is possible to then write an expression which will match balanced parentheses. Micosoft's .NET platform includes an extension to support \emph{balancing group definitions} which would also allow for balanced parentheses to be matched. Regular expressions using these language features and extensions are not \emph{regular} in the formal sense. Throughout this project, we only consider regular expressions according to their formal definition.
 
 \section{SAT and SMT Solvers}
 
@@ -589,16 +589,17 @@ SAT is NP complete. It is computationally straightforward (i.e. possible in line
 This has an impact on the practical application of SAT solvers and the reliability of such applications. Whilst heuristics can be used to efficiently solve some SAT problems, there is no guarantee that a particular problem will be able to be solved in a reasonable timeframe. Generally though, if a solver returns SAT/UNSAT instead of timing out, it can be assumed that the result is correct with a good degree of confidence.
 
 
-\begin{algbox}{Knuth's SAT0}
+\subsection{Knuth's Algorithm A}
 
-First discussed in \citet{Knuth:2015:ACP:2898950}, \citeauthor{Knuth:2015:ACP:2898950}'s \emph{Algorithm A} solves SAT by backtracking. Designed as a basic solution to the problem of designing a SAT solver, it is an improvement on the naïve algorithm discussed earlier. For a SAT problem involving $n$ variables, the algorithm proceeds by setting the $n$\textsuperscript{th} variable to its ``most plausible'' value and then recursively doing the same for the $n-1$ previous variables. If at any point a contradiction is encountered, the value assigned to $n$ is flipped and the process repeats. For literals which are never negated in any clause, we can assume that they are true without issue. These are known as ``pure literals'', a concept which reappears in the DPLL algorithm discussed later.
+First discussed in \citet{Knuth:2015:ACP:2898950}, \citeauthor{Knuth:2015:ACP:2898950}'s \emph{Algorithm A} (also known as \textsc{SAT0}) solves SAT by backtracking. Designed as a basic solution to the problem of designing a SAT solver, it is an improvement on the naïve algorithm discussed earlier. For a SAT problem involving $n$ variables, the algorithm proceeds by setting the $n$\textsuperscript{th} variable to its ``most plausible'' value and then recursively doing the same for the $n-1$ previous variables. If at any point a contradiction is encountered, the value assigned to $n$ is flipped and the process repeats. For literals which are never negated in any clause, we can assume that they are true without issue. These are known as ``pure literals'', a concept which reappears in the DPLL algorithm discussed later.
 
 At each stage, clauses must be modified to take into account the assignments, such as $x_1 = T$. This is achieved by removing any \emph{clause} which contains a literal $l = x_1$. For any clauses containing $l = \neg x_1$, this literal must be removed because it can no longer be used to satisfy the clause now that $x_1$ has been set. If $x_1$ is set to $F$, the same procedure happens in reverse (clauses containing $l = \neg x_1$ are removed, literals requiring $l = x_1$ are removed).
 \label{algorithm:knuth:sat0}
-\end{algbox}
+
+
 \subsection{DPLL}
 
-A more advanced approach than Knuth's SAT0 (discussed in algorithm \ref{algorithm:knuth:sat0}) is the \emph{Davis–Putnam–Logemann–Loveland} (DPLL) algorithm. DPLL underpins a number of modern SAT solving software such as Microsoft's \emph{Z3} where it powers the core theory solver \citep{de2008z3}. The algorithm was developed by improving on the DP algorithm which was published in 1960 in \citet{Davis:1960:CPQ:321033.321034}.
+A more advanced approach than Knuth's SAT0 (discussed in section \ref{algorithm:knuth:sat0}) is the \emph{Davis–Putnam–Logemann–Loveland} (DPLL) algorithm. DPLL underpins a number of modern SAT solving software such as Microsoft's \emph{Z3} where it powers the core theory solver \citep{de2008z3}. The algorithm was developed by improving on the DP algorithm which was published in 1960 in \citet{Davis:1960:CPQ:321033.321034}.
 
 For an arbitrary CNF SAT problem, the algorithm uses a process known as \emph{unitary resolution}. If all previous variables in a CNF clause are false, the disjunctive nature implies that the last literal \emph{must} be true. DPLL applies this process recursively. As briefly mentioned in algorithm \ref{algorithm:knuth:sat0}, DPLL also uses the concept of a ``pure literal'' which is defined as a literal for which its negation does not appear in the Boolean formula.
 
