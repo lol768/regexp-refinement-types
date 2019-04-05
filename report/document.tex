@@ -301,15 +301,27 @@ Scale=MatchLowercase
 		\rule{\textwidth}{1pt}}
 	{\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
 
-\begin{abstract}
-	Entire classes of modern web application vulnerabilities arise due to problematic user input handling. This includes cross-site scripting (XSS), \emph{injection} issues (SQL, LDAP, etc), insecure
-	deserialisation and file inclusion vulnerabilities – all of which are encountered by information
-	security firms on a regular basis in application assessments. This project explores the use of regular expressions as refinement types for constrained data in order to model user input validation. We
-	normalise the type system of such a language and implement it. We then compare our system to and evaluate it against other, existing approaches by considering false positive and negative rates with a
-	series of test cases. 
-\end{abstract}
+\newenvironment{keywords}{\centering{\normalfont\Large\sffamily\color{id7-aubergine}Keywords}\vspace{0.3cm}\\
+    \hfill\begin{minipage}{0.95\textwidth}
+        \rule{\textwidth}{1pt}}
+    {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
 
 \tableofcontents
+\pagebreak[5]
+\begin{keywords}
+    Type Systems, Refinement Types, Application Security, User Input, Satisfiability Modulo Theories, Programming Languages, Static Analysis
+\end{keywords}
+
+\vspace{0.5em}
+
+\begin{abstract}
+    Entire classes of modern web application vulnerabilities arise due to problematic user input handling. This includes cross-site scripting (XSS), \emph{injection} issues (SQL, LDAP, etc), insecure
+    deserialisation and file inclusion vulnerabilities – all of which are encountered by information
+    security firms on a regular basis in application assessments. This project explores the use of regular expressions as refinement types for constrained data in order to model user input validation. We
+    formalise the type system of such a language and implement it. We then compare our system to and evaluate it against other, existing approaches by considering false positive and negative rates with a
+    series of test cases. 
+\end{abstract}
+
 
 
 \chapter{Motivation}
@@ -334,7 +346,7 @@ Many of these vulnerabilities--and the necessary techniques for preventing them-
 
 \section{Static Analysis}
 
-Static analysis tools can detect some classes of vulnerability by examining code at rest. Within application security, static analysis tools are grouped under the \emph{Static Application Security Testing} SAST denomination in contrast to \emph{Dynamic Application Security Testing} (DAST) tools which operate at runtime. These tools work by either independently parsing the developer's code or analysing an \emph{abstract syntax tree} (AST) and using a series of inspections to check and log common problems. Some more advanced tools use \emph{taint tracking} combined with information flow analysis to mark and track variables and parameters that have been influenced by user input \citep{denning1977certification}. A list of sinks that are deemed potentially dangerous (such as database query functions) is maintained, and user input flowing to any of these sinks results in an issue being logged.
+Static analysis tools can detect some classes of vulnerability by examining source code. Within application security, static analysis tools are grouped under the \emph{Static Application Security Testing} SAST denomination in contrast to \emph{Dynamic Application Security Testing} (DAST) tools which operate at runtime and observe the behaviour of a running system.\\SAST tools work by either independently parsing the developer's code or analysing an \emph{abstract syntax tree} (AST) produced by the language toolchain\footnote{In the context of C\#, Microsoft have made the \emph{Roslyn} compiler source code available and many static analysis tools are built on top of this open platform.} and using a series of inspections to check and log common problems.\\Some more advanced tools use \emph{taint tracking} combined with information flow analysis to mark and track variables and parameters that have been influenced by user input \citep{denning1977certification}. A list of sinks that are deemed potentially dangerous (such as database query functions) is maintained, and user input flowing to any of these sinks results in an issue being logged.
 
 As discussed in \citet{sadowski2018lessons}, it is preferable to detect issues in a static fashion--ideally integrated into the build process--to ensure that problems are actioned by developers. The false positive rate should also be minimised to avoid the risk of \emph{alert fatigue}, a problem which occurs in a variety of different contexts where the value of alerts is decreased due to a perception that often, there is no real substance to the warnings \citep{kesselheim2011clinical}.
 
