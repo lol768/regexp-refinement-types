@@ -107,7 +107,7 @@ Scale=MatchLowercase
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
 
-\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{info-circle} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faIcon{info-circle} #1\vspace{.75\baselineskip}}}}}
 
 \newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
             \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
@@ -949,5 +949,143 @@ We natively integrate with Microsoft's Rise4fun platform to showcase our languag
 
 \bibliographystyle{agsm}
 \bibliography{bibliography}
+
+\appendix
+
+\chapter{Project Specification}
+\section*{Introduction}
+
+Within information security, entire classes of application vulnerabilities arise due to problematic user input handling \citep{christey2007vulnerability}. This covers cross-site scripting (XSS), injection (SQL, LDAP, etc), insecure
+deserialisation and file inclusion vulnerabilities -- all of which are regularly discovered in major software products.
+
+There are many existing products that aim to detect problems within an application. \citet{Sadowski:2018:LBS:3200906.3188720} describe the benefits of static analysis tooling deployed within Google which allow checks for common issues to be performed as part of the compilation process. The authors explain one of the main challenges with developer adoption as \emph{trustworthiness} ``users do not trust to results due to, say, false positives`` and highlight the importance of reporting issues early: ``survey participants deemed 74\% of the issues flagged at compile time as real problems, compared to 21\% of those found in checked-in code''.
+
+In the context of application security, tooling can be broadly categorised into the two broad areas of DAST (dynamic application security testing) and SAST (static application security testing) tooling. SAST tooling can analyse a codebase at rest and lends itself to generating much more immediate results that can take the entire codebase into account. DAST tooling allows for assessment from a black-box perspective but is much more limited. Research into the effectiveness of DAST-based scanning tools by \citet{doupe2010johnny} drew the conclusion that commonly available tools of this kind often failed to crawl more complex parts of an application which resulted in decreased coverage from a security perspective.
+
+Existing static analysis tools can provide useful warnings that help prevent introduction of vulnerabilities. In the .NET ecosystem, tools such as \emph{Roslyn Security Guard} can detect e.g. injection vulnerabilities by tainting user input and then using information flow analysis -- first described in \cite{denning1977certification} -- to determine when unsafe input is passed to a dangerous \emph{sink} function \citep{rosylynsecguard}. Of course, this approach is limited. All user input is deemed unsafe by virtue of being user input and prior validation (as is commonly performed using regular expressions) is not taken into account when deciding if an alert needs to be raised or not. This leads to false positive reports where a program is secure by virtue of already performing validation to prevent a vulnerability.
+
+The main objective of this project is to explore the use of a type system which uses regular-expression based refinement types applied to user input. A refinement type in the context of a type system is a type that is subject to a particular predicate \citep[p. 207]{benjaminpierce2002}. By considering flow of data that belongs to a refinement type for a particular pattern, it will be possible to make inferences about vulnerabilities that may be present in a codebase based on declared safe argument types. Use of refinement types in this way provides for a more informed evaluation of a particular risk than base types alone and should therefore enable reporting of fewer false positive issues.
+
+\begin{listing}[H]
+    \begin{minted}{javascript}
+    function LookupName(userId: /[A-Za-z0-9]+/): string {
+    var name: string = GetNameByUserId(userId); // safe
+    GetNameByUserId("'; DROP TABLE users;"); // type error
+    return name;
+    }
+    
+    function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ { /* database lookup.. */ }
+    \end{minted}
+    \caption{Example code illustrating a potential syntax. \texttt{userId} and \texttt{query} use the refinement type.}
+\end{listing}
+\section*{Objectives}
+
+
+
+\subsubsection*{Primary Objectives}
+
+\begin{itemize}
+    \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).
+    
+    \begin{itemize}
+        \item Explore the consequences of typical string operations (e.g. concatenation) and define the type of their return value when applied to elements of the regular expression type.
+        
+        \item At minimum, this should allow for simple functions to be declared that can safely accept/return a particular regular expression input\footnote{As a simplified example, an \texttt{unsafe\_shell\_exec} function might safely be able to accept any input that matches \texttt{\textasciicircum{}[\textasciicircum{}\textasciigrave{}]\textdollar{}}}.
+        
+        \item Evaluate the rate of false positives when compared to existing static analysis 
+    \end{itemize}
+    
+    \item Implement such a type system that can guarantee type safety, built against a simplified proof-of-concept language.
+    \begin{itemize}
+        \item Test the implementation against a variety of test cases. The testing strategy should make use of automated unit tests, and manual system testing considering both general expected input as well as any relevant ``edge-cases'' that need to be handled.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Additional Objectives}
+
+\begin{itemize}
+    \item Apply the theory explored in the primary phase of the project to produce a type analysis tool which works against type annotations applied to a commonly-used language such as C\# or Scala. This tooling could be integrated into an IDE or CI pipeline.
+\end{itemize}
+
+\textit{}\infobox{Primary objectives are expected to be completed during the lifetime of the project. Additional objectives are identified as potential goals to pursue beyond the original scope of the project, if time permits.}
+
+\section*{Schedule}
+
+\arrayrulecolor{white}
+\def\arraystretch{1.5}
+\begin{table}[H]
+    
+    \centering
+    \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
+    \begin{tabular}[t]{|p{5.5cm}|p{10cm}|}
+        \hline
+        \rowcolor{id7-sky-blue}
+        {\color[HTML]{FFFFFF} \sffamily \textbf{Time Window}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Work}} \\ \hline
+        October \nth{1} -- October \nth{14} & Specification completion, research into prior related works. Study of elementary programming language and type system theory (e.g. simply typed $\lambda$-calculus, SLam). \\ \hline
+        October \nth{15} -- October \nth{28} & \parbox[t]{10cm}{Begin writing background for report, work on formalisation of regular expression refinement type.\\\textcolor{id7-ruby-red}{\textbf{Deadline}: CS353 presentation, \nth{24} October}}\vspace{0.4em} \\ \hline
+        October \nth{29} -- November \nth{11} & Explore and document properties of type system. Begin implementation of ideas to produce a concrete proof-of-concept. \\ \hline
+        November \nth{12} -- November \nth{25} & Completion of progress report, continued implementation work. \\ \hline
+        November \nth{26} -- December \nth{9} & \parbox[t]{10cm}{Testing of implemented proof-of-concept.\\\textcolor{id7-ruby-red}{\textbf{Deadline}: CS915 coursework, \nth{26} November}}\vspace{0.4em} \\ \hline
+        December \nth{10} -- January \nth{6} & Slack time (to use if behind schedule, else to make a start on year scheduled in 2019). \\ \hline
+        January \nth{7} -- January \nth{20} & \parbox[t]{10cm}{Finalise testing of implementation, write-up test cases.\\\textcolor{id7-ruby-red}{\textbf{Deadline}: CS324 coursework}}\vspace{0.4em} \\ \hline
+        January \nth{21} -- February \nth{3} & Evaluate false positive rates against existing systems based exclusively on taint tracking. \\ \hline
+        February \nth{4} -- February \nth{17} & Report work, project presentation preparation \\ \hline
+        February \nth{18} -- March \nth{3} & Project presentation preparation, report work \\ \hline
+        March \nth{4} -- March \nth{17} & Project presentation delivery, report finalisation. \\ \hline
+    \end{tabular}
+    \caption{Projected work by time period. Deadlines for other modules included where known.}
+    \label{schedule}
+\end{table}
+
+Table \ref{schedule} provides a breakdown of the project time into periods for each fortnight, along with the expected work to be completed. A meeting will be scheduled for each week to discuss progress and any road-blocks that arise with the project supervisor
+
+\section*{Methodology}
+
+\subsection*{Software Engineering}
+
+This project includes an element of software engineering. Namely, the design and implementation of a proof of concept language which supports a type system incorporating regular expression refinement types.
+
+This implementation work will be carried out in an Agile fashion to fit in with the short timescales inherent to the project and allow for greater flexibility. Time periods in the schedule which involve development work will be treated as a number of week-long development sprints with priorities formalised prior to the commencement of each period. Progress will be reviewed in weekly supervision meetings.
+
+Testing will be automated via the use of unit testing to ensure that specific components function according to their specification in isolation. Where appropriate, integration and system testing can be used to test the solution as a whole (for example, an entire program as a test case would fit into this part of the testing process).
+
+\subsection*{Evaluation}
+
+Towards the end of the implementation phase, the false positive rate of the proof of concept tool should be compared with that of existing static analysis tooling based on taint tracking alone.
+
+Logically equivalent test cases should be built for each tool under evaluation in the necessary programming language. Both safe and unsafe function invocations should be included in each test case for completeness.
+
+\section*{Resources and risks}
+
+
+The project is reliant on a number of resources. Use of these resources is subject to the risks outlined in table \ref{rr}. These risks should be evaluated and managed to minimise any potential impact on the project.
+
+\arrayrulecolor{white}
+\def\arraystretch{1.5}
+\begin{table}[H]
+    
+    \centering
+    \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
+    \begin{tabular}[t]{|p{5.5cm}|p{4cm}|p{7cm}|}
+        \hline
+        \rowcolor{id7-sky-blue}
+        {\color[HTML]{FFFFFF} \sffamily \textbf{Resource}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Applicable risk(s)}} &
+        {\color[HTML]{FFFFFF} \sffamily \textbf{Impact}} \\ \hline
+        \parbox[t]{5cm}{\textbf{VCS hosting: GitHub}\\Storing and tracking code and report changes\\} & Loss of availability due to outage & Minimal, \emph{git} is decentralised so copy of files always available locally and at off-site backup \\ \hline
+        \parbox[t]{5cm}{\textbf{Report authoring: \LaTeX}\\Writing and compiling the report, tracking bibliography} & Obsolescence & Unlikely, TeX tooling has been used for decades. Even if particular packages ceased working, the bulk of the content would still be accessible as plain text. \\ \hline
+        \parbox[t]{5cm}{\textbf{C\# analysis: Roslyn libary}\\Fulfilling the additional objective by analysing C\# code} & Loss of availability due to license change & Minimal. Even if Roslyn's OSS status changes, there is no requirement to integrate with C\#, other languages would illustrate the potential just as well. This would also not impact a primary project objective. \\ \hline
+        \parbox[t]{5cm}{\textbf{Self}\\Project work} & Illness, coursework deadlines & Minimised by scheduled slack time and identification of applicable coursework deadlines. \\ \hline
+    \end{tabular}
+    \caption{Resources and associated risks. \label{rr}}
+\end{table}
+
+
+\section*{Legal, social, ethical and professional issues}
+
+As a project with some security motivation, it is possible that legal, social, ethical and professional issues will arise. In particular, evaluation of existing static analysis tooling must be performed with care to ensure that use of any particular external test cases is permitted by the \emph{Copyright, Designs and Patents Act 1988} within the UK.
+
+Additionally, in order to comply with the \emph{Computer Misuse Act 1988}, any static analysis of external code should only be conducted with permission.  Discovered issues should be disclosed responsibly.
+
+
 
 \end{document}
