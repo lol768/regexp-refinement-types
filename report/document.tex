@@ -232,15 +232,12 @@ Scale=MatchLowercase
 	{\end{minted}\vspace{0.5em}\end{mdframed}\end{codeflt}}
 
 \newenvironment{mycodefile}[5][]
-{
-	\begin{codeflt}[tb]\begin{mdframed}
-			\captionsetup{name=\faIcon{brackets-curly} \textbf{Code Listing}, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
+{\begin{mdframed}
 			\vspace{0.5em}
-			\caption{#3 \hfill #4}
-			\vspace{0.5em}
-			\captionsetup{style=default} 
+			\sffamily \textcolor{id7-aubergine}{\faIcon{brackets-curly} \textbf{Code Listing} #3 \hfill #4}
+            \rmfamily
 			\inputminted{#2}{#5}}
-			{\vspace{0.5em}\end{mdframed}\end{codeflt}}
+			{\vspace{0.5em}\end{mdframed}}
 	
 \usepackage[printwatermark]{xwatermark}
 \newsavebox\mybox
@@ -253,6 +250,14 @@ Scale=MatchLowercase
 %ypos=15,
 %]{\usebox\mybox}
 
+
+% Try and avoid *stupid* hypthenation
+% SE https://tex.stackexchange.com/a/335088/102207
+\pretolerance=5000
+\tolerance=9000
+\emergencystretch=0pt
+\righthyphenmin=4
+\lefthyphenmin=4
 
 % ======================
 
@@ -753,7 +758,7 @@ Using CNF as before, a simple problem under this theory could require the clause
 
 \subsection{DPLL(T): Extending DPLL to Arbitrary Theories}
 
-First described in \citet{ganzinger2004dpll} and presented in \citet{presdpllt}, DPLL(T) extends the power of DPLL to a theory $T$ (as defined above) using a repeated two-phase approach:
+Initially described in \citet{ganzinger2004dpll} and presented in \citet{russell2016artificial}, DPLL(T) extends the power of DPLL to a theory $T$ (as defined above) using a repeated two-phase approach:
 
 \begin{itemize}
 	\item First, all functions under the theory $T$ in the problem are replaced with a Boolean variable. DPLL then proceeds as described earlier to find a satisfying valuation for the Boolean variables.
@@ -766,17 +771,40 @@ In DPLL(T), the theory solver is queried as an oracle and used each time the SAT
 
 \section{Refinement Types}
 
-Within type systems, refinement types allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type.
+Within type systems, \emph{refinement types} allow for predicate-based constraints to be applied to types in order to restrict the domain of elements which belong to the type. The concept of refinement types was first introduced in \citet{freemanreftypes}'s paper on \emph{Refinements Types in ML} which ``preserve type inference'' whilst ``allowing more errors to be detected at compile time''. Refinement types have subsequently been developed for languages such as Haskell (in the form of \emph{Liquid Haskell}, discussed in section \ref{lh}), Scala and TypeScript.
 
-\citet{benjaminpierce2002} describes them as ``a restricted form of intersection types'' that ``preserve type inference and allow more errors to be detected at compile time''.
 
-A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 3\}$; only $\{0, 1, 2, 3\}$ would then be permitted for values of $n$ under this constraint. Equally, this type can be applied to strings. A length constraint could be written as $\{s : \Sigma^* \mid \left| s \right| = 4 \}$.
+A local variable used to store natural numbers could be constrained via a refinement type such as $\{n: \mathbb{N}\ \mid n \leq 3\}$; only $\{0, 1, 2, 3\}$ would then be permitted for values of $n$ under this constraint. Equally, we can apply the same concept to strings. A type with a length constraint could be written as $\{s : \Sigma^* \mid \left| s \right| = 4 \}$ to specify a domain of ``all strings which are 4 characters in length''.
+
+An intelligent type checker should be able to determine if values of one refinement type are compatible with another. For example, values in $\{n: \mathbb{N}\ \mid n \leq 2\}$ should be assignable to a member of type $\{n: \mathbb{N}\ \mid n \leq 5\}$.
 
 In order to model common input validation practice, we allow regular expression membership to be expressed using refinement types. For example, $\{s: \Sigma^* \mid s \in L(ba+)\}$ would allow \texttt{"baa"} to be assigned as a value of some variable $s$, but not \texttt{"a"}. This refinement type can then be applied to local variables as well as function return types and parameter types.
+
+The issue of compatibility arises for regular expressions, too. Intuitively, we know that strings in $L(a+)$ are also a member of $L(a*|b*)$.
+
+\subsection{Smart Constructors}
+
+As an alternative to refinement types, it is possible in some languages to define new types with so-called `smart' constructors which enforce a range of constraints when creating an instance of the type. For example, the value could be checked to ensure it was greater than a certain number. Violations could return a \texttt{Nothing} type (or equivalent).
+
+The example below from \citet{jkcclemens} shows how one could implement a type to represent a reasonable human age in the Rust programming language:
+
+\begin{mycodefile}{rust}{An \texttt{Age} type in Rust}{Rust}{age.rs}
+\end{mycodefile}
+
+The idea is that other parts of the codebase can return/accept the \texttt{Age} type. This provides a compile-time guarantee that, if an \texttt{Age} type is present, its inner value meets the conditions defined within the smart constructor.
+
+There are a few disadvantages to this approach. Firstly, the implementation is rather verbose. A new type needs to be created for each different constraint, and the various functions must be implemented alongside it. Refinement type systems make it much more straight-forward to define new refined types and determine if two types are compatible.
+
+Additionally, the value check is carried out at runtime. In contrast, a type checker which supports refinement types is able to determine whether e.g. constants belong to the type \emph{at compile-time}. As a result, no check needs to take place at runtime and the values can be ``baked in'' to the executable with reduced overhead.
 
 \chapter{Prior Art}
 
 There is a wealth of existing work within the areas of static analysis and program verification. This chapter aims to explore, and evaluate, some of the these works.
+
+\section{Formal Languages}
+
+* Rex
+* \citep{Hooimeijer2009}
 
 \section{Program Verification}
 
@@ -813,7 +841,7 @@ Dafny has some limited string support. An example is shown in listing \ref{code:
 There is some limited interoperability support with other .NET code \citep{wilcowio}, but the absence of a standard library or input/output support limits Dafny's potential to an existence as an interesting research language.
 
 \subsection{Liquid Haskell}
-
+\label{lh}
 Liquid Haskell is a program verifier for Haskell. Refinement types are supported in the form of special nested comments which specify \emph{liquid types}.
 
 The logic available for use in these type specifications is limited to ensure that the derived \emph{verifiable conditions} that are eventually passed to the SMT solver are \emph{decidable}. Thus, whilst Liquid Haskell supports basic logical expressions, relations and operators, there is no support for regular expression membership checks or arbitrary code execution to implement such functionality.
@@ -834,15 +862,64 @@ Listing \ref{code:liquidhaskell:1} shows an example of a type constrained using 
 
 \subsection{Snyk}
 
-\begin{mycodefile}{groovy}{\label{code:gradle:1}Specifying dependencies using a build tool}{Gradle}{build.gradle}
+Snyk is a polyglot tool which analyses system dependencies to find components with known security vulnerabilities. Build files which specify dependencies are parsed and analysed. An example for the \emph{Gradle} build system, which is popular amongst JVM developers, is shown below for an Android application:
 
+\begin{mycodefile}{groovy}{\label{code:gradle:1}Specifying dependencies using a build tool}{Gradle}{build.gradle}
 \end{mycodefile}
 
-Snyk is a polyglot tool which analyses system dependencies to find components with known security vulnerabilities. Build files which specify dependencies (example in listing \ref{code:gradle:1}) are parsed and analysed.
+Figure \ref{figure:snyk} is an illustrative vulnerability report for the \emph{My Warwick} Android application. The issue claims to exist in a Java utility library, \emph{Guava}. The nature of deserialisation vulnerabilities is that an application must:
+
+\begin{itemize}
+    \item Accept user input for deserialisation
+    \item Unsafely deserialise the user input, in a manner which places no restriction on the types the attacker can deserialise to
+    \item Have, on its classpath, a class which can be used by an attacker as a \emph{gadget} to execute code or carry out a denial of service (DoS) attack
+\end{itemize}
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+        
+        
+        \caption{\label{figure:snyk}A vulnerability description in Snyk}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \centering \includegraphics[width=0.9\linewidth]{snyk.png}
+    \end{MyMdframed}
+\end{figure}
+
+Snyk vulnerabilities relating to deserialisation tend to be raised in large volumes for each \emph{gadget} discovered in a library. The system gives no weight to whether the application deserialises user input, does so in an unsafe way which allows any type to be used, or indeed does any deserialisation at all. In \emph{My Warwick}'s case, no automatic deserialisation is present at all, and so the is completely unexploitable. This problem is a consequence of Snyk only analysing dependencies and not performing static analysis on the codebase to determine if the problem is relevant or not.
+
+At the time of writing, the company has introduced ``runtime monitoring'' to determine if insecure functions are actually called. This functionality increases the value of the vulnerability reports, but only supports a limited number of platforms and requires running an agent alongside the application to collect and send runtime data.
 
 \chapter{Design and Implementation}
 
 \todobox{Language design (syntax), architecture of type checker and interpreter, libraries used (Z3, ANTLR4, introductions to both with code samples), Gradle plugin, syntax highlighting with WASM}
+
+\section{Implementation}
+
+\subsection{Frontends}
+
+\subsubsection{Rise4fun}
+
+Within Microsoft Research, the \emph{Research in Software Engineering} (RiSE) group has built a tool known as \emph{rise4fun}. This web based tool is an interactive sandbox where allows users interested in programming language research can experiment with software engineering tooling. Users can enter code in a syntax-highlighted editor and execute type-checkers and verifiers in their browser. Results are displayed in real-time. Showcases exist for projects such as Z3, Dafny and many others.
+
+We natively integrate with Microsoft's Rise4fun platform to showcase our language's features and allow users to experiment with refinement types.
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+        
+        
+        \caption{\label{figure:r4f}Example of a type violation, displayed in the Rise4fun environment.}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+        
+        \centering \includegraphics[width=0.9\linewidth]{rise4fun.png}
+    \end{MyMdframed}
+\end{figure}
+
+
 
 
 \begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}

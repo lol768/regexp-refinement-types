@@ -17,13 +17,14 @@ import org.fusesource.jansi.AnsiConsole;
 import spark.ResponseTransformer;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
+
+import javax.json.Json;
 
 import static spark.Spark.*;
 
@@ -38,6 +39,9 @@ public class Application {
     }
 
     public void startWebServer() {
+        Gson gson = new Gson();
+        staticFiles.location("/public");
+        before((request, response) -> response.type("application/json"));
         options("/check",
                 (request, response) -> {
 
@@ -55,8 +59,92 @@ public class Application {
                                 accessControlRequestMethod);
                     }
 
-                    return "OK";
+                    return "\"OK\"";
                 });
+
+        get("/language", (req, res) -> {
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            InputStream is = classloader.getResourceAsStream("lang.json");
+            return is.readAllBytes();
+        });
+
+        post("/run", (req, res) -> {
+                    RiseForFunRequest riseForFunRequest = gson.fromJson(req.body(), RiseForFunRequest.class);
+                    RiseForFunResponse response = new RiseForFunResponse();
+                    response.setVersion(1.0);
+                    ArrayList<Output> outputs = new ArrayList<>();
+                    response.setOutputs(outputs);
+
+                    String program = riseForFunRequest.getSource();
+                    PocLex lexer = new PocLex(CharStreams.fromString(program));
+                    CommonTokenStream tokens = new CommonTokenStream(lexer);
+                    PocLang parser = new PocLang(tokens);
+                    if (parser.getNumberOfSyntaxErrors() > 0) {
+                        res.status(400);
+                        outputs.add(new Output("text/plain", "Syntax error"));
+                        return response;
+                    }
+                    List<ErrorReport> reports = doTypeChecks(parser.program()).getReports();
+                    StringBuilder s = new StringBuilder();
+
+                    int i = 0;
+                    for (ErrorReport report : reports) {
+                        i++;
+                        s.append("snip(" +report.getLineNo()).append(",").append(report.getColNo()).append("): Error: ").append(report.getMsg()).append(".\n");
+                    }
+
+                    s.append("\nVerifier finished with " + i + " errors");
+
+                    if (s.length() == 0) {
+                        s.append("Type check succeeded");
+                    }
+                    outputs.add(new Output("text/plain", s.toString()));
+
+                    return response;
+                }, new JsonTransformer()
+        );
+
+        get("/metadata", (req, res) -> {
+            RiseForFunMetadata metadata = new RiseForFunMetadata();
+            metadata.setDescription("Simple language with refinement types supporting regex constraints");
+            metadata.setName("RegexRefinementTypes");
+            metadata.setDisplayName("Regex Refinement Types");
+            metadata.setInstitutionUrl("https://warwick.ac.uk/services/its/");
+            metadata.setInstitution("the University of Warwick");
+            metadata.setInstitutionImageUrl("https://671da5df.ngrok.io/warwick.png?a");
+            metadata.setTermsOfUseUrl("https://warwick.ac.uk/terms");
+            metadata.setPrivacyUrl("https://warwick.ac.uk/terms/privacy/");
+            metadata.setQuestion("Will the type-checker find a regex violation?");
+            metadata.setVersion(1.0);
+            metadata.setMimeType("text/rrt");
+            metadata.setUrl("https://adamwilliams.eu");
+            metadata.setDisableErrorTable(false);
+            metadata.setSupportsLanguageSyntax(true);
+            ArrayList<Sample> samples = new ArrayList<>();
+            Sample e = new Sample();
+            e.setName("Example 1: regex refinements");
+            e.setSource("function Main(): string[/[a-f]+/] {\n" +
+                    "    return Secondary()\n" +
+                    "}\n" +
+                    "\n" +
+                    "function Secondary(): string[/[a-z][a-z]/] {\n" +
+                    "    return \"ao\"\n" +
+                    "}");
+            samples.add(e);
+            Sample f = new Sample();
+            f.setName("Example 2: integer refinements");
+            f.setSource("function Main(): string[/[a-f]+/] {\n" +
+                    "    return Secondary()\n" +
+                    "}\n" +
+                    "\n" +
+                    "function Secondary(): string[/[a-z][a-z]/] {\n" +
+                    "    return \"ao\"\n" +
+                    "}");
+            samples.add(f);
+            metadata.setSamples(samples);
+
+            return metadata;
+        }, new JsonTransformer());
 
         post("/check", (req, res) -> {
                     res.header("Access-Control-Allow-Origin", "*");
@@ -218,6 +306,7 @@ public class Application {
         public String render(Object model) {
             return gson.toJson(model);
         }
+
 
     }
 }

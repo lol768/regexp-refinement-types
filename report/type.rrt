@@ -1,0 +1,7 @@
+function Write(path: string, name: string[/A-Za-z+/]): void {
+    !eu.adamwilliams.rrt.example1.Application.writeToFile(path, name)
+}
+
+function WriteFfi(path: string, name: string): void {
+    Write(path, name)
+}

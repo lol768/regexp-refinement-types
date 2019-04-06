@@ -1,0 +1,153 @@
+{
+  "displayName":    "RRT",
+  "name":           "Regex Refinement Types",
+  "mimeTypes":      ["text/rrt"],
+  "fileExtensions": ["rrt"],
+
+
+  "lineComment":      "// ",
+
+  "editorOptions": { "tabSize": 4, "insertSpaces": true },
+
+  "keywords": [
+    "function", "if", "else", "return", "void"
+  ],
+
+  "extraKeywords": [],
+
+  "typeKeywords": [
+    "bool", "uint", "string"
+  ],
+
+  "extraTypeKeywords": [],
+
+
+  "typeFollows": [
+    ":"
+  ],
+
+
+  "operators": [
+    "??", "||", "&&", "|", "^", "&", "==", "!=", "<=", ">=", "<<",
+    "+", "-", "*", "/", "%", "!", "~", "++", "--","+=",
+    "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", ">>", "=>"
+  ],
+
+  "extraOperators": [],
+
+  "symbols":  "[!=*\\/\\-\\(\\)]+",
+
+
+  "escapes": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})",
+
+
+  "tokenizer": {
+    "root": [
+
+      ["[A-Z][\\w]*(?=[\\.\\w]*(\\s|\\/\\*!\\*\\/)+\\w)", "type.identifier" ],
+
+
+
+      ["([A-Z][\\w]*[\\.\\w]*)(<)(?![^>]+>\\s*(?:\\(|$))", ["type.identifier", { "token": "@brackets", "next": "@type" } ]],
+      ["([A-Z][\\w]*[\\.\\w]*)(<)", ["identifier", { "token": "@brackets", "next": "@type" } ]],
+
+
+
+
+      ["[A-Z][\\w]*(?=\\.[A-Z])", "type.identifier" ],
+      ["[A-Z][\\w]*(?=\\.[a-z_])", "type.identifier", "@qualified" ],
+
+
+      ["[a-zA-Z_]\\w*", { "cases": {"@typeFollows": { "token": "keyword", "next": "@type" },
+        "@typeKeywords": { "token": "type.identifier", "next": "@qualified" },
+        "@extraTypeKeywords": { "token": "type.identifier", "next": "@qualified" },
+        "@keywords": { "token": "keyword", "next": "@qualified" },
+        "@extraKeywords": { "token": "keyword", "next": "@qualified" },
+        "@default": { "token": "identifier", "next": "@qualified" } } }],
+
+
+      { "include": "@whitespace" },
+
+
+      ["[{}()\\[\\]]", "@brackets"],
+      ["[<>](?!@symbols)", "@brackets"],
+      ["@symbols", { "cases": { "@operators": "operator",
+        "@extraOperators": "operator",
+        "@default"  : "" } } ],
+
+
+      ["@\"", { "token": "string.quote", "bracket": "@open", "next": "@litstring" } ],
+
+
+      ["\\d*\\.\\d+([eE][\\-+]?\\d+)?", "number.float"],
+      ["0[xX][0-9a-fA-F]+", "number.hex"],
+      ["\\d+", "number"],
+
+
+      ["[;,.]", "delimiter"],
+
+
+      ["\"([^\"\\\\]|\\\\.)*$", "string.invalid" ],
+      ["\"",  { "token": "string.quote", "bracket": "@open", "next": "@string" } ],
+
+
+      ["'[^\\\\']'", "string"],
+      ["(')(@escapes)(')", ["string","string.escape","string"]],
+      ["'", "string.invalid"]
+    ],
+
+    "qualified": [
+      ["[a-zA-Z_][\\w]*", { "cases": { "@typeFollows": { "token": "keyword", "next": "@type" },
+        "@typeKeywords": "type.identifier",
+        "@keywords": "keyword",
+        "@default": "identifier" } }],
+      ["\\.", "delimiter"],
+      ["","","@pop"]
+    ],
+
+    "type": [
+      { "include": "@whitespace" },
+      ["[A-Z]\\w*", "type.identifier"],
+
+      ["[a-zA-Z_]\\w*", { "cases": {"@typeKeywords": "type.identifier",
+        "@keywords": {"token": "@rematch", "next": "@popall"},
+        "@default": "type.identifier" } }],
+      ["[<]", "@brackets", "@type_nested" ],
+      ["[>]", "@brackets", "@pop" ],
+      ["[\\.,:]", { "cases": { "@keywords": "keyword",
+        "@default": "delimiter" }}],
+      ["","","@popall"]
+    ],
+
+    "type_nested": [
+      ["[<]", "@brackets", "@type_nested" ],
+      { "include": "type" }
+    ],
+
+    "comment": [
+      ["[^\\/*]+", "comment" ],
+
+      ["\\*/",    "comment", "@pop"  ],
+      ["[\\/*]",   "comment" ]
+    ],
+
+    "string": [
+      ["[^\\\\\"]+",  "string"],
+      ["@escapes", "string.escape"],
+      ["\\\\.",      "string.escape.invalid"],
+      ["\"",        { "token": "string.quote", "bracket": "@close", "next": "@pop" } ]
+    ],
+
+    "litstring": [
+      ["[^\"]+",    "string"],
+      ["\"\"",       "string.escape"],
+      ["\"",        { "token": "string.quote", "bracket": "@close", "next": "@pop" } ]
+    ],
+
+    "whitespace": [
+      ["[ \\t\\v\\f\\r\\n]+", "white"],
+      ["\\/\\*",       "comment", "@comment" ],
+      ["\\/\\/.*$",    "comment"]
+    ]
+  }
+}
