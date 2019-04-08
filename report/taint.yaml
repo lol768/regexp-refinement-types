@@ -1,0 +1,9 @@
+# Used in sanitisers and validators
+TaintTypes:
+  - LocalUrl # URL which we know is local (IsLocalUrl check performed)
+  - HtmlEscaped # User input which we know is escaped
+  - LdapFilterEncoded # LDAP filter string which we know is encoded
+  - LdapDistinguishedNameEncoded # LDAP DN which has been encoded
+  - AbsolutePath # Absolute path generated from a safe routing function
+  - UrlEncoded # URL which has been through the encoding process
+  - UrlPathEncoded # Path component of a URL which has been encoded

@@ -1,0 +1,17 @@
+Behavior:
+  Encoder_LdapFilterEncode:
+    Namespace: Microsoft.Security.Application # Namespace of the class
+    ClassName: Encoder # Enclosing class
+    Name: LdapFilterEncode # When this method is called on the above class
+    Method: # Method based rule
+      Returns: # We consider its return value
+        Taint: LdapFilterEncoded # And taint return value as LdapFilterEncoded
+        TaintFromArguments: [0]
+  DirectorySearcher_Filter:
+    Namespace: System.DirectoryServices # Namespace of the class
+    ClassName: DirectorySearcher  # Enclosing class
+    Name: Filter # Name of the property
+    Field: # Field/property based rule
+      # To be safe, this field's value must be LdapFilterEncoded
+      # SCS0031 is the name of the inspection
+      Injectable: [SCS0031: LdapFilterEncoded]

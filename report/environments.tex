@@ -1,0 +1,74 @@
+
+% Set up example boxes
+
+\DeclareFloatingEnvironment[fileext=frm,placement={!ht},name=Example]{exampleflt}
+\captionsetup[exampleflt]{labelfont=bf}
+
+\newenvironment{example}[1]
+{
+        \begin{mdframed} \setlength{\parskip}{1em}
+            \vspace{0.5em}
+            \sffamily \textcolor{id7-aubergine}{\faPuzzlePiece{} \textbf{Example:} #1}
+            \vspace{0.5em}
+            \rmfamily
+
+            }
+            {\end{mdframed}}
+}
+
+% And algorithm boxes
+
+\DeclareFloatingEnvironment[fileext=frm,placement={!ht},name=Algorithm]{algorithmflt}
+\captionsetup[figure]{name=\faImage{} Figure, singlelinecheck=false,font={color=id7-aubergine,sf},position=top,labelfont=bf}
+\newcounter{algorithm}
+\newenvironment{algbox}[1]
+{
+        \begin{mdframed} \setlength{\parskip}{1em}
+            \vspace{1.5em}
+
+            \captionsetup[algorithm]{name=\faCogs{} Algorithm, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
+            \captionof{algorithm}{#1}\hfill
+
+            \rmfamily
+            \captionsetup{style=default}
+
+        }
+        {\vspace{0.5em}\end{mdframed}
+}
+
+% And code boxes
+
+\DeclareFloatingEnvironment[fileext=frm,placement={!ht},name=Code Listing]{codeflt}
+\captionsetup[algorithmflt]{labelfont=bf}
+\captionsetup[figure]{labelfont=bf}
+\renewcommand{\theFancyVerbLine}{\rmfamily \textcolor[rgb]{0.7, 0.7, 0.7}{\arabic{FancyVerbLine}}}
+
+\newenvironment{mycode}[4][]
+{\VerbatimEnvironment
+    \begin{codeflt}[tb]\begin{mdframed}
+        \captionsetup{name=\faIcon{brackets-curly} \textbf{Code Listing}, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
+        \vspace{0.5em}
+        \caption{#3 \hfill #4}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+    \begin{minted}[#1]{#2}}
+    {\end{minted}\vspace{0.5em}\end{mdframed}\end{codeflt}}
+
+\newenvironment{mycodefile}[5][]
+{\begin{mdframed}
+            \vspace{0.5em}
+            \sffamily \textcolor{id7-aubergine}{\faIcon{brackets-curly} \textbf{Code Listing} #3 \hfill #4}
+            \rmfamily
+            \inputminted{#2}{#5}}
+            {\vspace{0.5em}\end{mdframed}}
+
+% Abstract and keywords
+\newenvironment{abstract}{\centering{\normalfont\Large\sffamily\color{id7-aubergine}Abstract}\vspace{0.3cm}\\
+    \hfill\begin{minipage}{0.95\textwidth}
+        \rule{\textwidth}{1pt}}
+    {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
+
+\newenvironment{keywords}{\centering{\normalfont\Large\sffamily\color{id7-aubergine}Keywords}\vspace{0.3cm}\\
+    \hfill\begin{minipage}{0.95\textwidth}
+        \rule{\textwidth}{1pt}}
+    {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
