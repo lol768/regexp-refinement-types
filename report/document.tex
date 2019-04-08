@@ -374,6 +374,12 @@ This ensures no syntax error is introduced when the Java code ends the string af
 
 This query would return all users in the database.
 
+\subsubsection{LDAP Injection}
+\todobox{Write section}
+
+
+\subsubsection{Path Traversal}
+\todobox{Write section}
 
 \section{Static Analysis}
 
@@ -412,13 +418,17 @@ bugs from making it into production \citep{sadowski2018lessons}.
 Existing static analysis are often unable to evaluate the effectiveness of input validation code that may already be in
 place--leading to false positives.
 This is because the tools consider code in isolation and cannot reason about the form of user input.
-Taint tracking is similarly binary, where data originates from user input and is assumed dangerous or originates
+Taint tracking is similarly ``binary'', where data originates from user input and is assumed dangerous or originates
 elsewhere and assumed benign.
 
 We describe a system which uses \emph{refinement types} in order to determine whether existing regular expression based
-input validation is effective. This happens at compile time, using an SMT solver to find situations where input could
-fail to be matched by a regular expression. This allows for potential security issues to be surfaced during
-type-checking.
+input validation is effective.
+This happens at compile time, using an SMT solver to find situations where input could fail to be matched by a regular
+expression.
+This allows for potential security issues to be surfaced during type-checking.
+
+We know of no existing program verification tools capable of verifying regular expression membership properties
+within a programming language using pre/post-conditions or type annotations--our system is novel in this respect.
 
 \chapter{Background}
 This chapter discusses the theory underpinning the techniques used in the implementation.
@@ -1050,14 +1060,14 @@ type \emph{at compile-time}.
 As a result, no check needs to take place at runtime and the values can be ``baked in'' to the executable with
 reduced overhead.
 
-\chapter{Prior Art}
+\section{Prior Art}
 
-There is a wealth of existing work within the areas of static analysis and program verification.
-This chapter aims to explore, and evaluate, some of the these works.
+There is a wealth of existing technical work within the areas of static analysis and program verification.
+This section aims to explore, and evaluate, some of the these works.
 
-\section{Formal Languages}
+\subsection{Formal Languages}
 
-\subsection{Rex}
+\subsubsection{Rex}
 
 \emph{Rex} is a tool produced within the Research in Software Engineering (RiSE) research group within Microsoft.
 \citeauthor{rex} introduce the concept of $\epsiolon$-SFAs (Symbolic Finite Automata) which provide a more flexible
@@ -1097,9 +1107,9 @@ which caused the system-under-test to crash or exhibit unintended functionality.
 This could also help to uncover bugs in sanitisers and filters such as those designed to prevent cross-site scripting by
 disallowing HTML.
 
-\section{Program Verification}
+\subsection{Program Verification}
 
-\subsection{Dafny}
+\subsubsection{Dafny}
 
 \emph{Dafny} is a language designed by Microsoft Research with built-in static verification functionality and modern
 programming language features (including polymorphic types).
@@ -1145,7 +1155,7 @@ then becomes necessary to manually implement the regular expression check in imp
 There is some limited interoperability support with other .NET code \citep{wilcowio}, but the absence of a standard
 library or input/output support limits Dafny's potential to an existence as an interesting research language.
 
-\subsection{Liquid Haskell}
+\subsubsection{Liquid Haskell}
 \label{lh}
 Liquid Haskell is a program verifier for Haskell.
 Refinement types are supported in the form of special nested comments which specify \emph{liquid types}.
@@ -1165,9 +1175,9 @@ integer members.
     \vspace{0.5em}
 \end{mycodefile}
 
-\section{Static Analysis and Security Tooling}
+\subsection{Static Analysis and Security Tooling}
 
-\subsection{Security Code Scan}
+\subsubsection{Security Code Scan}
 
 \emph{Security Code Scan} is a tool built to analyse C\# programs using the \emph{Roslyn} inspections system.
 The project continues the work of the earlier \emph{Roslyn Security Guard} and includes a variety of different rules
@@ -1203,7 +1213,7 @@ line with security best practice.
 \begin{mycodefile}{csharp}{\label{code:scs:3}Rules relating to LDAP injection}{C\#}{ldap.cs}
 \end{mycodefile}
 
-\subsection{Snyk}
+\subsubsection{Snyk}
 
 \emph{Snyk} is a polyglot tool which analyses system dependencies to find components with known security vulnerabilities.
 Build files which specify dependencies are parsed and analysed.
