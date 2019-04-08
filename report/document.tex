@@ -909,9 +909,9 @@ power of DPLL to a theory $T$ (as defined above) using a repeated two-phase appr
     \item First, all functions under the theory $T$ in the problem are replaced with a Boolean variable.
           DPLL then proceeds as described earlier to find a satisfying valuation for the Boolean variables.
     \item Once a full set of valuations are available, a specialised \emph{theory solver} attempts to determine if the
-          valuations can be satisfied under the theory $T$. If these valuations yield logical constraints that are
-          contradictory, the original formula $\phi$ is augmented with an additional clause to reflect the requirement
-          that the two constraints cannot both be true.
+          valuations can be satisfied under the theory $T$.
+          If these valuations yield logical constraints that are contradictory, the original formula $\phi$ is augmented
+          with an additional clause to reflect the requirement that the two constraints cannot both be true.
     \item If the formula has been modified as the result of a contradiction, the SAT solver is executed again to
           retrieve a new valuation -- assuming it is possible to backtrack.
     \item If at any stage it is not possible to backtrack and the functions required to be true contradict each other,
@@ -919,10 +919,76 @@ power of DPLL to a theory $T$ (as defined above) using a repeated two-phase appr
 \end{itemize}
 
 In DPLL(T), the theory solver is queried as an oracle and used each time the SAT solver has found a valuation.
+Below, we see how the DPLL(T) algorithm proceeds with an example within the context of the linear integer arithmetic
+theory:
+
+\begin{example}{$((b > 7) \lor (a + 5 > 4) \land (a < -10 \lor \neg (b > 7)))$}
+    We begin by deriving a SAT formula for the problem: $(A \lor B) \land (C \lor \neg A)$.
+
+    Perform DPLL:
+
+    \begin{outline}
+        \1[\cogs] DPLL invocation: symbols unassigned: $[A, B, C]$, current model $\{\}$
+        \1[\arrow] Consistency check failed, we are not done yet
+        \1[\arrow] No empty clauses yet, we can continue
+        \1[\arrow] Apply PureLiteralAssign on $B$, setting value to true
+        \2[\cogs] DPLL invocation: symbols unassigned: $[A, C]$, current model $\{B=T\}$
+        \2[\arrow] Consistency check failed, we are not done yet
+        \2[\arrow] No empty clauses yet, we can continue
+        \2[\arrow] Apply PureLiteralAssign on $C$, setting value to true
+        \3[\cogs] DPLL invocation: symbols unassigned: $[A]$, current model\\ $\{B=T, C=T\}$
+        \3[\checkMark] Consistency check passes, returning SAT and current model\\ $\{B=T, C=T\}$
+    \end{outline}
+
+
+    Earlier, we assigned $B = (a + 5 > 4) = a > -1$ and $C = (a < -10)$.
+    The SAT solver has required that $B$ be true.
+    However, $C$ contradicts this requirement by requiring $a < -10$ where $-10 < -1$.
+    The theory solver will now augment the original SAT problem with a requirement that $B$ and $C$ cannot both be true.
+
+    \((A \lor B) \land (C \lor \neg A)~\land \) \colorbox{white}{$(\neg B \lor \neg C)$}
+
+    We perform DPLL on the new SAT formula:
+
+    \begin{outline}
+        \1[\cogs] DPLL invocation: symbols unassigned: $[A, B, C]$, current model $\{\}$
+        \1[\arrow] Consistency check failed, we are not done yet
+        \1[\arrow] No empty clauses yet, we can continue
+        \1[\arrow] There are no pure literals available yet
+        \1[\arrow] There are no unit clauses available yet
+        \1[\arrow] Attempt $A$ = true, call DPLL
+        \2[\cogs] DPLL invocation: symbols unassigned: $[B, C]$, current model $\{A=T\}$
+        \2[\arrow] Consistency check failed, we are not done yet
+        \2[\arrow] No empty clauses yet, we can continue
+        \2[\arrow] Apply PureLiteralAssign on $B$, setting value to false
+        \3[\cogs] DPLL invocation: symbols unassigned: $[C]$, current model $\{A=T, B=F\}$
+        \3[\arrow] Consistency check failed, we are not done yet
+        \3[\arrow] No empty clauses yet, we can continue
+        \3[\arrow] Apply PureLiteralAssign on $C$, setting value to true
+        \4[\cogs] DPLL invocation: symbols unassigned: $[~]$, current model\\ $\{A=T, B=F, C=T\}$
+        \4[\checkMark] Consistency check passes, returning SAT and current model\\ $\{A=T, B=F, C=T\}$
+    \end{outline}
+
+    We now have a satisfying valuation $\{A=T, B=F, C=T\}$.
+    We query the theory solver, are $A$ and $C$ contradictory?
+
+    \begin{itemize}
+        \item $A = (b > 7)$
+        \item $C = (a < -10)$
+    \end{itemize}
+
+    These concern different variables, so there is no problem.
+    Hence, we can satisfy this SMT problem.
+\end{example}
+
+
+
 Although we have discussed theories relating to linear integer inequalities, this approach is equally applicable to
 other theories.
 Z3str3, which powers string solving in Z3, is built on this principle and uses a theory solver that is equipped with
 knowledge of non-deterministic finite automata \citep{berzish2017z3str3}.
+
+
 
 \section{Refinement Types}
 
@@ -991,18 +1057,55 @@ This chapter aims to explore, and evaluate, some of the these works.
 
 \section{Formal Languages}
 
-* Rex
-* \citep{Hooimeijer2009}
+\subsection{Rex}
+
+\emph{Rex} is a tool produced within the Research in Software Engineering (RiSE) research group within Microsoft.
+\citeauthor{rex} introduce the concept of $\epsiolon$-SFAs (Symbolic Finite Automata) which provide a more flexible
+mapping to regular expressions (as they are implemented in modern programming languages) \citep{rex}.
+
+Rex SFAs use formulae instead of characters to define transitions.
+Constructing automata for regular expressions involving character classes, or matching unicode characters (for which
+the overall alphabet size is large) is much more tractable using the SFA representation.
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+        \caption{\label{figure:sfa:1} A simple SFA for the regex \texttt{\^[A-F]+\$}}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \makebox[\linewidth][c]{\centering \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+            semithick]
+            \node[initial,state]   (A)                      {$q_a$};
+            \node[state,accepting]           (B)  [right of=A]  {$q_b$};
+
+            \path (A) edge [bend left]             node {$x \ge \mathrm{A} \land x \le \mathrm{F}$} (B)
+            (B) edge [loop below]              node {$x \ge \mathrm{A} \land x \le \mathrm{F}$} (B);
+            \end{tikzpicture}}
+
+        \vspace{0.5em}
+    \end{MyMdframed}
+\end{figure}
+
+Microsoft have described a random walk algorithm that can operate on an SFA to generate valid string members that are
+matched by the regular expression \citep{rexapp}.
+This does not directly help us reduce false positives generated by static analysis tools, but it is an exciting
+development for offensive security.
+As we have discussed, many applications rely on regular expressions for initial validation logic.
+Using Rex as a \emph{fuzzing} tool, a security researcher could generate input deemed valid by the validation logic
+which caused the system-under-test to crash or exhibit unintended functionality.
+This could also help to uncover bugs in sanitisers and filters such as those designed to prevent cross-site scripting by
+disallowing HTML.
 
 \section{Program Verification}
 
 \subsection{Dafny}
 
-Dafny is a language designed by Microsoft Research with built-in static verification functionality and modern
+\emph{Dafny} is a language designed by Microsoft Research with built-in static verification functionality and modern
 programming language features (including polymorphic types).
 The language itself is imperative and allows programmers to specify functions with pre and post-conditions which are
 verified at compile time \citep{dafny2}.
-Recent versions of Dafny allow programs to be compiled into executables targeting the .NET framework \citet{dafny}.
+Recent versions of Dafny allow programs to be compiled into executables targeting the .NET framework \citep{dafny}.
 
 \begin{mycodefile}{dafnylex.py:DafnyLexer -x}{\label{code:dafny:1}Factorial function and a pre-condition violation}{Dafny}{factorial.dfy}
     
@@ -1044,8 +1147,8 @@ library or input/output support limits Dafny's potential to an existence as an i
 
 \subsection{Liquid Haskell}
 \label{lh}
-Liquid Haskell is a program verifier for Haskell. Refinement types are supported in the form of special nested comments
-which specify \emph{liquid types}.
+Liquid Haskell is a program verifier for Haskell.
+Refinement types are supported in the form of special nested comments which specify \emph{liquid types}.
 
 The logic available for use in these type specifications is limited to ensure that the derived \emph{verifiable
 conditions} that are eventually passed to the SMT solver are \emph{decidable}.
@@ -1164,9 +1267,159 @@ This section covers the design of the language's syntax, its type system and the
 
 \subsection{Syntax}
 
-As discussed, we had settled on a C-like syntax with some inspiration from other languages such as Go.
+The C-like syntax, with some inspiration from other languages such as Go, is augmented with the use of square brackets
+to specify refinement types.
+Below, we show a high-level BNF grammar for our language.
+This was constructed, made unambiguous and then used as a basis during the implementation phase.
 
+\setlength{\grammarparsep}{20pt plus 1pt minus 1pt} % increase separation between rules
+\setlength{\grammarindent}{12em} % increase separation between LHS/RHS
 
+We begin by defining our main non-terminal to represent a complete program.
+Programs contain a number of functions, which are declared with an identifier, number of arguments and a return type.
+
+\begin{grammar}
+    <program> ::= (<function> \textbackslash n)*
+    <function> ::= <function-signature> <body> `\}'
+
+    <function-signature> ::= `function' ` ' <identifier> `(' <argument-decl> `): ' <type> `\{\textbackslash n'
+
+    <body> ::= (<body-line> \textbackslash n)*
+
+    <argument-decl> ::= <expr> `: ' <type>
+    \alt <expr> `: ' <type> `, ' <argument-decl>
+    \alt <empty>
+\end{grammar}
+
+We can now start to define what is permitted inside the lines that sit within a function body.
+We want to be able to declare local variables, assign values to them, call functions (discarding any return type) or
+control the flow of execution using \emph{selection}.
+
+\begin{grammar}
+    <body-line> ::= <var-assignment>
+        \alt <return-stmt>
+        \alt <var-decl>
+        \alt <function-call>
+        \alt <if-stmt>
+
+    <var-assignment> ::= <identifier> `=' <expr>
+
+    <return-stmt> ::= `return' <expr>
+
+    <var-decl> ::= `var' <identifier> `: ' <type>
+
+    <function-call> ::= <identifier> `(' <argument-list> `)'
+
+    <argument-list> ::= <expr> | <expr> `,' <argument-list>
+    \alt <empty>
+\end{grammar}
+
+Selection in the language is implemented with an \textbf{if}-\textbf{else if}-\textbf{else} construct
+as one might see in other imperative languages such as C.
+Such a statement has no limit on the number of \textbf{else if} components.
+
+\begin{grammar}
+    <if-stmt> ::= `if` ` ' `(' <expr> `)' ` ' `\{ \textbackslash n' <body> `\}' <optional-else>
+
+    <optional-else> ::= ` ' `else' ` ' `\{ \textbackslash n' <body> `\}' \alt ` ' `else' ` ' if_stmt \alt <empty>
+
+\end{grammar}
+
+We now turn our attention to the type system, and support for refinements (encompassed in the \texttt{<constraint>})
+non-terminal in the grammar.
+The language supports the following type keywords:
+
+\arrayrulecolor{white}
+\def\arraystretch{1.5}
+\begin{table}[H]
+
+    \centering
+    \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
+    \begin{tabular}[t]{|p{3cm}|p{8cm}|}
+        \hline
+        \rowcolor{id7-aubergine}
+        {\color[HTML]{FFFFFF} \sffamily \textbf{Type Keyword}} & {\color[HTML]{FFFFFF} \sffamily \textbf{Description}} \\ \hline
+        \texttt{string} & A collection of characters. May be refined to be a regular expression member. \\ \hline
+        \texttt{uint} & An unsigned integer. May include a refinement to be greater/less than a threshold. \\ \hline
+        \texttt{bool} & An ordinary Boolean value which may be \texttt{true} or \texttt{false}. No applicable refinements. \\ \hline
+        \texttt{void} & Used for functions with no return type. \\ \hline
+    \end{tabular}
+\end{table}
+
+In the grammar, we define the \texttt{<type>} non-terminal to represent a type reference.
+This non-terminal is then used throughout the grammar for function argument types, local variables types and return
+types.
+
+\begin{grammar}
+    <type> ::= <type-keyword> | <type-keyword> `[' <constraint> `]'
+
+    <type-keyword> ::= `void' | `uint' | `bool' | `string'
+
+    <constraint> ::= `>' <number> \alt `<' <number> \alt `>=' <number> \alt `<=' <number> \alt `/' <re> `/'
+\end{grammar}
+
+Integer refinements are a relatively straightforward affair, as shown above.
+We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
+We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
+prime-suffixed rules with $\epsidlon$-productions.
+
+\begin{grammar}
+
+    <re> ::= <simple-re> <union-prime>
+
+    <union-prime> ::= `|' <re> | <empty>
+
+    <simple-re> ::= <basic-re> <concat-prime>
+
+    <concat-prime> ::= <simple-re> | <empty>
+
+    <basic-re> ::= <kleene-star> | <plus> | <elementary-re>
+
+    <kleene-star> ::= <elementary-re> `*'
+
+    <plus> ::= <elementary-re> `+'
+
+    <elementary-re> ::= <group> | `.' | <character> | <range-re>
+
+    <group> ::= `(' re `)'
+
+    <range-re> ::= <positive-range> | <negated-range>
+
+    <positive-range> ::= `[' <range-items> `]'
+
+    <negated-range> ::= `[^' <range-items> `]'
+
+    <range-items> ::= <range-item> | <range-item> <range-items>
+
+    <range-item> ::= <character> `-' <character> | <character>
+
+\end{grammar}
+
+We define expressions to permit basic arithmetic operations, nesting and function calls:
+
+\begin{grammar}
+<expr> ::= <expr> (`*'|`/') <expr>
+    \alt <expr> (`+'|`-') <expr>
+    \alt <value_ref>
+    \alt <expr> ` ' (`<'|`>'|`<='|`>='|`==') ` ' <expr>
+    \alt <function-call>
+    \alt <value-ref>
+
+<value-ref> ::= <number> | <string-literal> | `true' | `false' | <identifier>
+\end{grammar}
+
+Finally, we set-up the most basic rules for setting what is permitted as an identfier name, string literal or
+number:
+
+\begin{grammar}
+    <number> :== <digit> | <integer> <digit>
+
+    <digit> :== `0' | `1' | `2' | `3' | `4' | `5' | `6' | `7' | `8' | `9'
+
+    <string-literal> :== `\textquotedbl{}' (<character> *) `\textquotedbl{}'
+
+    <identifier> :== <alpha> (<alphanumeric> *)
+\end{grammar}
 
 \section{Implementation}
 
