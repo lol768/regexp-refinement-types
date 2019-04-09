@@ -1435,18 +1435,23 @@ number:
 
 \subsection{Frontends}
 
+\subsubsection{Web Application}
+
+\todobox{Screenshot, why it was developed}
+
 \subsubsection{Rise4fun}
 
 Within Microsoft Research, the \emph{Research in Software Engineering} (RiSE) group has built a tool known as
 \emph{rise4fun}.
-This web based tool is an interactive sandbox where allows users interested in programming language research can
-experiment with software engineering tooling.
+This web based platform is an interactive sandbox where allows users interested in programming language research can
+experiment with software engineering tools such as Z3, Dafny and many others.
 Users can enter code in a syntax-highlighted editor and execute type-checkers and verifiers in their browser.
 Results are displayed in real-time.
-Showcases exist for projects such as Z3, Dafny and many others.
 
 We natively integrate with Microsoft's Rise4fun platform to showcase our language's features and allow users to
 experiment with refinement types.
+Much of the web application backend could be re-used, illustrating the flexibility of the parsing and type-checking
+APIs.
 
 \begin{figure}[H]
     \begin{MyMdframed}
