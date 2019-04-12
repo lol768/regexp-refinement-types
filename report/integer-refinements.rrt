@@ -3,5 +3,6 @@ function Product(a: uint[<10], b: uint[<=15]): uint {
 }
 
 function Main(): uint {
+    // prints 60
     return Product(4, 15)
 }

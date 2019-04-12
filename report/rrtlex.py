@@ -3,10 +3,7 @@
     pygments.lexers.rrt
     ~~~~~~~~~~~~~~~~~~~~
 
-    Lexers for RRT.
-
-    :copyright: Copyright 2006-2017 by the Pygments team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+    Lexer for RRT.
 """
 
 import re
@@ -81,7 +78,7 @@ class RrtLexer(RegexLexer):
             (r'void', Keyword.Type, '#pop'),
         ],
         'refinementint': [
-            (r'(\[)([<>])(\s*)([0-9]+)(\])', bygroups(Punctuation, Punctuation, Text, Number.Integer, Punctuation), '#pop'),
+            (r'(\[)([<>]=?)(\s*)([0-9]+)(\])', bygroups(Punctuation, Punctuation, Text, Number.Integer, Punctuation), '#pop'),
             (r'\b', Text, '#pop')
         ],
         'refinementstring': [

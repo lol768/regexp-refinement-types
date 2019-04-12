@@ -121,7 +121,7 @@
     </style>
     <script type="text/javascript" src="wasm_exec.js"></script>
     <script type="text/javascript">
-        let foo = true;
+        let foo = /.*[A-Z]|f+/;
         const go = new Go();
         WebAssembly.instantiateStreaming(fetch("Test.wasm"), go.importObject).then((result) => {
             go.run(result.instance);

@@ -1,0 +1,1 @@
+Warning: Task type 'eu.adamwilliams.TypeCheckTask': property 'srcRt' is not annotated with an input or output annotation.

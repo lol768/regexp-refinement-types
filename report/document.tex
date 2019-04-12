@@ -8,6 +8,7 @@
 \usepackage[pro]{fontawesome5}
 \usepackage{ragged2e}
 \usepackage{titlesec}
+\usepackage{framed}
 \usepackage{tikz}
 \usepackage{trimclip}
 \usepackage[printwatermark]{xwatermark}
@@ -19,7 +20,7 @@
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
-\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc}
+\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc, shapes.geometric}
 \usepackage{shellesc}
 \usepackage{minted}
 \usepackage{syntax}
@@ -97,6 +98,7 @@ Scale=MatchLowercase
 \definecolor{id7-emerald-green}{HTML}{797906}
 \definecolor{id7-sky-blue}{HTML}{204F79}
 \definecolor{id7-sky-blue-tint}{HTML}{bccad7}
+\definecolor{id7-aubergine-tint}{HTML}{cec1d2}
 \definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
@@ -314,7 +316,8 @@ path traversal.
 \subsubsection{SQL Injection}
 \label{ex:sqli}
 
-SQL injection falls into the \emph{injection} category above.
+Structured Query Language (SQL) is used with relational database systems to create, retrieve, update and delete data.
+SQL injection falls into the \emph{injection} category of vulnerabilities above.
 Generally, it arises when SQL queries concatenate or interpolate user input into a query command.
 An attacker is able to craft user input that ``breaks out'' of e.g. a string literal and execute arbitrary SQL.
 This could lead to exfiltration of sensitive data, destruction of data or violation of data integrity.
@@ -375,7 +378,57 @@ This ensures no syntax error is introduced when the Java code ends the string af
 This query would return all users in the database.
 
 \subsubsection{LDAP Injection}
-\todobox{Write section}
+
+The Lightweight Directory Access Protocol (LDAP) is a networked protocol designed for querying directory services.
+These services are used for storing and organising network entities, such as users and devices.
+Microsoft's Active Directory (AD) is a commonly deployed enterprise solution for storing user information and handling
+network authentication.
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+
+
+        \caption{\label{figure:wso}LDAP is used internally at Warwick to power the single sign-on system}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \centering \includegraphics[width=0.5\linewidth]{wso.png}
+    \end{MyMdframed}
+\end{figure}
+
+LDAP queries are written in a compact manner using operations and parentheses for each clause:
+
+\texttt{(\&(warwickUniId=1510654)(sn=Williams))}
+
+This query retrieves the user with attribute \texttt{warwickUniId} set to value 1510654 and surname (sn) set to value
+``Williams''.
+The \texttt{\&} operator specifies conjunction to be applied to the nested filters.
+
+Much like SQL injection, LDAP injection arises when user-input is concatenated into a filter name or value.
+The impact is generally more limited, but due to the support for wildcard characters it is possible to leak other
+attribute values by testing for a character at a time.
+Numeric values or dates can be exfiltrated using a binary search approach.
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+
+
+        \caption{Injection into a conjunctive query can be used to exfiltrate data}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \centering \includegraphics[width=0.5\linewidth]{dobcrack.png}
+
+        \vspace{0.5em}
+
+        Note that despite network latency, we can still leak a value in a short period of time (< 15s) by
+        repeatedly querying an oracle with less than/greater than filters and observing the response.
+    \end{MyMdframed}
+\end{figure}
+
+
 
 
 \subsubsection{Path Traversal}
@@ -470,7 +523,7 @@ rules by way of a regular expression attribute.
 When user data is submitted in e.g. a form, the framework is able to automatically perform validation and reject input
 which does not match the expression.
 
-\begin{mycodefile}{csharp}{Entity fields can be validated using regular expressions in ASP.NET MVC}{C\#}{codesample-csharp-regex.cs}
+\begin{mycodefile}{csharp}{Entity field validation using regular expressions}{C\# / ASP.NET MVC}{codesample-csharp-regex.cs}
 \end{mycodefile}
 
 \subsection{DFAs and NFAs}
@@ -549,7 +602,7 @@ For example, the matching parentheses language which accepts strings such as \te
 \texttt{))} or \texttt{((())} can be proven non-regular by contradiction (using the pumping lemma described in
 \citet{rabin1959finite}).
 As a result, no DFA, NFA or regular expression\footnote{The language \emph{can} however be recognised using a pushdown
-automata because it belongs to the set of deterministic context-free languages.} can encode the rules of this language.
+automata because it belongs to the set of deterministic context-free languages. These are discussed later on.} can encode the rules of this language.
 
 \begin{figure}
     \begin{MyMdframed}
@@ -581,8 +634,9 @@ automata because it belongs to the set of deterministic context-free languages.}
         
 \vspace{0.5em}
 
-The initial state is $q_0$. As this automaton is non-deterministic, it can be viewed as ``branching'' and entering the
-two states $q_a$ and $q_b$ due to the $\epsilon$-transitions.
+The initial state is $q_0$.
+As this automaton is non-deterministic, it can be viewed as ``branching'' and entering the two states $q_a$ and $q_b$
+due to the $\epsilon$-transitions.
 $q_a$ is used for the \texttt{g+} component of the alternation in the original regular expression and, similarly, $q_b$
 is used for the \texttt{f+} component.
 Both of these states require at least one occurrence of their respective character before entering the $q_{x1}$ state
@@ -607,6 +661,58 @@ Micosoft's .NET platform includes an extension to support \emph{balancing group 
 balanced parentheses to be matched.
 Regular expressions using these language features and extensions are not \emph{regular} in the formal sense.
 Throughout this project, we only consider regular expressions according to their formal definition.
+
+\section{Parsing}
+
+We have briefly discussed regular languages and how they can be represented using regular expressions.
+In addition, we have introduced DFAs and NFAs which are capable of recognising regular languages.
+
+As illustrated in the Chomsky hierarchy pictured in figure \ref{fig:chomsky:1}, languages can fall into a variety of
+classes.
+Our language cannot be regular--it needs to be able to parse regular expressions, allowing for nested groups which must
+balance.
+As a consequence, we cannot parse the language in its entirety using a DFA/NFA.
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+        \caption{\label{fig:chomsky:1} Chomsky hierarchy of grammars}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+        \begin{adjustbox}{center} \begin{tikzpicture}%[font=\sffamily]%
+                                      \foreach \X [count=\Y,remember=\Y as \LastY] in
+                                      {Regular,Context Free,Context Sensitive,Recursively Enumerable}
+                                      {\ifnum\Y=1
+                                      \node[ellipse,draw,outer sep=0pt] (F-\Y) {\X};
+                                      \else
+                                      \node[anchor=south] (T-\Y) at (F-\LastY.north) {\X};
+                                      \path let \p1=($([yshift=1ex]T-\Y.north)-(F-\LastY.south)$),
+                                      \p2=($(F-1.east)-(F-1.west)$),\p3=($(F-1.north)-(F-1.south)$)
+                                      in ($([yshift=1ex]T-\Y.north)!0.5!(F-\LastY.south)$)
+                                      node[minimum height=\y1,minimum width={\y1*\x2/\y3},
+                                      draw,ellipse,inner sep=0pt] (F-\Y){};
+                                      \fi}
+        \end{tikzpicture}
+        \end{adjustbox}
+    \end{MyMdframed}
+\end{figure}
+
+However, the language comprising balanced parentheses lies within the context-free class.
+We can formally define a context-free grammar to comprise a 4-tuple $G = (V, \Sigma, R, S)$ where the tuple elements
+are defined below \citep[p.~102]{sipser2012introduction}:
+
+\begin{description}
+    \item[$V$] Finite set of \emph{non-terminals}, each of these describes a ``sub-language'' of $G$.
+    \item[$\Sigma$] Finite set of \emph{terminals} representing string literals (i.e. actual characters in the language), where $V \cap \Sigma = \emptyset$.
+    \item[$R$] Rules/productions in the grammar.
+    \item[$S$] The start variable, $S \in V$.
+\end{description}
+
+
+
+In order to parse context-free languages, we can use an $LL$-parser.
+Parsers of this type process the input string from left to right and use the leftmost derivation.
+
 
 \section{SAT and SMT Solvers}
 
@@ -685,9 +791,7 @@ Using the formula from the original example, we can convert to DNF:
         (a \land \neg b) \lor (c)
         \)
     \end{description}
-    
-    \spacedrule{}
-    
+
     A more interesting example might comprise a formula of structure  \(
     (a \lor b) \land (c \lor d) \land (e \lor f)
     \), which is converted to the lengthy DNF formula below:
@@ -834,6 +938,7 @@ The examples below show how DPLL proceeds for a satisfiable and unsatisfiable fo
 \newcommand{\cogs}{\faIcon[light]{cogs}}
 \newcommand{\arrow}{\faIcon[light]{arrow-right}}
 \newcommand{\checkMark}{\faIcon[light]{check}}
+\newcommand{\forward}{\faIcon[light]{forward}}
 
 \begin{example}{$(a \lor \neg b) \land (\neg a \lor c \lor b) \land (\neg c \lor \neg a)$}
     Recursive calls are shown with another level of indentation in the trace below.
@@ -878,6 +983,13 @@ The examples below show how DPLL proceeds for a satisfiable and unsatisfiable fo
     \end{outline}
 \end{example}
 
+DPLL is straightforward to implement and libraries exist for the JVM and .NET platforms.
+The code sample below shows how to work with the AIMA Java library built from the descriptions in
+\citet{russell2016artificial}:
+
+\begin{mycodefile}{java}{\label{code:java:aima:1}Using the DPLL library}{Java}{dpll.java}
+\end{mycodefile}
+
 \subsection{Satisfiability Modulo Theories (SMT)}
 
 Thus far, we have only considered solving problems involving Boolean variables and their negation.
@@ -917,7 +1029,7 @@ power of DPLL to a theory $T$ (as defined above) using a repeated two-phase appr
 
 \begin{itemize}
     \item First, all functions under the theory $T$ in the problem are replaced with a Boolean variable.
-          DPLL then proceeds as described earlier to find a satisfying valuation for the Boolean variables.
+          DPLL then proceeds as described earlier\footnote{} to find a satisfying valuation for the Boolean variables.
     \item Once a full set of valuations are available, a specialised \emph{theory solver} attempts to determine if the
           valuations can be satisfied under the theory $T$.
           If these valuations yield logical constraints that are contradictory, the original formula $\phi$ is augmented
@@ -929,10 +1041,15 @@ power of DPLL to a theory $T$ (as defined above) using a repeated two-phase appr
 \end{itemize}
 
 In DPLL(T), the theory solver is queried as an oracle and used each time the SAT solver has found a valuation.
+However, some heuristics used by the SAT solver cannot be used as-is within the context of an SMT problem.
+\citeauthor{barrett2002sat} notes that the \emph{pure literal rule} must be disabled, because atoms within an SMT
+problem are not necessarily independent\footnote{Observe that the truth value of a clause such as $A = \neg (x < 5)$ impacts the truth value of $B = (x < 10)$}
+as they are in a standard SAT problem \citep{barrett2002sat}.
+
 Below, we see how the DPLL(T) algorithm proceeds with an example within the context of the linear integer arithmetic
 theory:
 
-\begin{example}{$((b > 7) \lor (a + 5 > 4) \land (a < -10 \lor \neg (b > 7)))$}
+\begin{example}{$((b > 7) \lor (a + 5 > 4) \land (b < 5 \lor \neg (b > 7)))$}
     We begin by deriving a SAT formula for the problem: $(A \lor B) \land (C \lor \neg A)$.
 
     Perform DPLL:
@@ -941,22 +1058,25 @@ theory:
         \1[\cogs] DPLL invocation: symbols unassigned: $[A, B, C]$, current model $\{\}$
         \1[\arrow] Consistency check failed, we are not done yet
         \1[\arrow] No empty clauses yet, we can continue
-        \1[\arrow] Apply PureLiteralAssign on $B$, setting value to true
-        \2[\cogs] DPLL invocation: symbols unassigned: $[A, C]$, current model $\{B=T\}$
+        \1[\forward] Skipping pure literal check
+        \1[\arrow] There are no unit clauses available yet
+        \1[\arrow] Attempt $A$ = true, call DPLL
+        \2[\cogs] DPLL invocation: symbols unassigned: $[B, C]$, current model $\{A=T\}$
         \2[\arrow] Consistency check failed, we are not done yet
         \2[\arrow] No empty clauses yet, we can continue
-        \2[\arrow] Apply PureLiteralAssign on $C$, setting value to true
-        \3[\cogs] DPLL invocation: symbols unassigned: $[A]$, current model\\ $\{B=T, C=T\}$
-        \3[\checkMark] Consistency check passes, returning SAT and current model\\ $\{B=T, C=T\}$
+        \2[\forward] Skipping pure literal check
+        \2[\arrow] Apply UnitPropagate on $C$, setting value to true
+        \3[\cogs] DPLL invocation: symbols unassigned: $[B]$, current model $\{A=T, C=T\}$
+        \3[\checkMark] Consistency check passes, returning SAT and current model $\{A=T, C=T\}$
     \end{outline}
 
 
-    Earlier, we assigned $B = (a + 5 > 4) = a > -1$ and $C = (a < -10)$.
-    The SAT solver has required that $B$ be true.
-    However, $C$ contradicts this requirement by requiring $a < -10$ where $-10 < -1$.
-    The theory solver will now augment the original SAT problem with a requirement that $B$ and $C$ cannot both be true.
+    Earlier, we assigned $A = (b > 7)$ and $C = (b < 5)$.
+    The SAT solver has required that $A$ be true.
+    However, $C$ contradicts this requirement by requiring $b < 5$ where $5 < 7$.
+    The theory solver will now augment the original SAT problem with a requirement that $A$ and $C$ cannot both be true.
 
-    \((A \lor B) \land (C \lor \neg A)~\land \) \colorbox{white}{$(\neg B \lor \neg C)$}
+    \((A \lor B) \land (C \lor \neg A)~\land \) \colorbox{white}{$(\neg A \lor \neg C)$}
 
     We perform DPLL on the new SAT formula:
 
@@ -964,31 +1084,40 @@ theory:
         \1[\cogs] DPLL invocation: symbols unassigned: $[A, B, C]$, current model $\{\}$
         \1[\arrow] Consistency check failed, we are not done yet
         \1[\arrow] No empty clauses yet, we can continue
-        \1[\arrow] There are no pure literals available yet
+        \1[\forward] Skipping pure literal check
         \1[\arrow] There are no unit clauses available yet
         \1[\arrow] Attempt $A$ = true, call DPLL
         \2[\cogs] DPLL invocation: symbols unassigned: $[B, C]$, current model $\{A=T\}$
         \2[\arrow] Consistency check failed, we are not done yet
         \2[\arrow] No empty clauses yet, we can continue
-        \2[\arrow] Apply PureLiteralAssign on $B$, setting value to false
-        \3[\cogs] DPLL invocation: symbols unassigned: $[C]$, current model $\{A=T, B=F\}$
+        \2[\forward] Skipping pure literal check
+        \2[\arrow] Apply UnitPropagate on $C$, setting value to true
+        \3[\cogs] DPLL invocation: symbols unassigned: $[B]$, current model $\{A=T, C=T\}$
         \3[\arrow] Consistency check failed, we are not done yet
-        \3[\arrow] No empty clauses yet, we can continue
-        \3[\arrow] Apply PureLiteralAssign on $C$, setting value to true
-        \4[\cogs] DPLL invocation: symbols unassigned: $[~]$, current model\\ $\{A=T, B=F, C=T\}$
-        \4[\checkMark] Consistency check passes, returning SAT and current model\\ $\{A=T, B=F, C=T\}$
+        \3[\crossMark] Every clause is empty, returning with UNSAT and current model $\{A=T, C=T\}$
+        \1[\arrow] Attempt with $A$ = true failed, we have backtracked
+        \1[\arrow] Attempt $A$ = false
+        \2[\cogs] DPLL invocation: symbols unassigned: $[B, C]$, current model $\{A=F\}$
+        \2[\arrow] Consistency check failed, we are not done yet
+        \2[\arrow] No empty clauses yet, we can continue
+        \2[\forward] Skipping pure literal check
+        \2[\arrow] Apply UnitPropagate on $B$, setting value to true
+        \3[\cogs] DPLL invocation: symbols unassigned: $[C]$, current model $\{A=F, B=T\}$
+        \3[\checkMark] Consistency check passes, returning SAT and current model $\{A=F, B=T\}$
     \end{outline}
 
-    We now have a satisfying valuation $\{A=T, B=F, C=T\}$.
-    We query the theory solver, are $A$ and $C$ contradictory?
+    We now have a satisfying valuation $\{A=F, B=T\}$.
+    We query the theory solver, are $\neg A$ and $B$ contradictory?
 
     \begin{itemize}
-        \item $A = (b > 7)$
-        \item $C = (a < -10)$
+        \item $\neg A = \neg (b > 7) = (b \le 7)$
+        \item $B = (a + 5 > 4) = a > -1$
     \end{itemize}
 
-    These concern different variables, so there is no problem.
-    Hence, we can satisfy this SMT problem.
+    These concern different variables, so there is no problem with both of these atoms being true.
+    As the model did not mention a truth value for $C$, the problem is satisfiable with either truth value for $C$.
+
+    An example model under this theory would be $\{b \to 4, a \to 1\}$.
 \end{example}
 
 
@@ -1133,7 +1262,11 @@ These constraints are passed to the Z3 SMT solver to verify the user's program.
 Listing \ref{code:dafny:1} shows an example Dafny program which causes a compile-time verification error.
 
 Dafny has some limited \texttt{string} support.
-An example is shown in listing \ref{code:dafny:2} with a function pre-condition on the length of a string.
+An example is shown in listing \ref{code:dafny:2} with a function pre-condition on the length of a string:
+
+\begin{mycodefile}{dafnylex.py:DafnyLexer -x}{\label{code:dafny:2}Length pre-condition for a string}{Dafny}{strings.dfy}
+\end{mycodefile}
+
 Strings in Dafny are treated as equivalent to the type \texttt{seq<char>} (that is, a sequence of characters) so
 although it is possible to retrieve e.g.\ the length of such a sequence, there is no built-in regular expression support.
 Whilst it \emph{is} possible to write a helper function and call it from within a pre-condition or post-condition, it
@@ -1341,7 +1474,7 @@ The language supports the following type keywords:
 \begin{table}[H]
 
     \centering
-    \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
+    \rowcolors{1}{id7-aubergine-tint}{lightgrey}
     \begin{tabular}[t]{|p{3cm}|p{8cm}|}
         \hline
         \rowcolor{id7-aubergine}
@@ -1433,11 +1566,42 @@ Code can be reused by way of user-defined functions.
 
 \begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}
     \vspace{0.5em}
+
+    In this example, we use the unrefined \texttt{uint} type to implement the factorial function, where
+    $5! = 5\times 4 \times 3 \times 2 \times 1$.
 \end{mycodefile}
+
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:2}A product function, which multiplies its arguments}{RRT}{integer-refinements.rrt}
+    \vspace{0.5em}
+
+    In this example, we use integer refinement types to restrict the domain of the arguments to the \texttt{Product}
+    function.
+    The first number, \texttt{a}, is required to be less than 10 whereas \texttt{b} must be less than or equal to 15.
+\end{mycodefile}
+
+\label{sec:grammar}
+
+\subsection{Abstract Syntax Trees}
+
+Combined with a parser generator, the grammar discussed in section \ref{sec:grammar} enables programs to be parsed into
+a data structure known as a \emph{Concrete Syntax Tree} (CST) which maps directly to the grammar.
+
+Whilst the CST is useful, most type checking will require a richer representation of a program written in our language.
+For example, the current grammar would parse refinements such as \textcolor{id7-ruby-red}{\texttt{uint}}\texttt{[/.*/]},
+To check for these issues and interpret code, we use an \emph{Abstract Syntax Tree} (AST) representation of the program.
+
+
 
 \section{Implementation}
 
-\subsection{Frontends}
+\subsection{Parsing}
+
+In order to lex and parse user input into the AST structure discussed earlier, we use the \emph{ANTLR4} parser generator.
+ANTLR4 generates $LL(*)$ parsers .
+
+\subsection{Integrations and Frontends}
+
+In this section, we present the various tool integrations we have built.
 
 \subsubsection{Web Application}
 
@@ -1478,11 +1642,42 @@ APIs.
 
 \todobox{Unit testing, manual testing (boundary conditions, adversarial input), integration testing (lexer, parser, interpreter)}
 
-\chapter{Legal, social, ethical and professional issues}
+\chapter[Legal, social, ethical and professional issues]{Legal, social, ethical and\\professional issues}
 
-Initially discussed in appendix \ref{project:spec}, we ensured that potential legal and ethical issues were minimised during the lifetime of the project. Much of the typical issues are not applicable to this project; no surveys were undertaken and no research was conducted necessitating volunteers.
+Initially covered in appendix \ref{project:spec}, we ensured that potential legal and ethical issues were minimised
+during the lifetime of the project.
+Much of the typical issues are not applicable to this project; no surveys were undertaken and no research was
+conducted which necessitated volunteers providing data.
 
-However, the core motivations underpinning the project objectives lie in the realm of information security. Therein lies the biggest potential for ethical questions to be raised. Although our work on refinement types is designed primarily to assist the developer by providing assurance about the structure of data flow, the nature of many security tools is that they can be used offensively. 
+However, the core motivations underpinning the project objectives lie in the realm of information security.
+Therein lies the biggest potential for ethical questions to be raised \citep{dark2008ethics}.
+Although our work on refinement types is designed primarily to assist the developer by providing assurance about the
+structure of flowing data, the nature of many security tools is that they can be used offensively.
+
+For example, fuzzing tools which generate test data and are designed to help highlight memory corruption bugs, can be
+used by third-parties other than the original developers to audit software.
+Similarly, it is possible that the tooling discussed in this report (Z3, Z3str3 and regular expression refinement
+types) could be used to discover potential exploitation opportunities in existing software, perhaps by porting
+logic into our language and adding refinement types in order to detect e.g. injection vulnerabilities by running the
+type-checker.
+
+\citeauthor{harper2018gray} discusses the ethics of security research in \citet{harper2018gray}.
+There is general consensus that ``offline'' security research into software\footnote{By offline, we mean to capture research which does not involve testing against a third-party production environment.
+For example, local fuzzing of the OpenSSL cryptography library would fall into this category.} is ethically preferable
+to testing against real-world systems without authorisation, even if intentions are good and would fall into activity
+typical of a ``grey hat'' researcher.
+However, opinions differ on how discovered vulnerabilities should be disclosed. \citeauthor{schneier2007fd} argues for
+\textit{full disclosure}--where vulnerabilities are publicly disclosed--describing it as a ``damned good
+idea'' and citing the principle that ``secrecy prevents people from accurately assessing their own risk'' \citep{schneier2007fd}.
+The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose
+(the creator of the original list) arguing that other approaches are simply ``security through obscurity''.
+
+\begin{mdframed}
+    \begin{leftbar}
+        my wuote
+    \end{leftbar}
+\end{mdframed}
+
 
 
 \chapter{Evaluation and Conclusions}
@@ -1542,13 +1737,13 @@ and should therefore enable reporting of fewer false positive issues.
 
 \begin{listing}[H]
     \begin{minted}{javascript}
-    function LookupName(userId: /[A-Za-z0-9]+/): string {
+function LookupName(userId: /[A-Za-z0-9]+/): string {
     var name: string = GetNameByUserId(userId); // safe
     GetNameByUserId("'; DROP TABLE users;"); // type error
     return name;
-    }
-    
-    function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ { /* database lookup.. */ }
+}
+
+function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ { /* database lookup.. */ }
     \end{minted}
     \caption{Example code illustrating a potential syntax. \texttt{userId} and \texttt{query} use the refinement type.}
 \end{listing}
