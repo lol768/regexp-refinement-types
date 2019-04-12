@@ -998,8 +998,6 @@ other theories.
 Z3str3, which powers string solving in Z3, is built on this principle and uses a theory solver that is equipped with
 knowledge of non-deterministic finite automata \citep{berzish2017z3str3}.
 
-
-
 \section{Refinement Types}
 
 Within type systems, \emph{refinement types} allow for predicate-based constraints to be applied to types in order to
@@ -1285,7 +1283,7 @@ This was constructed, made unambiguous and then used as a basis during the imple
 \setlength{\grammarparsep}{20pt plus 1pt minus 1pt} % increase separation between rules
 \setlength{\grammarindent}{12em} % increase separation between LHS/RHS
 
-We begin by defining our main non-terminal to represent a complete program.
+We begin by defining our main rule to represent a complete program.
 Programs contain a number of functions, which are declared with an identifier, number of arguments and a return type.
 
 \begin{grammar}
@@ -1335,8 +1333,7 @@ Such a statement has no limit on the number of \textbf{else if} components.
 
 \end{grammar}
 
-We now turn our attention to the type system, and support for refinements (encompassed in the \texttt{<constraint>})
-non-terminal in the grammar.
+We now turn our attention to the type system, and support for refinements (encompassed in the \texttt{<constraint>} rule) in the grammar.
 The language supports the following type keywords:
 
 \arrayrulecolor{white}
@@ -1356,8 +1353,8 @@ The language supports the following type keywords:
     \end{tabular}
 \end{table}
 
-In the grammar, we define the \texttt{<type>} non-terminal to represent a type reference.
-This non-terminal is then used throughout the grammar for function argument types, local variables types and return
+We define the \texttt{<type>} class to represent a type reference.
+This class is then used throughout the grammar for function argument types, local variables types and return
 types.
 
 \begin{grammar}
@@ -1371,7 +1368,7 @@ types.
 Integer refinements are a relatively straightforward affair, as shown above.
 We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
-prime-suffixed rules with $\epsidlon$-productions.
+prime-suffixed classes with $\epsidlon$-productions.
 
 \begin{grammar}
 
@@ -1431,11 +1428,20 @@ number:
     <identifier> :== <alpha> (<alphanumeric> *)
 \end{grammar}
 
+The result is a small imperative language which can be used to implement simple logic.
+Code can be reused by way of user-defined functions.
+
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}
+    \vspace{0.5em}
+\end{mycodefile}
+
 \section{Implementation}
 
 \subsection{Frontends}
 
 \subsubsection{Web Application}
+
+
 
 \todobox{Screenshot, why it was developed}
 
@@ -1468,18 +1474,21 @@ APIs.
 
 
 
-
-\begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}
-    \vspace{0.5em}
-\end{mycodefile}
-
 \chapter{Testing}
 
 \todobox{Unit testing, manual testing (boundary conditions, adversarial input), integration testing (lexer, parser, interpreter)}
 
+\chapter{Legal, social, ethical and professional issues}
+
+Initially discussed in appendix \ref{project:spec}, we ensured that potential legal and ethical issues were minimised during the lifetime of the project. Much of the typical issues are not applicable to this project; no surveys were undertaken and no research was conducted necessitating volunteers.
+
+However, the core motivations underpinning the project objectives lie in the realm of information security. Therein lies the biggest potential for ethical questions to be raised. Although our work on refinement types is designed primarily to assist the developer by providing assurance about the structure of data flow, the nature of many security tools is that they can be used offensively. 
+
+
 \chapter{Evaluation and Conclusions}
 
 \todobox{This needs to be completed by evaluating not just the performance of the tool against existing static analysis software, but also the scheduling of the project and project management.}
+
 
 \chapter{Future Work}
 \todobox{Flesh this out:\begin{itemize}
@@ -1501,6 +1510,7 @@ APIs.
 \appendix
 
 \chapter{Project Specification}
+\label{project:spec}
 \section*{Introduction}
 
 Within information security, entire classes of application vulnerabilities arise due to problematic user input handling \citep{christey2007vulnerability}.

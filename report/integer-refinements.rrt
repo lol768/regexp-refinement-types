@@ -1,0 +1,7 @@
+function Product(a: uint[<10], b: uint[<=15]): uint {
+    return a*b
+}
+
+function Main(): uint {
+    return Product(4, 15)
+}

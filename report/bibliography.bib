@@ -13,7 +13,7 @@
 @article{freemanreftypes,
     author = {Freeman, Tim and Pfenning, Frank},
     title = {Refinement Types for {ML}},
-    journal = {SIGPLAN Not.},
+	journal={ACM Sigplan Notices},
     issue_date = {June 1991},
     volume = {26},
     number = {6},
@@ -28,16 +28,12 @@
     publisher = {ACM},
     address = {New York, NY, USA},
 } 
-@techreport{msftttmr2012,
-    author = {Livshits, Ben},
-    title = {Dynamic Taint Tracking in Managed Runtimes},
-    year = {2012},
-    month = {November},
-    abstract = {
-    This paper provides a taxonomy of runtime taint tracking approaches for managed code, such as code written in Java, C#, PHP, Perl, or Ruby. It covers main applications of data tainting such as preventing web application vulnerabilities including cross-site scripting and SQL injection attacks, along with disallowing privacy-sensitive data leaks. In addition to giving an overview of related literature from the last decade, this paper provides guidance and describes the trade-offs of different instrumentation approaches. Lastly, we provide a list of open problems whose solutions would aid practical adaption of runtime tainting on a wider scale.
-    },
-    publisher = {Microsoft Research},
-    url = {https://www.microsoft.com/en-us/research/publication/dynamic-taint-tracking-in-managed-runtimes/},
+@article{msftttmr2012,
+	title={Dynamic taint tracking in managed runtimes},
+	author={Livshits, Benjamin},
+	journal={Technical Report MSR-TR-2012-114, Microsoft},
+	year={2012},
+	publisher={Citeseer}
 }
 @book{schneier2011secrets,
 	title={Secrets and lies: digital security in a networked world},
@@ -88,6 +84,7 @@
     year      = "1980",
     note      = "AAI8011683",
     publisher = "Stanford University",
+	institution = "Stanford University",
     address   = "Stanford, CA, USA",
 }
 
@@ -208,18 +205,23 @@
 	isbn = {0134397606, 9780134397603},
 	edition = {1st},
 	publisher = {Addison-Wesley Professional},
-} 
-@TechReport{dafny,
-	author = {Moskal, Michal},
-	title = {Co-Induction Simply: Automatic Co-Inductive Proofs in a Program Verifier},
-	year = {2013},
-	month = {July},
-	abstract = {
-	Program verification relies heavily on induction, which has received decades of attention in mechanical verification tools. When program correctness is best described by infinite structures, program verification is usefully aided also by co-induction, which has not benefited from the same degree of tool support. Co-induction is complicated to work with in interactive proof assistants and has had no previous support in dedicated program verifiers. This paper shows that an SMT-based program verifier can support reasoning about co-induction—handling infinite data structures, lazy function calls, and user-defined properties defined as greatest fix-points, as well as letting users write co-inductive proofs. Moreover, the support can be packaged to provide a simple user experience. The paper describes the features for co-induction in the language and verifier Dafny, defines their translation into input for a first-order SMT solver, and reports on some encouraging initial experience.
-	},
-	publisher = {Microsoft Research},
-	url = {https://www.microsoft.com/en-us/research/publication/co-induction-simply-automatic-co-inductive-proofs-in-a-program-verifier/},
 }
+@InProceedings{dafny,
+	author="Leino, K. Rustan M.
+	and Moskal, Micha{\l}",
+	editor="Jones, Cliff
+	and Pihlajasaari, Pekka
+	and Sun, Jun",
+	title="Co-induction Simply",
+	booktitle="FM 2014: Formal Methods",
+	year="2014",
+	publisher="Springer International Publishing",
+	address="Cham",
+	pages="382--398",
+	abstract="This paper shows that an SMT-based program verifier can support reasoning about co-induction---handling infinite data structures, lazy function calls, and user-defined properties defined as greatest fix-points, as well as letting users write co-inductive proofs. Moreover, the support can be packaged to provide a simple user experience. The paper describes the features for co-induction in the language and verifier Dafny, defines their translation into input for a first-order SMT solver, and reports on some encouraging initial experience.",
+	isbn="978-3-319-06410-9"
+}
+
 @InProceedings{dafny2,
 	author="Leino, K. Rustan M.",
 	editor="Clarke, Edmund M.
@@ -237,7 +239,7 @@
 @article{Davis:1960:CPQ:321033.321034,
 	author = {Davis, Martin and Putnam, Hilary},
 	title = {A Computing Procedure for Quantification Theory},
-	journal = {J. ACM},
+	journal = {Journal of the ACM (JACM)},
 	issue_date = {July 1960},
 	volume = {7},
 	number = {3},
@@ -301,7 +303,7 @@
 @article{Hooimeijer2009,
     author = {Hooimeijer, Pieter and Weimer, Westley},
     title = {A Decision Procedure for Subset Constraints over Regular Languages},
-    journal = {SIGPLAN Not.},
+	journal={ACM Sigplan Notices},
     issue_date = {June 2009},
     volume = {44},
     number = {6},
