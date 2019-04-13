@@ -1,9 +1,6 @@
 
 % Set up example boxes
 
-\DeclareFloatingEnvironment[fileext=frm,placement={!ht},name=Example]{exampleflt}
-\captionsetup[exampleflt]{labelfont=bf}
-
 \newenvironment{example}[1]
 {
         \begin{mdframed} \setlength{\parskip}{1em}
@@ -13,7 +10,7 @@
             \rmfamily
 
             }
-            {\end{mdframed}}
+            {\end{mdframed}
 }
 
 % And algorithm boxes
@@ -26,8 +23,8 @@
         \begin{mdframed} \setlength{\parskip}{1em}
             \vspace{1.5em}
 
-            \captionsetup[algorithm]{name=\faCogs{} Algorithm, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
-            \captionof{algorithm}{#1}\hfill
+            \captionsetup[algorithmflt]{name=\faCogs{} Algorithm, singlelinecheck=false,font={color=id7-aubergine,sf},position=top}
+            \captionof{algorithmflt}{#1}\hfill
 
             \rmfamily
             \captionsetup{style=default}

@@ -20,7 +20,7 @@
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
-\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc, shapes.geometric}
+\usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc, shapes.geometric, matrix}
 \usepackage{shellesc}
 \usepackage{minted}
 \usepackage{syntax}
@@ -179,7 +179,7 @@ Scale=MatchLowercase
 \rhead{\textcolor{grey}{\currentname}}
 
 \include{environments}
-
+\include{kmaps}
 \newsavebox\mybox
 \savebox\mybox{\tikz[color=id7-aubergine,opacity=0.3]\node{\sffamily DRAFT 1};}
 %\newwatermark*[
@@ -428,7 +428,8 @@ Numeric values or dates can be exfiltrated using a binary search approach.
     \end{MyMdframed}
 \end{figure}
 
-
+The best practice for mitigating this vulnerability involves using an encoder that is able to escape LDAP control
+characters (for example, right parenthesis is replaced with \texttt{\textbackslash{} 29}).
 
 
 \subsubsection{Path Traversal}
@@ -780,17 +781,27 @@ Clearly such an approach would be inefficient--for Boolean variables with two po
 would work in $\mathcal{O}(2^n)$.
 
 As discussed in \citet{miltersen2005converting}, it is also possible to convert formulae to \emph{Disjunctive Normal
-Form} (DNF) using De Morgan's law.
+Form} (DNF) using the laws of Boolean algebra.
 Using the formula from the original example, we can convert to DNF:
 
-    \begin{description}
-        \item[CNF] \(
-        (a \lor b \lor c) \land (\neg b \lor c)
-        \)
-        \item[DNF] \(
-        (a \land \neg b) \lor (c)
-        \)
-    \end{description}
+
+\begin{align*}
+   & (a \lor b \lor c) \land (\neg b \lor c) \\
+   \equiv~ & ((a \lor b \lor c) \land \neg b) \lor ((a \lor b) \lor c) \land c\quad \mathrm{Distributivity~of}~\land~\mathrm{over}~\lor \\
+   \equiv~  & ((a \lor c) \land \neg b) \lor c\quad  \mathrm{Complementation~of}~b \land \neg b \\
+   \equiv~  & (a \land \neg b) \lor (c \land \neg b) \lor c\quad \mathrm{Absorption:}~x \land (x \lor y) \equiv x \\
+   \equiv~  & ((a \land \neg b)) \lor c\quad  \mathrm{Distributivity~of}~\lor~\mathrm{over}~\land
+\end{align*}
+
+Alternatively, we can use a Karnaugh map to enumerate the possible values for the variables $a, b, c$ and identify
+groupings to string together in a disjucntion:
+
+\begin{Karnaughvuit}
+    \minterms{3,5,4,7,1}
+    \maxterms{2,0,6}
+    \implicant{4}{5}{id7-aubergine}
+    \implicant{1}{7}{id7-ruby-red}
+\end{Karnaughvuit}
 
     A more interesting example might comprise a formula of structure  \(
     (a \lor b) \land (c \lor d) \land (e \lor f)
@@ -939,6 +950,7 @@ The examples below show how DPLL proceeds for a satisfiable and unsatisfiable fo
 \newcommand{\arrow}{\faIcon[light]{arrow-right}}
 \newcommand{\checkMark}{\faIcon[light]{check}}
 \newcommand{\forward}{\faIcon[light]{forward}}
+\newcommand{\crossMark}{\faIcon[light]{times}}
 
 \begin{example}{$(a \lor \neg b) \land (\neg a \lor c \lor b) \land (\neg c \lor \neg a)$}
     Recursive calls are shown with another level of indentation in the trace below.
@@ -964,7 +976,6 @@ The examples below show how DPLL proceeds for a satisfiable and unsatisfiable fo
 
 
 \begin{example}{$(\neg b) \land (\lor c \lor b) \land (\neg c)$}
-    \newcommand{\crossMark}{\faIcon[light]{times}}
     Recursive calls are shown with another level of indentation in the trace below.
     \begin{outline}
         \1[\cogs] DPLL invocation: symbols unassigned: $[b, c]$, current model $\{\}$
@@ -1197,7 +1208,7 @@ This section aims to explore, and evaluate, some of the these works.
 \subsubsection{Rex}
 
 \emph{Rex} is a tool produced within the Research in Software Engineering (RiSE) research group within Microsoft.
-\citeauthor{rex} introduce the concept of $\epsiolon$-SFAs (Symbolic Finite Automata) which provide a more flexible
+\citeauthor{rex} introduce the concept of $\epsilon$-SFAs (Symbolic Finite Automata) which provide a more flexible
 mapping to regular expressions (as they are implemented in modern programming languages) \citep{rex}.
 
 Rex SFAs use formulae instead of characters to define transitions.
@@ -1501,7 +1512,7 @@ types.
 Integer refinements are a relatively straightforward affair, as shown above.
 We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
-prime-suffixed classes with $\epsidlon$-productions.
+prime-suffixed classes with $\epsilon$-productions.
 
 \begin{grammar}
 
@@ -1590,6 +1601,43 @@ Whilst the CST is useful, most type checking will require a richer representatio
 For example, the current grammar would parse refinements such as \textcolor{id7-ruby-red}{\texttt{uint}}\texttt{[/.*/]},
 To check for these issues and interpret code, we use an \emph{Abstract Syntax Tree} (AST) representation of the program.
 
+We designed the structure of the AST prior to implementing the system.
+Unlike some (generally more functional languages), we make a distinction between \textit{statements} and
+\textit{expressions}.
+The former do not necessarily yield a value in the same way as expressions.
+For example, an if statement may not return a value--it could simply call a function and rely on its side effects.
+We make no claim that such a language is more elegant than others, but adoption is important for security tooling
+to be effective; designing an imperative language which would be comfortable to e.g. Java developers was important,
+since they are responsible for a great proportion of production code.
+
+We rely on the object-oriented concept of inheritance when modelling our AST entities.
+Statements and expressions can inherit from a common abstract base class and reuse their logic.
+
+The diagram below shows the structure of our statement-related entities:
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+
+
+        \caption{\label{figure:ast:statements}Statement AST objects}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \centering \includegraphics[width=0.9\linewidth]{statements.eps}
+    \end{MyMdframed}
+\end{figure}
+
+
+\begin{description}
+    \item[VariableDeclarationStatement] Models a statement of type \mintinline{rrtlex.py:RrtLexer -x}{var variable: string[/A+/]}.
+    \item[FunctionCallStatement] Models a statement of type \mintinline{rrtlex.py:RrtLexer -x}{Function()}, where the return value is unused.
+    \item[VariableAssignmentStatement] Handles assignment of a value to a variable, \mintinline{rrtlex.py:RrtLexer -x}{variable="AAA"}
+    \item[IfStatement] Represents a control flow statement comprising an \textcolor{id7-aubergine}{\texttt{if}} clause and one or more \textcolor{id7-aubergine}{\texttt{else}}/\textcolor{id7-aubergine}{\texttt{else if}} clauses.
+    \item[FunctionDeclaration] Encapsulates data relating to a function such as the arguments it takes, an identifier and its return type.
+    \item[ReturnStatement] Represents a line in a function body which returns a value, e.g. \mintinline{rrtlex.py:RrtLexer -x}{return 6}.
+\end{description}
+
 
 
 \section{Implementation}
@@ -1628,7 +1676,7 @@ APIs.
         \vspace{0.5em}
         
         
-        \caption{\label{figure:r4f}Example of a type violation, displayed in the Rise4fun environment.}
+        \caption{\label{figure:r4f}Example of a type violation, displayed in the Rise4fun environment}
         \vspace{0.5em}
         \captionsetup{style=default}
         
