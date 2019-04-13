@@ -1,5 +1,5 @@
 \documentclass[a4paper,openany,12pt]{book}
-\usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=0.5cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
+\usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=1cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
 \usepackage{graphicx}
@@ -20,6 +20,9 @@
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
+
+\setlength{\cftbeforetoctitleskip}{-5pt}
+\setlength{\cftaftertoctitleskip}{40pt}
 \usetikzlibrary{automata, positioning, shapes.symbols, arrows, chains, calc, shapes.geometric, matrix}
 \usepackage{shellesc}
 \usepackage{minted}
@@ -83,8 +86,7 @@ Scale=MatchLowercase
         \usebox0
     \end{mdframed}
 }
-\titlespacing*{\chapter}
-{0pt}{0pt}{2.0ex}
+
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}%
 \title{}
 \author{}
@@ -242,8 +244,6 @@ Scale=MatchLowercase
 \restoregeometry
 \restorepagecolor
 
-\pagebreak[5]
-
 \tableofcontents
 \pagebreak[5]
 \begin{keywords}
@@ -261,7 +261,8 @@ Scale=MatchLowercase
     We formalise the type system of such a language and implement it.
     We then compare our system to and evaluate it against other, existing approaches by considering false positive and negative rates with a series of test cases.
 \end{abstract}
-
+\titlespacing*{\chapter}
+{0pt}{0pt}{2.0ex}
 
 \chapter{Motivation}
 
@@ -392,16 +393,17 @@ network authentication.
         \caption{\label{figure:wso}LDAP is used internally at Warwick to power the single sign-on system}
         \vspace{0.5em}
         \captionsetup{style=default}
-
-        \centering \includegraphics[width=0.5\linewidth]{wso.png}
+        \begin{center}
+            \includegraphics[width=0.5\linewidth]{wso.png}
+        \end{center}
     \end{MyMdframed}
 \end{figure}
 
-LDAP queries are written in a compact manner using operations and parentheses for each clause:
+LDAP queries are written in a compact manner using symbols for each operation and parentheses for each clause:
 
 \texttt{(\&(warwickUniId=1510654)(sn=Williams))}
 
-This query retrieves the user with attribute \texttt{warwickUniId} set to value 1510654 and surname (sn) set to value
+This query retrieves the user with attribute \texttt{warwickUniId} set to value 1510654 \emph{and} surname (sn) set to value
 ``Williams''.
 The \texttt{\&} operator specifies conjunction to be applied to the nested filters.
 
@@ -429,7 +431,7 @@ Numeric values or dates can be exfiltrated using a binary search approach.
 \end{figure}
 
 The best practice for mitigating this vulnerability involves using an encoder that is able to escape LDAP control
-characters (for example, right parenthesis is replaced with \texttt{\textbackslash{} 29}).
+characters (for example, right parenthesis is replaced with \texttt{\textbackslash 29}).
 
 
 \subsubsection{Path Traversal}
@@ -448,7 +450,7 @@ analysing an \emph{abstract syntax tree} (AST) produced by the language toolchai
 and using a series of inspections to check and log common problems.
 Some more advanced tools use \emph{taint tracking} combined with information flow analysis to mark and track variables
 and parameters that have been influenced by user input \citep{denning1977certification}.
-Functions or procedures for which it is dangerous to receive user input are marked as \texttt{taint sinks}, whereas
+Functions or procedures for which it is dangerous to receive user input are marked as \emph{taint sinks}, whereas
 sources of user input are known as \emph{taint sources}.
 A list of sinks that are deemed potentially dangerous (such as database query functions) is maintained, and user input
 flowing to any of these sinks results in an issue being logged.
@@ -700,7 +702,7 @@ As a consequence, we cannot parse the language in its entirety using a DFA/NFA.
 
 However, the language comprising balanced parentheses lies within the context-free class.
 We can formally define a context-free grammar to comprise a 4-tuple $G = (V, \Sigma, R, S)$ where the tuple elements
-are defined below \citep[p.~102]{sipser2012introduction}:
+are introduced below \citep[p.~102]{sipser2012introduction}:
 
 \begin{description}
     \item[$V$] Finite set of \emph{non-terminals}, each of these describes a ``sub-language'' of $G$.
@@ -709,7 +711,13 @@ are defined below \citep[p.~102]{sipser2012introduction}:
     \item[$S$] The start variable, $S \in V$.
 \end{description}
 
+As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ is defined as:
 
+\(
+    S \to SS ~ \mid ~ (S) ~ \mid ~ \epsilon
+\)
+
+This grammar
 
 In order to parse context-free languages, we can use an $LL$-parser.
 Parsers of this type process the input string from left to right and use the leftmost derivation.
@@ -730,19 +738,19 @@ The example below shows a satisfiable formula comprising 2 clauses and 3 variabl
 
 \emph{Can the} \(
     (a \lor b \lor c) \land (\neg b \lor c)
-\) \emph{propositional logic formula be satisfied?}\\
+\) \emph{propositional logic formula be satisfied?}
 
 \textcolor{id7-emerald-green}{\textbf{Yes}}, set $a = T$, $b=F$, $c=T$.
 Then clause 1 evaluates to $(T \lor F \lor T) = T$ and clause 2 evaluates to $(\neg F \lor T) = T$.
-The whole formula evaluates to $T \land T = T$.
+The whole formula evaluates to $T \land T = T$.\\
 
 By exhaustive evaluation, we can prove a problem cannot be satisfied:
 
 \emph{Can the} \(
     (a \lor b) \land (\neg a \lor b) \land (\neg b)
-\) \emph{propositional logic formula be satisfied?}\\
+\) \emph{propositional logic formula be satisfied?}
 
-\textcolor{id7-ruby-red}{\textbf{No}}, the clauses are contradictory.
+\textcolor{id7-ruby-red}{\textbf{No}}, the clauses are contradictory.\\
 The table below shows exhaustively that no valuation of the variables result in the formula evaluating to true:
 
 \arrayrulecolor{lightgrey} % <---
@@ -783,10 +791,8 @@ would work in $\mathcal{O}(2^n)$.
 As discussed in \citet{miltersen2005converting}, it is also possible to convert formulae to \emph{Disjunctive Normal
 Form} (DNF) using the laws of Boolean algebra.
 Using the formula from the original example, we can convert to DNF:
-
-
-\begin{align*}
-   & (a \lor b \lor c) \land (\neg b \lor c) \\
+\vspace{-0.25em}
+\begin{align*} & (a \lor b \lor c) \land (\neg b \lor c) \\
    \equiv~ & ((a \lor b \lor c) \land \neg b) \lor ((a \lor b) \lor c) \land c\quad \mathrm{Distributivity~of}~\land~\mathrm{over}~\lor \\
    \equiv~  & ((a \lor c) \land \neg b) \lor c\quad  \mathrm{Complementation~of}~b \land \neg b \\
    \equiv~  & (a \land \neg b) \lor (c \land \neg b) \lor c\quad \mathrm{Absorption:}~x \land (x \lor y) \equiv x \\
@@ -802,6 +808,8 @@ groupings to string together in a disjucntion:
     \implicant{4}{5}{id7-aubergine}
     \implicant{1}{7}{id7-ruby-red}
 \end{Karnaughvuit}
+
+Here, the red group corresponds to the $c$ clause, and the blue group to the $(a \land \neg b)$ clause.
 
     A more interesting example might comprise a formula of structure  \(
     (a \lor b) \land (c \lor d) \land (e \lor f)
@@ -1001,6 +1009,8 @@ The code sample below shows how to work with the AIMA Java library built from th
 \begin{mycodefile}{java}{\label{code:java:aima:1}Using the DPLL library}{Java}{dpll.java}
 \end{mycodefile}
 
+Although somewhat verbose, the library and its object-oriented representation of SAT formulae are intuitive to work with.
+
 \subsection{Satisfiability Modulo Theories (SMT)}
 
 Thus far, we have only considered solving problems involving Boolean variables and their negation.
@@ -1105,7 +1115,7 @@ theory:
         \2[\arrow] Apply UnitPropagate on $C$, setting value to true
         \3[\cogs] DPLL invocation: symbols unassigned: $[B]$, current model $\{A=T, C=T\}$
         \3[\arrow] Consistency check failed, we are not done yet
-        \3[\crossMark] Every clause is empty, returning with UNSAT and current model $\{A=T, C=T\}$
+        \3[\crossMark] Every clause is empty, returning with UNSAT and current model\\$\{A=T, C=T\}$
         \1[\arrow] Attempt with $A$ = true failed, we have backtracked
         \1[\arrow] Attempt $A$ = false
         \2[\cogs] DPLL invocation: symbols unassigned: $[B, C]$, current model $\{A=F\}$
@@ -1114,7 +1124,7 @@ theory:
         \2[\forward] Skipping pure literal check
         \2[\arrow] Apply UnitPropagate on $B$, setting value to true
         \3[\cogs] DPLL invocation: symbols unassigned: $[C]$, current model $\{A=F, B=T\}$
-        \3[\checkMark] Consistency check passes, returning SAT and current model $\{A=F, B=T\}$
+        \3[\checkMark] Consistency check passes, returning SAT and current model\\$\{A=F, B=T\}$
     \end{outline}
 
     We now have a satisfying valuation $\{A=F, B=T\}$.
@@ -1574,6 +1584,7 @@ number:
 
 The result is a small imperative language which can be used to implement simple logic.
 Code can be reused by way of user-defined functions.
+Included below are some illustrative examples of basic programs written in the discussed syntax:
 
 \begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:1}A factorial function written in the RRT language}{RRT}{factorial.rrt}
     \vspace{0.5em}
@@ -1582,10 +1593,12 @@ Code can be reused by way of user-defined functions.
     $5! = 5\times 4 \times 3 \times 2 \times 1$.
 \end{mycodefile}
 
+We can also begin to use refinement types in our program code:
+
 \begin{mycodefile}{rrtlex.py:RrtLexer -x}{\label{code:rrt:2}A product function, which multiplies its arguments}{RRT}{integer-refinements.rrt}
     \vspace{0.5em}
 
-    In this example, we use integer refinement types to restrict the domain of the arguments to the \texttt{Product}
+    Here, we use integer refinement types to restrict the domain of the arguments to the \texttt{Product}
     function.
     The first number, \texttt{a}, is required to be less than 10 whereas \texttt{b} must be less than or equal to 15.
 \end{mycodefile}
@@ -1611,14 +1624,44 @@ to be effective; designing an imperative language which would be comfortable to 
 since they are responsible for a great proportion of production code.
 
 We rely on the object-oriented concept of inheritance when modelling our AST entities.
-Statements and expressions can inherit from a common abstract base class and reuse their logic.
+Expressions and statements can inherit from a common abstract base class and reuse their logic.
+
+We first discuss the different types of expressions in our AST representation.
+There are 9 of these.
+We make a distinction between ``value'' expressions, where a value can be derived immediately, and those which require
+computation to derive a value (e.g. a function call or arithmetic operation).
+
+The diagram below show how the different expression types relate to each other:
+
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
+
+        \caption{\label{figure:ast:expressions}Expression AST objects}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+
+        \centering \includegraphics[width=0.9\linewidth]{expressions.eps}
+    \end{MyMdframed}
+\end{figure}
+
+\begin{description}
+    \item[JavaCallExpression] Models a expression which involves a foreign function interface call to a static JVM class method.
+    \item[BinaryOperationExpression] Represents an expression involving a binary operation, and two child nodes to which the operation is applied.
+    \item[ValueExpression] Parent object for value expressions, as discussed above.
+    \item[FunctionCallExpression] Represents a call to a non-void function, where the return value is used.
+    \item[VariableRefExpression] Encapsulates a reference to another variable which is in scope (either a function argument or local variable).
+    \item[Expression] Parent of all expressions, defines operations to evaluate their value for use by the interpreter.
+    \item[StringLiteral] Represents a string literal defined in code, such as  \mintinline{rrtlex.py:RrtLexer -x}{"Hello, world"}.
+    \item[UIntLiteral] Represents an unsigned integer literal defined in code, such as  \mintinline{rrtlex.py:RrtLexer -x}{6}.
+    \item[BooleanLiteral] Represents a boolean literal--\mintinline{rrtlex.py:RrtLexer -x}{true} or \mintinline{rrtlex.py:RrtLexer -x}{false}.
+\end{description}
 
 The diagram below shows the structure of our statement-related entities:
 
 \begin{figure}[H]
     \begin{MyMdframed}
         \vspace{0.5em}
-
 
         \caption{\label{figure:ast:statements}Statement AST objects}
         \vspace{0.5em}
@@ -1628,17 +1671,17 @@ The diagram below shows the structure of our statement-related entities:
     \end{MyMdframed}
 \end{figure}
 
-
 \begin{description}
     \item[VariableDeclarationStatement] Models a statement of type \mintinline{rrtlex.py:RrtLexer -x}{var variable: string[/A+/]}.
     \item[FunctionCallStatement] Models a statement of type \mintinline{rrtlex.py:RrtLexer -x}{Function()}, where the return value is unused.
     \item[VariableAssignmentStatement] Handles assignment of a value to a variable, \mintinline{rrtlex.py:RrtLexer -x}{variable="AAA"}
-    \item[IfStatement] Represents a control flow statement comprising an \textcolor{id7-aubergine}{\texttt{if}} clause and one or more \textcolor{id7-aubergine}{\texttt{else}}/\textcolor{id7-aubergine}{\texttt{else if}} clauses.
+    \item[IfStatement] Represents a control flow statement comprising an \textbf{\textcolor{id7-aubergine}{\texttt{if}}} clause and one or more \textbf{\textcolor{id7-aubergine}{\texttt{else}}}/\textbf{\textcolor{id7-aubergine}{\texttt{else if}}} clauses.
     \item[FunctionDeclaration] Encapsulates data relating to a function such as the arguments it takes, an identifier and its return type.
     \item[ReturnStatement] Represents a line in a function body which returns a value, e.g. \mintinline{rrtlex.py:RrtLexer -x}{return 6}.
 \end{description}
 
-
+Each statement is endowed with an \texttt{execute} operation which can optionally return a value in the form of an
+expression.
 
 \section{Implementation}
 
@@ -1721,7 +1764,7 @@ The Full Disclosure mailing list is a common avenue for disclosing vulnerabiliti
 (the creator of the original list) arguing that other approaches are simply ``security through obscurity''.
 
 \begin{mdframed}
-    \begin{leftbar}
+    \begin{leftbar}{id7-aubergine}
         my wuote
     \end{leftbar}
 \end{mdframed}
@@ -1734,6 +1777,7 @@ The Full Disclosure mailing list is a common avenue for disclosing vulnerabiliti
 
 
 \chapter{Future Work}
+
 \todobox{Flesh this out:\begin{itemize}
         \item Non-regular ``regular expressions'' like we see in PHP, Perl etc
         \item Integration with languages such as C\#--take advantage of Roslyn? Scala/Java could also work by using annotations.
@@ -1791,7 +1835,9 @@ function LookupName(userId: /[A-Za-z0-9]+/): string {
     return name;
 }
 
-function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ { /* database lookup.. */ }
+function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ {
+    // database lookup..
+}
     \end{minted}
     \caption{Example code illustrating a potential syntax. \texttt{userId} and \texttt{query} use the refinement type.}
 \end{listing}

@@ -14,7 +14,9 @@ Sentence problem = Sentence.newConjunction(
     Sentence.newDisjunction(notA, notC)
 );
 
-Set<Clause> clauses = ConvertToConjunctionOfClauses.convert(problem).getClauses();
+Set<Clause> clauses = ConvertToConjunctionOfClauses.convert(
+    problem
+).getClauses();
 List<PropositionSymbol> result = new ArrayList<>(
     SymbolCollector.getSymbolsFrom(problem)
 );

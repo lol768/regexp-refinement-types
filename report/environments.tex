@@ -69,3 +69,14 @@
     \hfill\begin{minipage}{0.95\textwidth}
         \rule{\textwidth}{1pt}}
     {\par\noindent\rule{\textwidth}{1pt}\end{minipage}}
+
+\renewenvironment{leftbar}[2][\hsize]
+{
+    \def\FrameCommand
+    {
+        {\color{#2}\vrule width 3pt}
+        \hspace{0pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
