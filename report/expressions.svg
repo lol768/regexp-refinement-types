@@ -44,13 +44,13 @@
      inkscape:window-height="1033"
      id="namedview597"
      showgrid="false"
-     inkscape:zoom="1.0396476"
-     inkscape:cx="632.62186"
-     inkscape:cy="314.61351"
+     inkscape:zoom="2.0792951"
+     inkscape:cx="542.76521"
+     inkscape:cy="316.21566"
      inkscape:window-x="1920"
      inkscape:window-y="22"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g591"
+     inkscape:current-layer="g271"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -1535,7 +1535,7 @@
          clip-path="url(#clipPath2)"
          id="path533"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="M 280,226.4546 V 144.5454"
          clip-path="url(#clipPath2)"
@@ -1559,7 +1559,7 @@
          clip-path="url(#clipPath2)"
          id="path541"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="m 115.04,120 h 70.92"
          clip-path="url(#clipPath2)"
@@ -1583,7 +1583,7 @@
          clip-path="url(#clipPath2)"
          id="path549"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="M 916.9568,360 H 740 V 144.5276"
          clip-path="url(#clipPath2)"
@@ -1595,7 +1595,7 @@
          clip-path="url(#clipPath2)"
          id="path553"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="M 720,426.4642 V 144.5358"
          clip-path="url(#clipPath2)"
@@ -1607,7 +1607,7 @@
          clip-path="url(#clipPath2)"
          id="path557"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="M 280,13.5454 V 95.4546"
          clip-path="url(#clipPath2)"
@@ -1631,7 +1631,7 @@
          clip-path="url(#clipPath2)"
          id="path565"
          inkscape:connector-curvature="0"
-         style="stroke:#5b3069;stroke-opacity:1;fill:#5b3069;fill-opacity:1" />
+         style="stroke:#5b3069;stroke-opacity:1" />
       <path
          d="M 560,706.4714 V 648 H 390.0442"
          clip-path="url(#clipPath2)"

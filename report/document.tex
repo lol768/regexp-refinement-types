@@ -11,6 +11,7 @@
 \usepackage{framed}
 \usepackage{tikz}
 \usepackage{trimclip}
+\usepackage{tikz-qtree}
 \usepackage[printwatermark]{xwatermark}
 \usepackage{amssymb}
 \usepackage[export]{adjustbox}
@@ -98,6 +99,7 @@ Scale=MatchLowercase
 \definecolor{id7-burnt-orange}{HTML}{A14418}
 \definecolor{id7-ruby-red}{HTML}{89102C}
 \definecolor{id7-emerald-green}{HTML}{797906}
+\definecolor{id7-bright-emerald-green}{HTML}{b1e7e1}
 \definecolor{id7-sky-blue}{HTML}{204F79}
 \definecolor{id7-sky-blue-tint}{HTML}{bccad7}
 \definecolor{id7-aubergine-tint}{HTML}{cec1d2}
@@ -112,7 +114,7 @@ Scale=MatchLowercase
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
 
-\newcommand{\infobox}[1] {\colorbox{infogreenlight}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faIcon{info-circle} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\infobox}[1] {\colorbox{id7-bright-emerald-green}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faIcon{info-circle} #1\vspace{.75\baselineskip}}}}}
 
 \newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
             \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
@@ -407,7 +409,27 @@ This query retrieves the user with attribute \texttt{warwickUniId} set to value 
 ``Williams''.
 The \texttt{\&} operator specifies conjunction to be applied to the nested filters.
 
-Much like SQL injection, LDAP injection arises when user-input is concatenated into a filter name or value.
+Much like SQL injection, LDAP injection arises when user-input is concatenated into a filter name or value:
+
+\newsavebox\myva
+\begin{lrbox}{\myva}\begin{minipage}{\textwidth}
+    \begin{mycodefile}{csharp}{\label{code:motivating:ldap:1}A vulnerable LDAP query function}{C\#}{ldap.cs}\end{mycodefile}
+\end{minipage}\end{lrbox}
+
+
+\begin{mdframed}[backgroundcolor=lightgrey]
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{public} \PYG{k+kt}{string} \PYG{n+nf}{GetSurnameForUser}\PYG{p}{(}\PYG{k+kt}{string} \PYG{n}{username}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{var} \PYG{n}{directoryEntry} \PYG{p}{=} \PYG{k}{new} \PYG{n}{DirectoryEntry}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}LDAP://acme.corp\PYGZdq{}}\PYG{p}{);}
+    \PYG{k+kt}{var} \PYG{n}{searcher} \PYG{p}{=} \PYG{k}{new} \PYG{n}{DirectorySearcher}\PYG{p}{(}\PYG{n}{directoryEntry}\PYG{p}{);}
+    \colorbox{id7-ruby-red}{\textcolor{white}{\faExclamationTriangle{} searcher.Filter = \PYGZdq{}(cn=\PYGZdq{} + username + \PYGZdq{})\PYGZdq{};}}
+    \PYG{k+kt}{var} \PYG{n}{result} \PYG{p}{=} \PYG{n}{searcher}\PYG{p}{.}\PYG{n}{FindOne}\PYG{p}{();}
+    \PYG{k}{return} \PYG{n}{result}\PYG{p}{.}\PYG{n}{Properties}\PYG{p}{[}\PYG{l+s}{\PYGZdq{}sn\PYGZdq{}}\PYG{p}{][}\PYG{l+m}{0}\PYG{p}{].}\PYG{n}{ToString}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+\end{mdframed}
+
 The impact is generally more limited, but due to the support for wildcard characters it is possible to leak other
 attribute values by testing for a character at a time.
 Numeric values or dates can be exfiltrated using a binary search approach.
@@ -421,7 +443,7 @@ Numeric values or dates can be exfiltrated using a binary search approach.
         \vspace{0.5em}
         \captionsetup{style=default}
 
-        \centering \includegraphics[width=0.5\linewidth]{dobcrack.png}
+        \begin{center}\includegraphics[width=0.5\linewidth]{dobcrack.png}\end{center}
 
         \vspace{0.5em}
 
@@ -435,6 +457,9 @@ characters (for example, right parenthesis is replaced with \texttt{\textbacksla
 
 
 \subsubsection{Path Traversal}
+
+
+
 \todobox{Write section}
 
 \section{Static Analysis}
@@ -485,6 +510,8 @@ This allows for potential security issues to be surfaced during type-checking.
 
 We know of no existing program verification tools capable of verifying regular expression membership properties
 within a programming language using pre/post-conditions or type annotations--our system is novel in this respect.
+Section \ref{sec:prior-art} discusses some of the existing static analysis tooling and languages that have been
+developed in more depth.
 
 \chapter{Background}
 This chapter discusses the theory underpinning the techniques used in the implementation.
@@ -643,7 +670,7 @@ due to the $\epsilon$-transitions.
 $q_a$ is used for the \texttt{g+} component of the alternation in the original regular expression and, similarly, $q_b$
 is used for the \texttt{f+} component.
 Both of these states require at least one occurrence of their respective character before entering the $q_{x1}$ state
-($x in \{a, b\}$) -- the only way to proceed to the final accepting state $q_f$.
+($x \in \{a, b\}$) -- the only way to proceed to the final accepting state $q_f$.
 
 \vspace{0.5em}
 
@@ -665,7 +692,7 @@ balanced parentheses to be matched.
 Regular expressions using these language features and extensions are not \emph{regular} in the formal sense.
 Throughout this project, we only consider regular expressions according to their formal definition.
 
-\section{Parsing}
+\section{Context-Free Grammars and Parsing}
 
 We have briefly discussed regular languages and how they can be represented using regular expressions.
 In addition, we have introduced DFAs and NFAs which are capable of recognising regular languages.
@@ -711,13 +738,20 @@ are introduced below \citep[p.~102]{sipser2012introduction}:
     \item[$S$] The start variable, $S \in V$.
 \end{description}
 
-As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ is defined as:
+As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ is comprises the following rule:
 
 \(
     S \to SS ~ \mid ~ (S) ~ \mid ~ \epsilon
 \)
 
-This grammar
+This grammar describes the balanced parentheses language.
+The rule can be applied as many times as necessary to support an arbitrary number of balanced parentheses.
+
+\begin{tikzpicture} % all changes only affect trees within this environment
+    \tikzset{grow'=right} % make trees grow from left to right
+    \tikzset{every tree node/.style={anchor=base west}} % align nodes of the tree to the left (west)
+    \Tree [.SS [.(S) [. ()]] [.(S) [.((S)) [(())]] ] ]
+\end{tikzpicture}
 
 In order to parse context-free languages, we can use an $LL$-parser.
 Parsers of this type process the input string from left to right and use the leftmost derivation.
@@ -791,7 +825,6 @@ would work in $\mathcal{O}(2^n)$.
 As discussed in \citet{miltersen2005converting}, it is also possible to convert formulae to \emph{Disjunctive Normal
 Form} (DNF) using the laws of Boolean algebra.
 Using the formula from the original example, we can convert to DNF:
-\vspace{-0.25em}
 \begin{align*} & (a \lor b \lor c) \land (\neg b \lor c) \\
    \equiv~ & ((a \lor b \lor c) \land \neg b) \lor ((a \lor b) \lor c) \land c\quad \mathrm{Distributivity~of}~\land~\mathrm{over}~\lor \\
    \equiv~  & ((a \lor c) \land \neg b) \lor c\quad  \mathrm{Complementation~of}~b \land \neg b \\
@@ -1050,7 +1083,7 @@ power of DPLL to a theory $T$ (as defined above) using a repeated two-phase appr
 
 \begin{itemize}
     \item First, all functions under the theory $T$ in the problem are replaced with a Boolean variable.
-          DPLL then proceeds as described earlier\footnote{} to find a satisfying valuation for the Boolean variables.
+          DPLL then proceeds as described earlier to find a satisfying valuation for the Boolean variables.
     \item Once a full set of valuations are available, a specialised \emph{theory solver} attempts to determine if the
           valuations can be satisfied under the theory $T$.
           If these valuations yield logical constraints that are contradictory, the original formula $\phi$ is augmented
@@ -1208,7 +1241,7 @@ type \emph{at compile-time}.
 As a result, no check needs to take place at runtime and the values can be ``baked in'' to the executable with
 reduced overhead.
 
-\section{Prior Art}
+\section{Prior Art}\label{sec:prior-art}
 
 There is a wealth of existing technical work within the areas of static analysis and program verification.
 This section aims to explore, and evaluate, some of the these works.
@@ -1605,7 +1638,7 @@ We can also begin to use refinement types in our program code:
 
 \label{sec:grammar}
 
-\subsection{Abstract Syntax Trees}
+\subsection{Abstract Syntax Tree}
 
 Combined with a parser generator, the grammar discussed in section \ref{sec:grammar} enables programs to be parsed into
 a data structure known as a \emph{Concrete Syntax Tree} (CST) which maps directly to the grammar.
@@ -1688,11 +1721,15 @@ expression.
 \subsection{Parsing}
 
 In order to lex and parse user input into the AST structure discussed earlier, we use the \emph{ANTLR4} parser generator.
-ANTLR4 generates $LL(*)$ parsers .
+ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go.
+These parsers are not restricted to a fixed number of lookahead tokens.
+
+
 
 \subsection{Integrations and Frontends}
 
-In this section, we present the various tool integrations we have built.
+In this section, we present the various tools and integrations we have built on top of the core parser, type checker
+and interpreter.
 
 \subsubsection{Web Application}
 
@@ -1747,12 +1784,13 @@ structure of flowing data, the nature of many security tools is that they can be
 
 For example, fuzzing tools which generate test data and are designed to help highlight memory corruption bugs, can be
 used by third-parties other than the original developers to audit software.
-Similarly, it is possible that the tooling discussed in this report (Z3, Z3str3 and regular expression refinement
-types) could be used to discover potential exploitation opportunities in existing software, perhaps by porting
-logic into our language and adding refinement types in order to detect e.g. injection vulnerabilities by running the
-type-checker.
+Similarly, it is possible that the tooling discussed in this report could be used to discover potential exploitation
+opportunities in existing software, perhaps by porting logic into our language and adding refinement types in order to
+detect e.g. injection vulnerabilities by running the type-checker.
+SMT solvers such as Z3 combined with systems like Rex could be used to find bugs in sanitiser libraries designed to
+prevent e.g. XSS vulnerabilities.
 
-\citeauthor{harper2018gray} discusses the ethics of security research in \citet{harper2018gray}.
+\citeauthor{harper2018gray} discuss the ethics of security research in \citet{harper2018gray}.
 There is general consensus that ``offline'' security research into software\footnote{By offline, we mean to capture research which does not involve testing against a third-party production environment.
 For example, local fuzzing of the OpenSSL cryptography library would fall into this category.} is ethically preferable
 to testing against real-world systems without authorisation, even if intentions are good and would fall into activity
@@ -1760,21 +1798,37 @@ typical of a ``grey hat'' researcher.
 However, opinions differ on how discovered vulnerabilities should be disclosed. \citeauthor{schneier2007fd} argues for
 \textit{full disclosure}--where vulnerabilities are publicly disclosed--describing it as a ``damned good
 idea'' and citing the principle that ``secrecy prevents people from accurately assessing their own risk'' \citep{schneier2007fd}.
-The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose
-(the creator of the original list) arguing that other approaches are simply ``security through obscurity''.
+The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose arguing
+that other approaches are simply ``security through obscurity'':
 
 \begin{mdframed}
     \begin{leftbar}{id7-aubergine}
-        my wuote
+        \vspace{0.25em}
+
+        \textit{We don't believe in security by obscurity, and as far as we know, full disclosure is the only way to ensure that everyone, not just the insiders, have access to the information we need.} \\
+        \vspace{0.25em}
     \end{leftbar}
+    \vspace{-0.2em}
+    \hfill \textcolor{id7-aubergine}{\Small \sffamily -- \textbf{Leonard Rose (creator of original \textit{Full Disclosure} mailing list)}}
+    \rmfamily
 \end{mdframed}
 
 
 
 \chapter{Evaluation and Conclusions}
 
-\todobox{This needs to be completed by evaluating not just the performance of the tool against existing static analysis software, but also the scheduling of the project and project management.}
+\section{Evaluation Against Existing Works}
 
+\todobox{Security Code Scan}
+
+\section{Conclusions}
+
+We have designed and implemented a proof-of-concept language to support regular expression refinement types,
+demonstrating that it is feasible to implement type checking for such a language using SMT theory and a modern
+SMT solver.
+
+Using a series of test cases, we have shown that regular expression membership violations are correctly detected
+and reported in a measure of time suitable for integrating into the build process.
 
 \chapter{Future Work}
 
