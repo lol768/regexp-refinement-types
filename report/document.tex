@@ -19,6 +19,8 @@
 \usepackage{etoolbox}
 \usepackage{algpseudocode}
 \usepackage{fontspec}
+\usepackage{pdflscape}
+\usepackage{rotating}
 \newfontfamily{\fallbackmono}{DejaVu Sans}
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
@@ -48,7 +50,6 @@
 \usepackage{pagecolor}
 \usepackage{wrapfig}
 \usepackage{nameref}
-\usepackage{fontspec}
 \setsansfont{Proxima Nova}
 \setmonofont{Ubuntu Mono}
 \newfontfamily\warwickfont[
@@ -1951,8 +1952,6 @@ public class VisitorListener extends PocLangBaseListener {
 \end{mycodefile}
 
 
-
-
 \subsection{Integrations and Frontends}
 
 In this section, we present the various tools and integrations we have provide on top of the core parser, type checker
@@ -1960,19 +1959,42 @@ and interpreter.
 
 \subsubsection{Command Line Interface}
 
-Initially, we built a basic command line interface which would read programs from the standard inpuit (stdin) stream.
+Initially, we built a basic command line interface which would read programs from the standard input (stdin) stream.
+Program text would be passed to the lexer, parser and then type checked.
+
+Example output is shown below:
 
 \termbox{
     \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} cat input.txt | ./gradlew run}\\
     \texttt{\textbf{> Task :run}}\\
     \textcolor{term-green}{\texttt{Reading program from stdin (use Ctrl+D when finished)...}}\\
     \textcolor{id7-ruby-red}{\texttt{Violation via value "gggg"}}\\
-    \textcolor{id7-ruby-red}{\texttt{L5:4 Return type string [(str.in.re x (re.union (re.+ (str.to.re "g")) (re.+ (str.to.re "f"))))] of function SecondaryFunction didn't satisfy string [(str.in.re x (re.+ (str.to.re "f")))]}}
+    \textcolor{id7-ruby-red}{\texttt{L5:4 Return type string [/g+|f+/] of function SecondaryFunction didn't satisfy string [/f+/], example violating value: "gggg"}}
 }
+
+This interface was useful during development, when implementing the type checker was the priority and the usability
+of the interface was not as much of a consideration.
+
+However, it is difficult to edit programs entered at the command line.
+This made the interface impractical for experimenting in order to learn and explore the language.
+No syntax highlighting could be provided, and line references had to be manually matched up to determine where
+issues arose in the input.
 
 \subsubsection{Web Application}
 
-\todobox{Screenshot, why it was developed}
+As the result of the issues with the command line interface, we built a simple graphical web interface.
+\pagebreak[5]
+\begin{landscape}
+
+    \newgeometry{margin=0in}
+    \thispagestyle{empty}
+
+    \topskip0pt
+    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (61.5mm, -105mm){\includegraphics[width=\paperheight,height=\paperwidth]{webiface.png}};
+\end{landscape}
+
+\restoregeometry
+Some text would go here
 
 \subsubsection{Rise4fun}
 
@@ -2023,9 +2045,9 @@ For example, fuzzing tools which generate test data and are designed to help hig
 used by third-parties other than the original developers to audit software.
 Similarly, it is possible that the tooling discussed in this report could be used to discover potential exploitation
 opportunities in existing software, perhaps by porting logic into our language and adding refinement types in order to
-detect e.g. injection vulnerabilities by running the type-checker.
+detect e.g.\ injection vulnerabilities by running the type-checker.
 SMT solvers such as Z3 combined with systems like Rex could be used to find bugs in sanitiser libraries designed to
-prevent e.g. XSS vulnerabilities.
+prevent e.g.\ XSS vulnerabilities.
 
 \citeauthor{harper2018gray} discuss the ethics of security research in \citet{harper2018gray}.
 There is general consensus that ``offline'' security research into software\footnote{By offline, we mean to capture research which does not involve testing against a third-party production environment.
@@ -2050,7 +2072,10 @@ that other approaches are simply ``security through obscurity'':
     \rmfamily
 \end{mdframed}
 
-
+Our view, in line with that of \citeauthor{schneier2007fd}, is that full disclosure is a useful tool for ensuring users
+are informed and can take steps to secure their software and devices.
+We believe that vulnerabilities should go through a coordinated (or ``responsible'') disclosure process with a vendor
+prior to full disclosure.
 
 \chapter{Evaluation and Conclusions}
 
