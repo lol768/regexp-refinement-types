@@ -341,7 +341,7 @@ security issues, and a subset of these are described below \citep{owasp10}:
 Many of these vulnerabilities--and the necessary techniques for preventing them--have been well-established for a
 number of years, and yet they continue to be regularly discovered in production applications \citep[p.~2]{schneier2011secrets}.
 
-\subsection{Examples}
+\subsection{Examples}\label{subsec:examples}
 
 From the above classes of vulnerabilities, we will focus on a subset of motivating examples.
 In the context of a Java Enterprise Edition (EE) application these will include SQL injection, LDAP injection and
@@ -1980,10 +1980,11 @@ This made the interface impractical for experimenting in order to learn and expl
 No syntax highlighting could be provided, and line references had to be manually matched up to determine where
 issues arose in the input.
 
-\subsubsection{Web Application}
+\subsubsection{Web Application Interface}
 
-As the result of the issues with the command line interface, we built a simple graphical web interface.
-\pagebreak[5]
+Due to the limitations discussed with the command line interface, we built a graphical web interface.
+A screenshot is included overleaf.
+
 \begin{landscape}
 
     \newgeometry{margin=0in}
@@ -1991,12 +1992,25 @@ As the result of the issues with the command line interface, we built a simple g
 
     \topskip0pt
     \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (61.5mm, -105mm){\includegraphics[width=\paperheight,height=\paperwidth]{webiface.png}};
+
 \end{landscape}
 
-\restoregeometry
-Some text would go here
+As illustrated, users can enter code into the application.
+We use a WebAssembly program, compiled from Go and using the same ANTLR lexer, to parse the program in real-time in
+the browser.
+This allows us to provide syntax recognition and highlighting which is identical in implementation to the Java backend.
 
-\subsubsection{Rise4fun}
+When the user clicks the ``Perform type checks'' button, the program is sent to the backend Java type-checker application
+which runs a HTTP server.
+This server uses the same API as the original command line interface, but returns data in the JSON interchange format.
+The browser then uses this type checking data to display annotations directly on the relevant line(s) indicating to the
+user where type violations have occurred.
+
+The page includes a number of different samples to demonstrate a variety of the language's features.
+If the type checking is successful, the user is given the opportunity to execute their code.
+The interpreter will then execute the program and print the return value of the \texttt{Main} function.
+
+\subsubsection{Rise4fun Integration}
 
 Within Microsoft Research, the \emph{Research in Software Engineering} (RiSE) group has built a tool known as
 \emph{rise4fun}.
@@ -2022,6 +2036,13 @@ APIs.
         \centering \includegraphics[width=0.9\linewidth]{rise4fun.png}
     \end{MyMdframed}
 \end{figure}
+
+\subsubsection{Gradle Plugin Integration}
+
+We have built a Gradle plugin which enables projects to include code in the RRT language.
+A build task is then provided to type-check all RRT code and report the results, failing the build if problems are
+encountered.
+In this way, developers can integrate use of the language into real-world projects.
 
 
 
@@ -2068,7 +2089,7 @@ that other approaches are simply ``security through obscurity'':
         \vspace{0.25em}
     \end{leftbar}
     \vspace{-0.2em}
-    \hfill \textcolor{id7-aubergine}{\Small \sffamily -- \textbf{Leonard Rose (creator of original \textit{Full Disclosure} mailing list)}}
+    \hfill \textcolor{id7-aubergine}{\small \sffamily -- \textbf{Leonard Rose (creator of original \textit{Full Disclosure} mailing list)}}
     \rmfamily
 \end{mdframed}
 
@@ -2086,11 +2107,18 @@ prior to full disclosure.
 \section{Conclusions}
 
 We have designed and implemented a proof-of-concept language to support regular expression refinement types,
-demonstrating that it is feasible to implement type checking for such a language using SMT theory and a modern
-SMT solver.
+demonstrating that it is feasible to implement type checking for such a language by formulating type compatibility
+as an SMT problem and using a modern SMT solver.
 
 Using a series of test cases, we have shown that regular expression membership violations are correctly detected
-and reported in a measure of time suitable for integrating into the build process.
+and reported in a short amount of time that would not unduly affect project build performance.
+Using the motivating examples discussed in section \ref{subsec:examples}, we have shown that use of regular expression
+refinement types would be an effective defence in depth measure and reduce false positives compared to existing security
+tooling.
+
+We have developed a variety of interfaces to enable experimentation with our language, including a web application.
+Finally, we have developed tooling to integrate our language into existing projects using an industry-standard build
+system and added support for bi-directional interoperability with existing Java Virtual Machine (JVM) code.
 
 \chapter{Future Work}
 
