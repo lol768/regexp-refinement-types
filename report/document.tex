@@ -13,6 +13,7 @@
 \usepackage{trimclip}
 \usepackage{tikz-cd}
 \usepackage[printwatermark]{xwatermark}
+\usepackage[edges]{forest}
 \usepackage{amssymb}
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
@@ -819,7 +820,7 @@ As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ whe
 
 This grammar describes the balanced parentheses language.
 The rule can be applied as many times as necessary to support an arbitrary number of balanced parentheses.
-The tree below shows how one can apply the rule to produce the string \texttt{()(())}.
+The tree below shows how one could apply the rule to produce the string \texttt{()(())}.
 
 \begin{tikzcd}[every arrow/.append style={dash}]
 & (S) \arrow[r] & ()\\
@@ -827,13 +828,16 @@ SS \arrow[ru]\arrow[rd] & &\\
 & (S) \arrow[r] & ((S)) \arrow[r] & (())
 \end{tikzcd}
 
-Alternatively, this derivation can be represented in terms of the production rules applied:
+The tree reflects the same sequence of derivations applied below:
 
 $S \Rightarrow SS \Rightarrow (S)S \Rightarrow ()S \Rightarrow ()(S) \Rightarrow ()((S)) \Rightarrow ()(())$
 
-In order to parse context-free languages, we can use an $LL$-parser.
-Parsers of this type process the input string from left to right and use the \emph{leftmost derivation}.
-
+In order to parse most context-free languages, we can use an $LL$-parser.
+Parsers of this type process the input string from left to right, using the \emph{leftmost derivation}.
+Input is parsed in a top-down approach, by starting at the root of the tree, picking a production and matching user
+input \citep[p.~141]{linz2006introduction}.
+These parsers generally have the ability to peek or \emph{lookahead} at characters further on in the input string;
+an $LL(k)$ parser is one able to look $k$ tokens ahead \citep{Grune:1990:PTP:130365}.
 
 \section{SAT and SMT Solvers}
 
@@ -1887,6 +1891,8 @@ We assume a theory solver is available for integer arithmetic and strings.
 In order to lex and parse user input into the AST structure discussed earlier, we use the \emph{ANTLR4} parser generator.
 ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go \citep{parr2011ll}.
 These parsers are not restricted to a fixed number of lookahead tokens.
+ANTLR instead generates a series of \emph{lookahead DFAs} which help the parser to make decisions based on whether
+suuccessive tokens belong to a regular language or not (in which case, backtracking begins) \citep[p.~3]{parr2011ll}.
 
 The grammar is split into two distinct files.
 One file defines the rules for the lexer, which is responsible for tokenising the source code.
@@ -1909,8 +1915,15 @@ function definitions.
 
 To solve this, we define two new lexical states using the \textbf{\texttt{mode}} keyword:
 
-\begin{mycodefile}{antlr}{\label{code:antlr:1}Using lexical states in the lexer}{ANTLR}{antlrlex.g4}
-\end{mycodefile}
+\newsavebox\myvlex
+
+\begin{lrbox}{\myvlex}\begin{minipage}{\textwidth}
+  \begin{mycodefile}{antlr}{\label{code:antlr:1}Using lexical states in the lexer}{ANTLR}{antlrlex.g4}
+  \end{mycodefile}
+\end{minipage}\end{lrbox}
+
+\input{antlrlex.tex}
+
 
 When the lexer identifies characters which begin constraints after a type keyword, it is directed to enter the
 \texttt{CONSTRAINT} state.
@@ -1949,7 +1962,13 @@ public class VisitorListener extends PocLangBaseListener {
     }
 }
     \end{minted}
+    Various methods can be defined on the listener and will be triggered when the nodes of a given type are encountered
+    in the tree.
 \end{mycodefile}
+
+ANTLR can also be configured to target other languages, such as Go.
+This is significant, because Go supports compiling to \emph{WebAssembly} which most modern browsers can run natively,
+client-side.
 
 
 \subsection{Integrations and Frontends}
@@ -1985,16 +2004,6 @@ issues arose in the input.
 Due to the limitations discussed with the command line interface, we built a graphical web interface.
 A screenshot is included overleaf.
 
-\begin{landscape}
-
-    \newgeometry{margin=0in}
-    \thispagestyle{empty}
-
-    \topskip0pt
-    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (61.5mm, -105mm){\includegraphics[width=\paperheight,height=\paperwidth]{webiface.png}};
-
-\end{landscape}
-
 As illustrated, users can enter code into the application.
 We use a WebAssembly program, compiled from Go and using the same ANTLR lexer, to parse the program in real-time in
 the browser.
@@ -2009,6 +2018,19 @@ user where type violations have occurred.
 The page includes a number of different samples to demonstrate a variety of the language's features.
 If the type checking is successful, the user is given the opportunity to execute their code.
 The interpreter will then execute the program and print the return value of the \texttt{Main} function.
+
+
+
+\begin{landscape}
+
+    \newgeometry{margin=0in}
+    \thispagestyle{empty}
+
+    \topskip0pt
+    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (61.5mm, -105mm){\includegraphics[width=\paperheight,height=\paperwidth]{webiface.png}};
+
+\end{landscape}
+
 
 \subsubsection{Rise4fun Integration}
 
@@ -2037,18 +2059,124 @@ APIs.
     \end{MyMdframed}
 \end{figure}
 
-\subsubsection{Gradle Plugin Integration}
+\subsubsection{Gradle Plugin}
 
 We have built a Gradle plugin which enables projects to include code in the RRT language.
 A build task is then provided to type-check all RRT code and report the results, failing the build if problems are
 encountered.
-In this way, developers can integrate use of the language into real-world projects.
+In this way, developers can integrate the language into real-world projects.
 
+Our Gradle plugin operates using the same standard directory conventions for Java software.
+The root project directory includes a top-level \texttt{src/} directory which in turn contains sets for the
+\texttt{main} code and for any \texttt{test} files (unit tests, integration tests etc).
+\pagebreak[5]
+Within each of these directories, a language directory exists for e.g. \texttt{java} or \texttt{antlr}.
+We add support for a new \texttt{rrt} directory in our plugin and define an \texttt{rrt} build task:
 
+\begin{mycodefile}{java}{Gradle plugin main class implementation}{Java}{gradle.java}\end{mycodefile}
+
+As documented in the code, we execute type checking after the Java sources are built.
+This ensures we can check the types of any project Java functions called from within the RRT sources.
+When the task is executed, type checker errors are reported as in the sample below:
+
+\termbox{
+\texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{examples-1} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} ./gradlew build}\\
+\textcolor{id7-ruby-red}{\texttt{\textbf{> Task :rrt} FAILED}}\\
+\texttt{type.txt: L6:6 string didn't satisfy string [/A-Za-z+/], example violating value: ""}\\
+~\\
+\textcolor{id7-ruby-red}{\texttt{FAILURE: Build failed with an exception.}}\\
+\texttt{* What went wrong:}\\
+\texttt{Execution failed for task ':poc'.}\\
+\texttt{> The type check failed!}\\
+~\\
+\texttt{* Try:\\
+Run with \textbf{--stacktrace} option to get the stack trace. Run with \textbf{--info} or \textbf{--debug} option to get more log output. Run with --scan to get full insights.}\\
+~\\
+\textcolor{id7-ruby-red}{\texttt{BUILD FAILED in 9s}}
+}
 
 \chapter{Testing}
 
-\todobox{Unit testing, manual testing (boundary conditions, adversarial input), integration testing (lexer, parser, interpreter)}
+We use a variety of automated and manual steps in order to test the system thoroughly.
+
+\section{Unit Testing}
+
+JUnit is a automated test framework for Java.
+38 individual passing JUnit test methods are implemented which cover the broad areas described below:
+
+\begin{description}
+    \item[Parsing] Tests for simple syntactically valid and invalid programs, as well as parser regression tests for functions that were incorrectly parsed during development and subsequently fixed.
+    \item[AST construction tests] Ensuring that programs are consistently parsed into the same, correct AST representation.
+    \item[Simple type checks] Such as returning a string from a function marked as returning a string.
+    \item[Other checks] Including function/variable re-declaration.
+    \item[Integer refinement types] As described above, constraint violations for integer inequalities.
+    \item[Regexp refinement types] As described above, constraint violations for regular language membership.
+    \item[AST interpreter tests] Ensuring that the interpreter correctly evaluates expressions and statements within the AST.
+
+\end{description}
+
+\termbox{
+\texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} ./gradlew test --rerun-tasks}\\\\
+
+\textcolor{term-green}{\textbf{\texttt{BUILD SUCCESSFUL}}} \texttt{in 18s}\\
+\texttt{5 actionable tasks: 5 executed}
+}
+
+\section{Integration Testing}
+
+Automated integration tests exist to test the system end-to-end.
+This means ensuring that programs parse, pass type checking and execute yielding the correct result.
+
+\todobox{More detail, examples}
+
+\section{Manual Testing}
+
+\todobox{boundary conditions, adversarial input}
+
+
+\chapter{Project Management}
+
+\todobox{I can't think of a nice way to \emph{not} write this is past tense. Is it okay to use here?}
+
+For this project to be successful, it was essential that its delivery was managed appropriately.
+In this chapter, we discuss some of the contributing factors which ensured that progress was made, potential problems
+were foreseen and planned for and objectives were met.
+
+\subsection{Development Methodology}
+
+It is important, for any project with significant elements of software engineering, that development be approached in a
+way which enables any changes to system requirements to be quickly handled.
+
+For this project, we incorporated a number of features of agile software development methodologies such as Scrum.
+The Scrum methodology involves ``sprints'' which are a fixed duration and planned in advance based on tasks in the backlog \citep{sutherland2014scrum}.
+Work was undertaken in a series of one week sprints, with a supervisor meeting organised immediately after the end
+of each sprint.
+Progress was reviewed, more interesting parts of the work were discussed and the next sprint was planned.
+
+\subsection{Challenges}
+
+Throughout the project, a number of challenges were faced:
+
+\begin{itemize}
+    \item Initial type-checking work had used the JavaSMT API layer for abstracting over direct Z3 usage and
+    theoretically allowing the underlying SMT solver to be swapped out with no code changes. Unfortunately,
+    this library did not offer any abstractions for working with string theory solvers and so whilst it was
+    possible to implement a prototype for integer refinements, it was necessary to swap out the library and use
+    Z3 directly in order to implement string regular expression refinements.
+    \item Bindings for Java that allowed Z3 to be used were not generally available and needed to be compiled from source.
+    Some functions available in the C API were not exposed via the Java bindings, and it was necessary to work with
+    the Z3 development team at Microsoft to add these additional functions to the Java API.
+\end{itemize}
+
+Due to the slack time allocated in the project timetable, these challenges did not impact the project's overall
+schedule and objectives were met as expected.
+
+\subsection{Objectives}
+
+As discussed in section 1, all core objectives set for the project were met.
+
+One additional `stretch' objective, which involved adding support for a language such as Scala, was not met.
+This remains as possible future work and is discussed in more depth in chapter \ref{ch:future-work}.
 
 \chapter[Legal, social, ethical and professional issues]{Legal, social, ethical and\\professional issues}
 
@@ -2120,7 +2248,7 @@ We have developed a variety of interfaces to enable experimentation with our lan
 Finally, we have developed tooling to integrate our language into existing projects using an industry-standard build
 system and added support for bi-directional interoperability with existing Java Virtual Machine (JVM) code.
 
-\chapter{Future Work}
+\chapter{Future Work}\label{ch:future-work}
 
 \todobox{Flesh this out:\begin{itemize}
         \item Non-regular ``regular expressions'' like we see in PHP, Perl etc

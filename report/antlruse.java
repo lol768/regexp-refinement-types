@@ -1,4 +1,4 @@
-//Program to be parsed
+// Program to be parsed
 String program = "function Main()\n{\n......";
 // Lexer for the language, pointed at a stream constructed
 // from the string above

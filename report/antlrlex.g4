@@ -1,4 +1,5 @@
-lexer grammar PocLex ;
+lexer grammar PocLex;
+
 mode REGEX;
 BEGIN_RE_RANGE : '[' -> pushMode(REGEX_RANGE) ;
 END_RE_RANGE   : ']' ;

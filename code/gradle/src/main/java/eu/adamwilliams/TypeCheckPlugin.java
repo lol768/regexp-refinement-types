@@ -9,15 +9,13 @@ import java.io.File;
 
 
 public class TypeCheckPlugin implements Plugin<Project> {
-
-
     public void apply(Project project) {
         SourceSet mainSourceSet = project.getConvention().getPlugin(JavaPluginConvention.class).
                 getSourceSets().getByName("main");
         File srcFolder = mainSourceSet.getAllSource().getSrcDirs().stream().map(d -> d.getParentFile()).findFirst().get();
         File srcRrt = new File(srcFolder, "rrt");
 
-        project.getTasks().create("poc", TypeCheckTask.class, (a) -> {
+        project.getTasks().create("rrt", TypeCheckTask.class, (a) -> {
             a.setSrcRt(srcRrt);
             a.dependsOn("compileJava");
         });
