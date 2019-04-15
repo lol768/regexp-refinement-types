@@ -1,0 +1,5 @@
+function Demonstration(): uint[> 10] {
+    var x: uint[> 5]
+    x = 6
+    return x
+}

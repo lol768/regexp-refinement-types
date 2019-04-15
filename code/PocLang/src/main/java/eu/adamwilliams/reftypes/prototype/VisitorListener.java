@@ -18,6 +18,12 @@ import java.util.stream.Collectors;
  * like register functions in the function table here.
  */
 public class VisitorListener extends PocLangBaseListener {
+
+    @Override
+    public void enterProgram(PocLang.ProgramContext ctx) {
+        // called when program non-terminal begins
+    }
+
     private final RegexZ3Adapter regexAdapter;
     private FunctionTable table;
     private ErrorReporter reporter;

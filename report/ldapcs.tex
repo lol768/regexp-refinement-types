@@ -1,0 +1,12 @@
+\begin{mdframed}[backgroundcolor=lightgrey]
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGidseven{k}{public} \PYGidseven{k+kt}{string} \PYGidseven{n+nf}{GetSurnameForUser}\PYGidseven{p}{(}\PYGidseven{k+kt}{string} \PYGidseven{n}{username}\PYGidseven{p}{)}
+\PYGidseven{p}{\PYGidsevenZob{}}
+    \PYGidseven{k+kt}{var} \PYGidseven{n}{directoryEntry} \PYGidseven{p}{=} \PYGidseven{k}{new} \PYGidseven{n}{DirectoryEntry}\PYGidseven{p}{(}\PYGidseven{l+s}{\PYGidsevenZdq{}LDAP://acme.corp\PYGidsevenZdq{}}\PYGidseven{p}{);}
+    \PYGidseven{k+kt}{var} \PYGidseven{n}{searcher} \PYGidseven{p}{=} \PYGidseven{k}{new} \PYGidseven{n}{DirectorySearcher}\PYGidseven{p}{(}\PYGidseven{n}{directoryEntry}\PYGidseven{p}{);}
+    \colorbox{id7-ruby-red}{\textcolor{white}{\faExclamationTriangle{} searcher.Filter = \PYGidsevenZdq{}(cn=\PYGidsevenZdq{} + username + \PYGidsevenZdq{})\PYGidsevenZdq{};}}
+    \PYGidseven{k+kt}{var} \PYGidseven{n}{result} \PYGidseven{p}{=} \PYGidseven{n}{searcher}\PYGidseven{p}{.}\PYGidseven{n}{FindOne}\PYGidseven{p}{();}
+    \PYGidseven{k}{return} \PYGidseven{n}{result}\PYGidseven{p}{.}\PYGidseven{n}{Properties}\PYGidseven{p}{[}\PYGidseven{l+s}{\PYGidsevenZdq{}sn\PYGidsevenZdq{}}\PYGidseven{p}{][}\PYGidseven{l+m}{0}\PYGidseven{p}{].}\PYGidseven{n}{ToString}\PYGidseven{p}{();}
+\PYGidseven{p}{\PYGidsevenZcb{}}
+\end{Verbatim}
+\end{mdframed}

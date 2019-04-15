@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>eu.adamwilliams.reftypes.prototype.ast.BinaryOperationExpression</OriginalElement>
+  <nodes>
+    <node x="201.0" y="-13.5">eu.adamwilliams.reftypes.prototype.ast.BooleanLiteral</node>
+    <node x="625.0" y="426.5">eu.adamwilliams.reftypes.prototype.ast.JavaCallExpression</node>
+    <node x="185.0" y="506.5">eu.adamwilliams.reftypes.prototype.ast.VariableDeclarationStatement</node>
+    <node x="213.0" y="226.5">eu.adamwilliams.reftypes.prototype.ast.UIntLiteral</node>
+    <node x="609.0" y="-13.5">eu.adamwilliams.reftypes.prototype.ast.FunctionCallExpression</node>
+    <node x="829.0" y="626.5">eu.adamwilliams.reftypes.prototype.ast.VariableAssignmentStatement</node>
+    <node x="261.0" y="626.5">eu.adamwilliams.reftypes.prototype.ast.Statement</node>
+    <node x="461.0" y="186.5">eu.adamwilliams.reftypes.prototype.ast.ErrorNode</node>
+    <node x="917.0" y="346.5">eu.adamwilliams.reftypes.prototype.ast.BinaryOperationExpression</node>
+    <node x="261.0" y="826.5">eu.adamwilliams.reftypes.prototype.ast.BinaryOperationType</node>
+    <node x="-35.0" y="826.5">eu.adamwilliams.reftypes.prototype.ast.ComparisonOperationType</node>
+    <node x="221.0" y="746.5">eu.adamwilliams.reftypes.prototype.ast.FunctionDeclaration</node>
+    <node x="197.0" y="106.5">eu.adamwilliams.reftypes.prototype.ast.ValueExpression</node>
+    <node x="853.0" y="106.5">eu.adamwilliams.reftypes.prototype.ast.VariableRefExpression</node>
+    <node x="533.0" y="546.5">eu.adamwilliams.reftypes.prototype.ast.FunctionCallStatement</node>
+    <node x="861.0" y="226.5">eu.adamwilliams.reftypes.prototype.ast.ComparisonOperation</node>
+    <node x="681.0" y="826.5">eu.adamwilliams.reftypes.prototype.ast.Body</node>
+    <node x="485.0" y="826.5">eu.adamwilliams.reftypes.prototype.ast.BodyEvaluator</node>
+    <node x="-35.0" y="106.5">eu.adamwilliams.reftypes.prototype.ast.StringLiteral</node>
+    <node x="657.0" y="106.5">eu.adamwilliams.reftypes.prototype.ast.Expression</node>
+    <node x="-3.0" y="626.5">eu.adamwilliams.reftypes.prototype.ast.ReturnStatement</node>
+    <node x="493.0" y="706.5">eu.adamwilliams.reftypes.prototype.ast.IfStatement</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.ValueExpression" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="83.0" y="0.0" />
+      <point x="-63.0" y="0.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.VariableRefExpression" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="-107.0" y="0.0" />
+      <point x="63.0" y="0.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.VariableAssignmentStatement" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="-131.0" y="0.0" />
+      <point x="59.0" y="0.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.VariableDeclarationStatement" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="0.0" y="13.5" />
+      <point x="0.0" y="-13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.ReturnStatement" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="83.0" y="0.0" />
+      <point x="-59.0" y="0.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.FunctionDeclaration" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="0.0" y="-13.5" />
+      <point x="0.0" y="13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.ErrorNode" target="eu.adamwilliams.reftypes.prototype.ast.ValueExpression">
+      <point x="0.0" y="-13.5" />
+      <point x="520.0" y="128.0" />
+      <point x="83.0" y="8.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.FunctionCallExpression" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="0.0" y="13.5" />
+      <point x="0.0" y="-13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.FunctionCallStatement" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="0.0" y="13.5" />
+      <point x="640.0" y="632.0" />
+      <point x="59.0" y="-8.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.IfStatement" target="eu.adamwilliams.reftypes.prototype.ast.Statement">
+      <point x="0.0" y="-13.5" />
+      <point x="560.0" y="648.0" />
+      <point x="59.0" y="8.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.ComparisonOperation" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="-99.0" y="0.0" />
+      <point x="760.0" y="240.0" />
+      <point x="40.0" y="13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.JavaCallExpression" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="0.0" y="-13.5" />
+      <point x="0.0" y="13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.BooleanLiteral" target="eu.adamwilliams.reftypes.prototype.ast.ValueExpression">
+      <point x="0.0" y="13.5" />
+      <point x="0.0" y="-13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.StringLiteral" target="eu.adamwilliams.reftypes.prototype.ast.ValueExpression">
+      <point x="75.0" y="0.0" />
+      <point x="-83.0" y="0.0" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.UIntLiteral" target="eu.adamwilliams.reftypes.prototype.ast.ValueExpression">
+      <point x="0.0" y="-13.5" />
+      <point x="0.0" y="13.5" />
+    </edge>
+    <edge source="eu.adamwilliams.reftypes.prototype.ast.BinaryOperationExpression" target="eu.adamwilliams.reftypes.prototype.ast.Expression">
+      <point x="-123.0" y="0.0" />
+      <point x="740.0" y="360.0" />
+      <point x="20.0" y="13.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6388888888888888" x="470.0" y="480.00000000000006" />
+  <SelectedNodes>
+    <node>eu.adamwilliams.reftypes.prototype.ast.ComparisonOperationType</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>Project Files</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

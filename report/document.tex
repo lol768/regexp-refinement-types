@@ -1,5 +1,5 @@
 \documentclass[a4paper,openany,12pt]{book}
-\usepackage[a4paper,left=2cm,right=2cm,top=0.5cm,bottom=1cm,includehead,includefoot,headheight=0.1cm,heightrounded]{geometry}
+\usepackage[a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
 \usepackage{graphicx}
@@ -11,13 +11,15 @@
 \usepackage{framed}
 \usepackage{tikz}
 \usepackage{trimclip}
-\usepackage{tikz-qtree}
+\usepackage{tikz-cd}
 \usepackage[printwatermark]{xwatermark}
 \usepackage{amssymb}
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
 \usepackage{etoolbox}
 \usepackage{algpseudocode}
+\usepackage{fontspec}
+\newfontfamily{\fallbackmono}{DejaVu Sans}
 \renewcommand{\contentsname}{\normalfont \sffamily \huge \textcolor{id7-aubergine}{Table of Contents}\vspace{-1.25em}}
 \renewcommand{\cftsecfont}{\normalfont}
 \renewcommand{\cftsecpagefont}{\normalfont}
@@ -103,6 +105,10 @@ Scale=MatchLowercase
 \definecolor{id7-sky-blue}{HTML}{204F79}
 \definecolor{id7-sky-blue-tint}{HTML}{bccad7}
 \definecolor{id7-aubergine-tint}{HTML}{cec1d2}
+\definecolor{term-dir}{HTML}{1d7d7d}
+\definecolor{term-git}{HTML}{3a5069}
+\definecolor{term-green}{HTML}{4c7d1d}
+\definecolor{term-branch}{HTML}{8a1818}
 \definecolor{skyblue}{rgb}{0.125, 0.31, 0.475}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
@@ -247,6 +253,30 @@ Scale=MatchLowercase
 \restorepagecolor
 
 \tableofcontents
+\pagebreak[5]
+\vspace{2em}
+\section*{Acknowledgements}
+
+I would like to thank my supervisor, Michael Gale, for his advice throughout this project and for shaping its
+direction from the beginning. His feedback has always been comprehensive and insightful, and his dedication to
+both teaching and supervision is clear to me.
+
+Next, I wish to thank my former colleagues at MWR InfoSecurity. In particular: Kostas Lintovois, my mentor during
+my time at MWR, taught me a great deal about practical security assurance work and cemented my knowledge of some of the
+motivating vulnerabilities we discuss in this report. Donato Capitella and James Coote were a pleasure to work with
+throughout the course of our project creating a platform for security-focussed training ``labs''--a project which
+greatly improved my knowledge of software engineering.
+And finally, thanks to the various consultants I worked with in the office and on-site: Mohit, James, Dennis, Alex, Amar,
+Connor and many others.
+
+Within Warwick, I am grateful to Mat Mannion and the teams within IT Services for their support of
+my security work and exposing me to a range of new programming languages and technologies.
+
+Whilst often overlooked, formatting is an essential part of any report, and I must gratefully acknowledge I have
+received from the TeX.SX community and \LaTeX{} package maintainers who have answered my numerous questions.
+
+Lastly, sincere thanks are due to my friends and family for their support during the year.
+
 \pagebreak[5]
 \begin{keywords}
     Type Systems, Refinement Types, Application Security, User Input, Satisfiability Modulo Theories,
@@ -416,19 +446,7 @@ Much like SQL injection, LDAP injection arises when user-input is concatenated i
     \begin{mycodefile}{csharp}{\label{code:motivating:ldap:1}A vulnerable LDAP query function}{C\#}{ldap.cs}\end{mycodefile}
 \end{minipage}\end{lrbox}
 
-
-\begin{mdframed}[backgroundcolor=lightgrey]
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k}{public} \PYG{k+kt}{string} \PYG{n+nf}{GetSurnameForUser}\PYG{p}{(}\PYG{k+kt}{string} \PYG{n}{username}\PYG{p}{)}
-\PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{var} \PYG{n}{directoryEntry} \PYG{p}{=} \PYG{k}{new} \PYG{n}{DirectoryEntry}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}LDAP://acme.corp\PYGZdq{}}\PYG{p}{);}
-    \PYG{k+kt}{var} \PYG{n}{searcher} \PYG{p}{=} \PYG{k}{new} \PYG{n}{DirectorySearcher}\PYG{p}{(}\PYG{n}{directoryEntry}\PYG{p}{);}
-    \colorbox{id7-ruby-red}{\textcolor{white}{\faExclamationTriangle{} searcher.Filter = \PYGZdq{}(cn=\PYGZdq{} + username + \PYGZdq{})\PYGZdq{};}}
-    \PYG{k+kt}{var} \PYG{n}{result} \PYG{p}{=} \PYG{n}{searcher}\PYG{p}{.}\PYG{n}{FindOne}\PYG{p}{();}
-    \PYG{k}{return} \PYG{n}{result}\PYG{p}{.}\PYG{n}{Properties}\PYG{p}{[}\PYG{l+s}{\PYGZdq{}sn\PYGZdq{}}\PYG{p}{][}\PYG{l+m}{0}\PYG{p}{].}\PYG{n}{ToString}\PYG{p}{();}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}
-\end{mdframed}
+\input{ldapcs}
 
 The impact is generally more limited, but due to the support for wildcard characters it is possible to leak other
 attribute values by testing for a character at a time.
@@ -454,13 +472,45 @@ Numeric values or dates can be exfiltrated using a binary search approach.
 
 The best practice for mitigating this vulnerability involves using an encoder that is able to escape LDAP control
 characters (for example, right parenthesis is replaced with \texttt{\textbackslash 29}).
-
+This ensures that user input is then not considered part of a query.
 
 \subsubsection{Path Traversal}
 
+Many applications read and write files to the filesystem.
+Problems arise when user input is permitted to influence the destination path.
 
+Consider a Java function which is designed to persist user preference information in a text file:
 
-\todobox{Write section}
+\newsavebox\myvb
+\begin{lrbox}{\myvb}\begin{minipage}{\textwidth}
+\begin{mycodefile}{java}{Hidden}{Java}{pathtraversal.java}\end{mycodefile}
+\end{minipage}\end{lrbox}
+
+\begin{mdframed}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGidseven{k+kd}{public} \PYGidseven{k+kd}{static} \PYGidseven{k+kt}{void} \PYGidseven{n+nf}{writeUserPreference}\PYGidseven{o}{(}\PYGidseven{n}{String} \PYGidseven{n}{username}\PYGidseven{o}{,} \PYGidseven{n}{Preference} \PYGidseven{n}{pref}\PYGidseven{o}{)} \PYGidseven{o}{\PYGidsevenZob{}}
+    \PYGidseven{k}{try} \PYGidseven{o}{\PYGidsevenZob{}}
+        \colorbox{id7-ruby-red}{\textcolor{white}{\faExclamationTriangle{} String path = \PYGidsevenZdq{}/tmp/prefs/\PYGidsevenZdq{} + username;}}
+        \PYGidseven{n}{Files}\PYGidseven{o}{.}\PYGidseven{n+na}{writeString}\PYGidseven{o}{(}\PYGidseven{n}{Paths}\PYGidseven{o}{.}\PYGidseven{n+na}{get}\PYGidseven{o}{(}\PYGidseven{n}{path}\PYGidseven{o}{),} \PYGidseven{n}{pref}\PYGidseven{o}{.}\PYGidseven{n+na}{toString}\PYGidseven{o}{());}
+    \PYGidseven{o}{\PYGidsevenZcb{}} \PYGidseven{k}{catch}\PYGidseven{o}{(}\PYGidseven{n}{IOException} \PYGidseven{n}{e}\PYGidseven{o}{)} \PYGidseven{o}{\PYGidsevenZob{}}
+        \PYGidseven{n}{e}\PYGidseven{o}{.}\PYGidseven{n+na}{printStackTrace}\PYGidseven{o}{();}
+    \PYGidseven{o}{\PYGidsevenZcb{}}
+\PYGidseven{o}{\PYGidsevenZcb{}}
+\end{Verbatim}
+\end{mdframed}
+
+If a user is able to influence the username passed as an argument to the function and choose a malicious name, such as
+the string \texttt{../../etc/ssh/sshd_config}, they will be able to write to files on the filesystem outside of the
+location which the developer intended.
+This issue can arise with both write and read operations.
+Depending on which files are available to the application, this vulnerability can lead to a full system compromise.
+
+Path traversal vulnerabilities have been reported in software for at least 20 years but still regularly make appearances
+in modern applications.
+As an example, CVE-2019-1002101 was disclosed in March 2019.
+This vulnerability impacts Kubernetes, a popular container orchestration system developed by Google.
+The root cause is a directory traversal vulnerability arising due to the system trusting unsafe input from an archive
+file.
 
 \section{Static Analysis}
 
@@ -507,6 +557,27 @@ input validation is effective.
 This happens at compile time, using an SMT solver to find situations where input could fail to be matched by a regular
 expression.
 This allows for potential security issues to be surfaced during type-checking.
+
+Our work meets the follow formal objectives (first described in appendix \ref{project:spec}):
+
+\begin{enumerate}
+    \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).
+    \begin{enumerate}
+        \item Explore the consequences of typical string operations (e.g. concatenation) and define the type of
+        their return value when applied to elements of the regular expression type.
+
+        \item At minimum, this should allow for simple functions to be declared that can safely accept/return a
+        particular regular expression input.
+        \item Evaluate the rate of false positives when compared to existing static analysis
+    \end{enumerate}
+    \item Implement such a type system that can guarantee type safety, built against a simplified proof-of-concept
+    language.
+    \begin{enumerate}
+        \item Test the implementation against a variety of test cases. The testing strategy should make use of
+        automated unit tests, and manual system testing considering both general expected input as well as
+        any relevant ``edge-cases'' that need to be handled.
+    \end{enumerate}
+\end{enumerate}
 
 We know of no existing program verification tools capable of verifying regular expression membership properties
 within a programming language using pre/post-conditions or type annotations--our system is novel in this respect.
@@ -733,12 +804,13 @@ are introduced below \citep[p.~102]{sipser2012introduction}:
 
 \begin{description}
     \item[$V$] Finite set of \emph{non-terminals}, each of these describes a ``sub-language'' of $G$.
-    \item[$\Sigma$] Finite set of \emph{terminals} representing string literals (i.e. actual characters in the language), where $V \cap \Sigma = \emptyset$.
+    \item[$\Sigma$] Finite set of \emph{terminals} representing string literals (i.e. actual characters in the language),
+                    where $V \cap \Sigma = \emptyset$.
     \item[$R$] Rules/productions in the grammar.
     \item[$S$] The start variable, $S \in V$.
 \end{description}
 
-As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ is comprises the following rule:
+As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ comprises the following rule:
 
 \(
     S \to SS ~ \mid ~ (S) ~ \mid ~ \epsilon
@@ -746,15 +818,20 @@ As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ whe
 
 This grammar describes the balanced parentheses language.
 The rule can be applied as many times as necessary to support an arbitrary number of balanced parentheses.
+The tree below shows how one can apply the rule to produce the string \texttt{()(())}.
 
-\begin{tikzpicture} % all changes only affect trees within this environment
-    \tikzset{grow'=right} % make trees grow from left to right
-    \tikzset{every tree node/.style={anchor=base west}} % align nodes of the tree to the left (west)
-    \Tree [.SS [.(S) [. ()]] [.(S) [.((S)) [(())]] ] ]
-\end{tikzpicture}
+\begin{tikzcd}[every arrow/.append style={dash}]
+& (S) \arrow[r] & ()\\
+SS \arrow[ru]\arrow[rd] & &\\
+& (S) \arrow[r] & ((S)) \arrow[r] & (())
+\end{tikzcd}
+
+Alternatively, this derivation can be represented in terms of the production rules applied:
+
+$S \Rightarrow SS \Rightarrow (S)S \Rightarrow ()S \Rightarrow ()(S) \Rightarrow ()((S)) \Rightarrow ()(())$
 
 In order to parse context-free languages, we can use an $LL$-parser.
-Parsers of this type process the input string from left to right and use the leftmost derivation.
+Parsers of this type process the input string from left to right and use the \emph{leftmost derivation}.
 
 
 \section{SAT and SMT Solvers}
@@ -833,7 +910,7 @@ Using the formula from the original example, we can convert to DNF:
 \end{align*}
 
 Alternatively, we can use a Karnaugh map to enumerate the possible values for the variables $a, b, c$ and identify
-groupings to string together in a disjucntion:
+groupings to string together in a disjunction:
 
 \begin{Karnaughvuit}
     \minterms{3,5,4,7,1}
@@ -1077,7 +1154,7 @@ In this example, $x = 4,~y=4$ would suffice.
 
 
 \subsection{DPLL(T): Extending DPLL to Arbitrary Theories}
-
+\label{dpllt}
 Initially described in \citet{ganzinger2004dpll} and presented in \citet{russell2016artificial}, DPLL(T) extends the
 power of DPLL to a theory $T$ (as defined above) using a repeated two-phase approach:
 
@@ -1420,7 +1497,7 @@ The nature of deserialisation vulnerabilities is that an application must:
           out a denial of service (DoS) attack
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}
     \begin{MyMdframed}
         \vspace{0.5em}
         
@@ -1458,9 +1535,40 @@ We therefore present an imperative proof-of-concept language, with a C-like synt
 The aim is that developers, and particularly those that work with JVM technologies, will be able to write critical
 sections of code within our language, where regex refinements are available.
 
-This section covers the design of the language's syntax, its type system and the foreign function interface (FFI).
+This section covers the design of the language's syntax, its type system, the foreign function interface (FFI) and
+interpreter.
+At build time, the language tooling will progress through a series of stages:
 
-\subsection{Syntax}
+\tikzstyle{line} = [draw, -latex']
+\tikzset{arrow/.style={
+minimum height=1.2cm,%
+inner sep=1em,
+shape=signal,
+signal from=west,
+signal to=east,
+signal pointer angle=110,
+text depth=.25ex,
+text height=1.5ex,
+fill=id7-aubergine,
+baseline,
+text centered, text=white
+}}
+
+\resizebox*{0.95\textwidth}{!}{\begin{tikzpicture}[node distance=-\pgflinewidth, auto, baseline={([yshift={-1.25ex}]current bounding box.center)}]
+\sffamily{
+\begin{scope}[start chain=transition going right,node distance=-\pgflinewidth]
+\node [arrow, on chain] {\faStream{} Parsing};
+\node [arrow, on chain] {\faChartNetwork{} AST Construction};
+
+\node [arrow, on chain] {\faClipboardCheck{} Type checking};
+\node [arrow, on chain] {\faFlag{} Reporting};
+\node [arrow, on chain] {\faCogs{} Interpreting};
+\end{scope}
+}
+\end{tikzpicture}}
+
+
+\subsection{Syntax}\label{subsec:syntax}
 
 The C-like syntax, with some inspiration from other languages such as Go, is augmented with the use of square brackets
 to specify refinement types.
@@ -1477,12 +1585,12 @@ Programs contain a number of functions, which are declared with an identifier, n
     <program> ::= (<function> \textbackslash n)*
     <function> ::= <function-signature> <body> `\}'
 
-    <function-signature> ::= `function' ` ' <identifier> `(' <argument-decl> `): ' <type> `\{\textbackslash n'
+    <function-signature> ::= `function' ` ' <identifier> `(' <parameter-decl> `): ' <type> `\{\textbackslash n'
 
     <body> ::= (<body-line> \textbackslash n)*
 
-    <argument-decl> ::= <expr> `: ' <type>
-    \alt <expr> `: ' <type> `, ' <argument-decl>
+    <parameter-decl> ::= <expr> `: ' <type>
+    \alt <expr> `: ' <type> `, ' <parameter-decl>
     \alt <empty>
 \end{grammar}
 
@@ -1541,7 +1649,7 @@ The language supports the following type keywords:
 \end{table}
 
 We define the \texttt{<type>} class to represent a type reference.
-This class is then used throughout the grammar for function argument types, local variables types and return
+This class is then used throughout the grammar for function parameter types, local variables types and return
 types.
 
 \begin{grammar}
@@ -1556,6 +1664,7 @@ Integer refinements are a relatively straightforward affair, as shown above.
 We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
 prime-suffixed classes with $\epsilon$-productions.
+
 
 \begin{grammar}
 
@@ -1652,7 +1761,7 @@ Unlike some (generally more functional languages), we make a distinction between
 \textit{expressions}.
 The former do not necessarily yield a value in the same way as expressions.
 For example, an if statement may not return a value--it could simply call a function and rely on its side effects.
-We make no claim that such a language is more elegant than others, but adoption is important for security tooling
+We make no claim that such a language is more elegant than others, but adoption is necessary for security tooling
 to be effective; designing an imperative language which would be comfortable to e.g. Java developers was important,
 since they are responsible for a great proportion of production code.
 
@@ -1683,12 +1792,14 @@ The diagram below show how the different expression types relate to each other:
     \item[BinaryOperationExpression] Represents an expression involving a binary operation, and two child nodes to which the operation is applied.
     \item[ValueExpression] Parent object for value expressions, as discussed above.
     \item[FunctionCallExpression] Represents a call to a non-void function, where the return value is used.
-    \item[VariableRefExpression] Encapsulates a reference to another variable which is in scope (either a function argument or local variable).
+    \item[VariableRefExpression] Encapsulates a reference to another variable which is in scope (either a function parameter or local variable).
     \item[Expression] Parent of all expressions, defines operations to evaluate their value for use by the interpreter.
     \item[StringLiteral] Represents a string literal defined in code, such as  \mintinline{rrtlex.py:RrtLexer -x}{"Hello, world"}.
     \item[UIntLiteral] Represents an unsigned integer literal defined in code, such as  \mintinline{rrtlex.py:RrtLexer -x}{6}.
     \item[BooleanLiteral] Represents a boolean literal--\mintinline{rrtlex.py:RrtLexer -x}{true} or \mintinline{rrtlex.py:RrtLexer -x}{false}.
 \end{description}
+
+All expression types must provide a way for the expression to be evaluated (yielding a value).
 
 The diagram below shows the structure of our statement-related entities:
 
@@ -1709,31 +1820,157 @@ The diagram below shows the structure of our statement-related entities:
     \item[FunctionCallStatement] Models a statement of type \mintinline{rrtlex.py:RrtLexer -x}{Function()}, where the return value is unused.
     \item[VariableAssignmentStatement] Handles assignment of a value to a variable, \mintinline{rrtlex.py:RrtLexer -x}{variable="AAA"}
     \item[IfStatement] Represents a control flow statement comprising an \textbf{\textcolor{id7-aubergine}{\texttt{if}}} clause and one or more \textbf{\textcolor{id7-aubergine}{\texttt{else}}}/\textbf{\textcolor{id7-aubergine}{\texttt{else if}}} clauses.
-    \item[FunctionDeclaration] Encapsulates data relating to a function such as the arguments it takes, an identifier and its return type.
+    \item[FunctionDeclaration] Encapsulates data relating to a function such as the parameters it takes, an identifier and its return type.
     \item[ReturnStatement] Represents a line in a function body which returns a value, e.g. \mintinline{rrtlex.py:RrtLexer -x}{return 6}.
 \end{description}
 
 Each statement is endowed with an \texttt{execute} operation which can optionally return a value in the form of an
 expression.
 
+Entities encapsulate data according to their purpose.
+An \textit{IfStatement} object contains an expression that is evaluated to produce a Boolean value, a reference to the
+bodies of code to execute if the expression is true (or false) and a reference to a further \textit{IfStatement} if an
+\mintinline{rrtlex.py:RrtLexer -x}{else if} is present.
+
+\subsection{Type Checking}
+
+Types need to be checked in a number of situations:
+
+\begin{itemize}
+    \item New value is assigned to a local variable
+    \item Value is passed to a function as an argument
+    \item Value is returned from a function
+\end{itemize}
+
+For simple types with no refinements, this is generally a straightforward check.
+As our language is strongly typed, we simply need to check that the expected and actual types are an exact match.
+No implicit conversions are supported in our language.
+
+Refined types are more involved: it is not enough for us to check that the refinements are the same.
+Observe that a variable of type \texttt{uint[< 10]} is perfectly valid to return from a function with a return type of
+\texttt{uint[<= 20]}.
+We must instead determine if the refinement types are \emph{compatible}.
+We define two refinement types $\tau_e, \tau_a$ (expected and actual) to be compatible if there is no value $v:~\tau_a$
+in the actual type that is not in $\tau_e$ and is therefore in the complement of the expected type $(\tau_e)^C$.
+
+A concrete example involving integer refinements is given below:
+
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{foo}{RRT}{irt.rrt}\end{mycodefile}
+
+In the above listing, we need to compare types on 2 occasions:
+
+\begin{enumerate}
+    \item When $6$ is assigned to $x$ (to check it is greater than $5$)
+    \item When $x$ is returned from the function \texttt{Demonstration} (to check $> 5$ is compatible with $> 10$)
+\end{enumerate}
+
+The first check is trivially accomplished because there are no unknowns.
+The second check can be expressed in CNF as an SMT formula, using the complement as discussed: $x > 5 \land x <= 10$.
+
+This problem can be checked using DPLL(T) as described in section \ref{dpllt}.
+We formulate a SAT problem $A \land B$, receive a satisfying valuation $\{A=T, B=T\}$ and pass this to the theory
+solver.
+As the reader will appreciate, it is then trivial to satisfy this formula with any value between $6$ and $10$.
+Hence, we have found a violation and the types are incompatible.
+
+The language type checker implements exactly this process.
+Constraints are built based on the types identified during AST construction and then solved using an SMT solver.
+We assume a theory solver is available for integer arithmetic and strings.
+
 \section{Implementation}
 
 \subsection{Parsing}
 
+\subsubsection{Introduction}
+
 In order to lex and parse user input into the AST structure discussed earlier, we use the \emph{ANTLR4} parser generator.
-ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go.
+ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go \citep{parr2011ll}.
 These parsers are not restricted to a fixed number of lookahead tokens.
+
+The grammar is split into two distinct files.
+One file defines the rules for the lexer, which is responsible for tokenising the source code.
+The second file describes the parser which ANTLR will generate.
+The parsing rules generally resemble the BNF discussed previously in section \ref{subsec:syntax}, so we will not
+dwell on them here.
+The lexer is more involved than a simple translation from BNF, because the language syntax requires that we make use of
+\emph{lexical states}.
+
+Consider the token definitions for variable/function identifiers and characters that can appear in a regular expression:
+
+\begin{minted}{antlr}
+IDENTIFIER : [A-Za-z_] [A-Za-z_0-9]* ;
+CHARACTER  : ~('\n'|'\r'|'.'|'('|')'|'['|']'|'*'|'+'|'/'|'|') | ESCAPED_META;
+\end{minted}
+
+As the two token definitions overlap, they cannot appear in use together in the same lexical state.
+If they did, only one would be identified by the lexer, breaking the parsing of either the regular expressions, or the
+function definitions.
+
+To solve this, we define two new lexical states using the \textbf{\texttt{mode}} keyword:
+
+\begin{mycodefile}{antlr}{\label{code:antlr:1}Using lexical states in the lexer}{ANTLR}{antlrlex.g4}
+\end{mycodefile}
+
+When the lexer identifies characters which begin constraints after a type keyword, it is directed to enter the
+\texttt{CONSTRAINT} state.
+From here, the forward slash regular expression delimiter prompts the lexer to enter the \texttt{REGEX} state where
+regular expressions are tokenised.
+States are maintained in a manner not dissimilar to a call stack.
+If this delimiter is not observed, integer constraints can be tokenised instead.
+
+Once the lexer reaches the end of an expression, it pops back into the previous lexical state and continues parsing.
+
+\subsubsection{Working with ANTLR}
+
+Once the grammar files are complete, ANTLR can be configured to generate parsers for a variety of languages.
+We decided to implement the type checker and interpreter in Java, so we target Java for the generated parser.
+
+Using the \emph{Gradle} build system, there is an official \texttt{antlr} plugin which provides a
+\texttt{generateGrammarSource} build task.
+When the grammar is modified, Gradle will regenerate the parser and lexer before compiling the rest of the Java
+code within the project.
+
+Following parser and lexer generation, it is straightforward to use them to process user input:
+
+\begin{mycodefile}{java}{\label{code:antlr:2}Using ANTLR's lexing and parsing APIs}{Java}{antlruse.java}
+    \vspace{0.5em}
+
+    Implementing the \emph{visitor} pattern \citep{gof1995}, we can then process the concrete syntax tree which ANTLR
+    has generated by parsing the program.
+    \vspace{0.5em}
+
+    \begin{minted}{java}
+public class VisitorListener extends PocLangBaseListener {
+
+    @Override
+    public void enterProgram(PocLang.ProgramContext ctx) {
+        // called when program non-terminal begins
+    }
+}
+    \end{minted}
+\end{mycodefile}
+
 
 
 
 \subsection{Integrations and Frontends}
 
-In this section, we present the various tools and integrations we have built on top of the core parser, type checker
+In this section, we present the various tools and integrations we have provide on top of the core parser, type checker
 and interpreter.
 
+\subsubsection{Command Line Interface}
+
+Initially, we built a basic command line interface which would read programs from the standard inpuit (stdin) stream.
+
+\termbox{
+    \texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{PocLang} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} cat input.txt | ./gradlew run}\\
+    \texttt{\textbf{> Task :run}}\\
+    \textcolor{term-green}{\texttt{Reading program from stdin (use Ctrl+D when finished)...}}\\
+    \textcolor{id7-ruby-red}{\texttt{Violation via value "gggg"}}\\
+    \textcolor{id7-ruby-red}{\texttt{L5:4 Return type string [(str.in.re x (re.union (re.+ (str.to.re "g")) (re.+ (str.to.re "f"))))] of function SecondaryFunction didn't satisfy string [(str.in.re x (re.+ (str.to.re "f")))]}}
+}
+
 \subsubsection{Web Application}
-
-
 
 \todobox{Screenshot, why it was developed}
 
@@ -2001,6 +2238,6 @@ The project is reliant on a number of resources. Use of these resources is subje
 
 As a project with some security motivation, it is possible that legal, social, ethical and professional issues will arise. In particular, evaluation of existing static analysis tooling must be performed with care to ensure that use of any particular external test cases is permitted by the \emph{Copyright, Designs and Patents Act 1988} within the UK.
 
-Additionally, in order to comply with the \emph{Computer Misuse Act 1988}, any static analysis of external code should only be conducted with permission.  Discovered issues should be disclosed responsibly.
+Additionally, in order to comply with the \emph{Computer Misuse Act 1990}, any static analysis of external code should only be conducted with permission.  Discovered issues should be disclosed responsibly.
 
 \end{document}

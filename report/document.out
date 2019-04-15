@@ -1,1 +1,38 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.1}{Motivation}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Application Security}{chapter.1}% 2
+\BOOKMARK [2][-]{subsection.1.1.1}{Examples}{section.1.1}% 3
+\BOOKMARK [1][-]{section.1.2}{Static Analysis}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.3}{A Better Approach}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Background}{}% 6
+\BOOKMARK [1][-]{section.2.1}{Regular Expressions}{chapter.2}% 7
+\BOOKMARK [2][-]{subsection.2.1.1}{DFAs and NFAs}{section.2.1}% 8
+\BOOKMARK [2][-]{subsection.2.1.2}{Programming Language Support}{section.2.1}% 9
+\BOOKMARK [1][-]{section.2.2}{Context-Free Grammars and Parsing}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.3}{SAT and SMT Solvers}{chapter.2}% 11
+\BOOKMARK [2][-]{subsection.2.3.1}{Introducing SAT}{section.2.3}% 12
+\BOOKMARK [2][-]{subsection.2.3.2}{Cook-Levin and NP Completeness}{section.2.3}% 13
+\BOOKMARK [2][-]{subsection.2.3.3}{Knuth's Algorithm A}{section.2.3}% 14
+\BOOKMARK [2][-]{subsection.2.3.4}{DPLL}{section.2.3}% 15
+\BOOKMARK [2][-]{subsection.2.3.5}{Satisfiability Modulo Theories \(SMT\)}{section.2.3}% 16
+\BOOKMARK [2][-]{subsection.2.3.6}{DPLL\(T\): Extending DPLL to Arbitrary Theories}{section.2.3}% 17
+\BOOKMARK [1][-]{section.2.4}{Refinement Types}{chapter.2}% 18
+\BOOKMARK [2][-]{subsection.2.4.1}{Smart Constructors}{section.2.4}% 19
+\BOOKMARK [1][-]{section.2.5}{Prior Art}{chapter.2}% 20
+\BOOKMARK [2][-]{subsection.2.5.1}{Formal Languages}{section.2.5}% 21
+\BOOKMARK [2][-]{subsection.2.5.2}{Program Verification}{section.2.5}% 22
+\BOOKMARK [2][-]{subsection.2.5.3}{Static Analysis and Security Tooling}{section.2.5}% 23
+\BOOKMARK [0][-]{chapter.3}{Design and Implementation}{}% 24
+\BOOKMARK [1][-]{section.3.1}{Design}{chapter.3}% 25
+\BOOKMARK [2][-]{subsection.3.1.1}{Syntax}{section.3.1}% 26
+\BOOKMARK [2][-]{subsection.3.1.2}{Abstract Syntax Tree}{section.3.1}% 27
+\BOOKMARK [2][-]{subsection.3.1.3}{Type Checking}{section.3.1}% 28
+\BOOKMARK [1][-]{section.3.2}{Implementation}{chapter.3}% 29
+\BOOKMARK [2][-]{subsection.3.2.1}{Parsing}{section.3.2}% 30
+\BOOKMARK [2][-]{subsection.3.2.2}{Integrations and Frontends}{section.3.2}% 31
+\BOOKMARK [0][-]{chapter.4}{Testing}{}% 32
+\BOOKMARK [0][-]{chapter.5}{Legal, social, ethical and professional issues}{}% 33
+\BOOKMARK [0][-]{chapter.6}{Evaluation and Conclusions}{}% 34
+\BOOKMARK [1][-]{section.6.1}{Evaluation Against Existing Works}{chapter.6}% 35
+\BOOKMARK [1][-]{section.6.2}{Conclusions}{chapter.6}% 36
+\BOOKMARK [0][-]{chapter.7}{Future Work}{}% 37
+\BOOKMARK [0][-]{appendix.A}{Project Specification}{}% 38
