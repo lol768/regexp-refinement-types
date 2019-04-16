@@ -5,10 +5,10 @@ public class TypeCheckPlugin implements Plugin<Project> {
                 .getSourceSets().getByName("main"); //get main source set
 
         // within main, look for an `rrt` directory
-        File srcFolder = mainSources.getAllSource().getSrcDirs().stream().map(
+        File srcDir = mainSources.getAllSource().getSrcDirs().stream().map(
                 d -> d.getParentFile()
         ).findFirst().get();
-        File srcRrt = new File(srcFolder, "rrt");
+        File srcRrt = new File(srcDir, "rrt");
 
         // set up the task so it happens *after* Java has compiled, for the FFI
         project.getTasks().create("rrt", TypeCheckTask.class, (a) -> {
