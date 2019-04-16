@@ -1,11 +1,14 @@
 IntegerFormulaManager imgr = ctx.getFormulaManager().getIntegerFormulaManager();
 IntegerFormula x = imgr.makeVariable("x");
 
-BooleanFormula expectedNegated = imgr.lessOrEquals(x, x.makeNumber(4)); // x <= 4
-BooleanFormula actual = imgr.lessThan(x, x.makeNumber(10)); // x < 10
+// x <= 4
+BooleanFormula expectedNegated = imgr.lessOrEquals(x, x.makeNumber(4));
+// x < 10
+BooleanFormula actual = imgr.lessThan(x, x.makeNumber(10));
 
 // try-with-resources, will dispose of the ProverEnvironment for us
-try (ProverEnvironment prover = ctx.newProverEnvironment(ProverOptions.GENERATE_MODELS)) {
+try (ProverEnvironment prover = 
+        ctx.newProverEnvironment(ProverOptions.GENERATE_MODELS)) {
     prover.addConstraint(expectedNegated);
     prover.addConstraint(actual); // both constraints must hold
     boolean isUnsat = prover.isUnsat(); // isUnsat = false here.

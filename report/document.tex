@@ -1,9 +1,12 @@
 \documentclass[a4paper,openany,12pt]{book}
 \usepackage[a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt]{geometry}
+% Bleed marks, if Warwick Print want them..
+%\usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt,showcrop=true,layout=a4paper]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage[table,xcdraw]{xcolor}
+\usepackage[edges]{forest}
 \usepackage{float}
 \usepackage[pro]{fontawesome5}
 \usepackage{ragged2e}
@@ -13,7 +16,6 @@
 \usepackage{trimclip}
 \usepackage{tikz-cd}
 \usepackage[printwatermark]{xwatermark}
-\usepackage[edges]{forest}
 \usepackage{amssymb}
 \usepackage[export]{adjustbox}
 \usepackage{tocloft}
@@ -217,7 +219,7 @@ Scale=MatchLowercase
 
 \begin{document}
   
-\newgeometry{margin=0in}
+\newgeometry{margin=0in,showcrop=true}
 \begin{titlepage}
     
     \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{bg.eps}};
@@ -469,7 +471,7 @@ Procedures exist to convert between regular expressions, NFAs and DFAs.
 For example, converting a regular expression to an NFA can be achieved using Thompson's construction algorithm \citep[p.~152]{aho1986compilers}.
 
 \subsection{Programming Language Support}
-
+\label{sec:pls}
 Most programming languages include a regular expression engine and offer syntax inspired by Perl's regular expressions.
 These ``regular'' expressions are often more powerful than the formal regular expressions discussed at the start of
 section \ref{regexbg} and can match non-regular languages.
@@ -1918,14 +1920,34 @@ The entire test suite can be executed using a Gradle task:
 \texttt{5 actionable tasks: 5 executed}
 }
 
-Most Java development environments also incorporate a graphical test overview, as illustrated in figure \ref{}.
+Most Java development environments also incorporate a graphical test overview, as illustrated in figure \ref{fig:unittests}.
+This enables tests to be executed immediately after any respectable changes in the codebase, leading to greater confidence in its correctness.
+These tests were particularly useful when the grammar underwent changes because adding new language constructs often impacted how existing code would be parsed.
+
+
+\begin{figure}
+	\begin{MyMdframed}
+		\vspace{0.5em}
+		
+		
+		\caption{\label{fig:unittests} Passing unit tests shown in the IntelliJ IDEA integrated development environment}
+		\vspace{0.5em}
+		\captionsetup{style=default}
+		\centering \includegraphics[width=\linewidth]{results.png}
+		
+	\end{MyMdframed}
+\end{figure}
+
+Throughout the project, the concept of test-driven development was kept in mind.
+Not every change involved a test being written before it was implemented, but for important parts of the codebase this approach made sense to ensure test coverage was in place early on and to provide confidence in correctness of an implementation.
+
 
 \section{Integration Testing}
 
 We include a range of integration tests to verify the system works end-to-end.
 This comprises ensuring that programs parse, type checking works as expected and the interpreter yields the correct result.
-
-In this way, the integration tests are able to test the components of the system working together.
+In contrast to the unit tests, which generally test specific components in isolation, the motivation behind the integration tests is to ensure that components work together correctly.
+These tests can unearth new issues which would otherwise not have been detected.
 
 \begin{mycodefile}{java}{\label{code:integration:1}Testing the Java foreign function interface with an end-to-end test}{Java}{integration.java}
 In this test, we begin with a string representing a program which calls and returns a native Java function.
@@ -1933,11 +1955,18 @@ We parse this program, type check it and then execute it.
 Throughout, we ensure that the behaviour matches our expectations and that the final result is correct.
 \end{mycodefile}
 
-
 \section{Manual Testing}
 
+Automated tests go some of the way to ruling out major bugs in an application, but we feel it is still necessary to manually test software after substantial changes.
+Test cases should be chosen with knowledge of the implementation in order to try and expose mishandling of edge cases, or problems with adversarial input.
 
+As an example, applications often exhibit buggy behaviour around \emph{boundary conditions} which can be caused by off-by-one errors or use of incorrect operators.
+We construct test cases for integer refinements to ensure the type checker works as expected for values that fall just inside/outside of the domain of values accepted by each type.
 
+The web interface is also more convenient to test manually.
+Whilst there are some tools which are able to render pages and compare screenshots to detect e.g. layout regressions, it can be difficult to implement such tests and keep them up to date.
+We find it more time-effective to manually test the web application in a variety of browsers on different devices.
+Design and layout issues are usually immediately apparent.
 
 \chapter{Project Management}
 
@@ -2054,6 +2083,13 @@ Finally, we have developed tooling to integrate our language into existing proje
 system and added support for bi-directional interoperability with existing Java Virtual Machine (JVM) code.
 
 \chapter{Future Work}\label{ch:future-work}
+
+Our language is relatively basic, and there exist many opportunities for future work in this area.
+We discuss a few possible directions for future research below.
+
+\section{Non-regular expressions}
+
+As highlighted in section 
 
 \todobox{Flesh this out:\begin{itemize}
         \item Non-regular ``regular expressions'' like we see in PHP, Perl etc

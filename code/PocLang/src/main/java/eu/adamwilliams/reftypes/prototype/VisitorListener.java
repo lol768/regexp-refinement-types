@@ -532,7 +532,10 @@ public class VisitorListener extends PocLangBaseListener {
     private Expression getAstExpressionForJavaCall(PocLang.Function_callContext ctx) {
         List<Expression> arguments = new ArrayList<>(ctx.expr().stream().map(e -> getAstExpression(e)).collect(Collectors.toList()));
 
-        return new JavaCallExpression( ctx.java_call().IDENTIFIER().stream().map(i -> i.getText()).collect(Collectors.toList()).toArray(String[]::new), arguments);
+        List<String> list = ctx.java_call().IDENTIFIER().stream().map(i -> i.getText()).collect(Collectors.toList());
+        String[] arr = new String[list.size()];
+
+        return new JavaCallExpression(list.toArray(arr), arguments);
     }
 
     private Expression handleComparisonAstExpression(PocLang.ExprContext exprCtx) {

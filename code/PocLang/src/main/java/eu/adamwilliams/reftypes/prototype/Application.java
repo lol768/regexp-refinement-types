@@ -19,6 +19,9 @@ import spark.ResponseTransformer;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,9 +66,8 @@ public class Application {
                 });
 
         get("/language", (req, res) -> {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            InputStream is = classloader.getResourceAsStream("lang.json");
-            return is.readAllBytes();
+            return Files.readAllLines(
+                    Paths.get(this.getClass().getResource("lang.json").toURI()), Charset.defaultCharset());
         });
 
         post("/run", (req, res) -> {
