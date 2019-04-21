@@ -2064,7 +2064,23 @@ prior to full disclosure.
 
 \section{Evaluation Against Existing Works}
 
-\todobox{Security Code Scan}
+Using the motivating examples described earlier in section \ref{subsec:examples} and a series of modifications,
+we have explored the effectiveness of existing security tooling and its ability to:
+
+\begin{itemize}
+    \item Detect that the code presents a potential risk to security
+    \item Correctly report, taking into account any and all validation code, whether an issue is exploitable
+\end{itemize}
+
+We have found that tooling is generally able to flag potential security vulnerabilities, but is prone to reporting
+false-positives where regular-expression based validation is already in place and prevents exploitation.
+
+\subsection{SQL Injection}
+
+\subsection{LDAP Injection}
+
+\subsection{Path Traversal}
+
 
 \section{Conclusions}
 
@@ -2089,7 +2105,8 @@ We discuss a few possible directions for future research below.
 
 \section{Non-regular expressions}
 
-As highlighted in section 
+As highlighted in section \ref{sec:pls}, the standard library within many programming languages supports an extension to traditional, theoretical regular expressions.
+A theory solver which supported these regular expressions would be interesting to see, and enable use of advanced features such as backreferences, lookaheads/lookbehinds  
 
 \todobox{Flesh this out:\begin{itemize}
         \item Non-regular ``regular expressions'' like we see in PHP, Perl etc
