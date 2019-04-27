@@ -1,0 +1,47 @@
+\begin{forest}
+[re
+  [simple\_re
+    [basic\_re
+      [plus
+        [elementary\_re
+          [range
+            [positive\_range
+              [{[}]
+[range\_items
+                [range\_item
+                  [lax\_character
+                    [A]
+                    ]
+[-]
+[lax\_character
+                    [Z]
+                    ]
+                  ]
+                ]
+[{]}]
+              ]
+            ]
+          ]
+[+]
+        ]
+      ]
+[concat\_prime
+      [simple\_re
+        [basic\_re
+          [elementary\_re
+            [character
+              [a]
+              ]
+            ]
+          ]
+[concat\_prime]
+        ]
+      ]
+    ]
+[union\_prime]
+  ]
+[/]
+]
+[{]}]
+]]
+    \end{forest}

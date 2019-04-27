@@ -1,0 +1,31 @@
+\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\dimexpr \linewidth-\columnsep}{\vspace{.75\baselineskip}\centering\parbox{0.95\linewidth}{\faIcon{lightbulb} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
+\newcommand{\readbox}[1] {\colorbox{infogreen}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\textcolor{white}{\faicon{book} \textbf{#1}\vspace{.75\baselineskip}}}}}}
+
+\newcommand{\infobox}[1] {\colorbox{id7-bright-emerald-green}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faIcon{info-circle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\widthboxedfigure}[3]{\begin{MyMdframed}\begin{figure}[H]
+            \begin{center}\vspace{2em}\includegraphics[width=#3\textwidth]{#1}\end{center}
+            \caption{#2}
+\end{figure}\end{MyMdframed}}
+
+\newcommand{\infoinlineicon}[1] {\colorbox{infogreenlight}{\faicon{info-circle} #1}}
+
+\newcommand{\infoinline}[1] {\colorbox{infogreenlight}{#1}}
+
+\definecolor{orange}{rgb}{0.9529,0.85176,0.5070588}
+
+\newcommand{\warnbox}[1] {\colorbox{orange}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{exclamation-triangle} #1\vspace{.75\baselineskip}}}}}
+
+\newcommand{\warninlineicon}[1] {\colorbox{orange}{\faicon{exclamation-triangle} #1}}
+
+\makeatletter
+\let\old@rule\@rule
+\def\@rule[#1]#2#3{\textcolor{lightgrey}{\old@rule[#1]{#2}{#3}}}
+\makeatother
+
+\newcommand{\warninline}[1] {\colorbox{orange}{#1}}

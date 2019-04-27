@@ -86,7 +86,7 @@ public String lookupUserNameByToken(String token) throws SQLException {
     \PYGidseven{n}{Statement} \PYGidseven{n}{stmt} \PYGidseven{o}{=} \PYGidseven{n}{connection}\PYGidseven{o}{.}\PYGidseven{n+na}{createStatement}\PYGidseven{o}{(}\PYGidseven{o}{)}\PYGidseven{o}{;}
     \PYGidseven{n}{String} \PYGidseven{n}{query} \PYGidseven{o}{=} \PYGidseven{l+s}{\PYGidsevenZdq{}select * from users where \PYGidsevenZdq{}}\PYGidseven{o}{;}
     \colorbox{id7-ruby-red}{\textcolor{white}{\faExclamationTriangle{} \PYGidseven{n}{query} \PYGidseven{o}{+=} \PYGidsevenZdq{} token = '\PYGidsevenZdq{} \PYGidseven{o}{+} \PYGidseven{n}{token} \PYGidseven{o}{+} \PYGidsevenZdq{}'\PYGidsevenZdq{} \PYGidseven{o}{;}}}
-    \PYGidseven{n}{ResultSet} \PYGidseven{n}{rs} \PYGidseven{o}{=} \PYGidseven{n}{stmt}\PYGidseven{o}{.}\PYGidseven{n+na}{executeQuery}\PYGidseven{o}{(}\PYGidseven{n}{sql}\PYGidseven{o}{)}\PYGidseven{o}{;}
+    \PYGidseven{n}{ResultSet} \PYGidseven{n}{rs} \PYGidseven{o}{=} \PYGidseven{n}{stmt}\PYGidseven{o}{.}\PYGidseven{n+na}{executeQuery}\PYGidseven{o}{(}\PYGidseven{n}{query}\PYGidseven{o}{)}\PYGidseven{o}{;}
     \PYGidseven{k}{if} \PYGidseven{o}{(}\PYGidseven{n}{rs}\PYGidseven{o}{.}\PYGidseven{n+na}{next}\PYGidseven{o}{(}\PYGidseven{o}{)}\PYGidseven{o}{)} \PYGidseven{o}{\PYGidsevenZob{}}
         \PYGidseven{k}{return} \PYGidseven{n}{rs}\PYGidseven{o}{.}\PYGidseven{n+na}{getString}\PYGidseven{o}{(}\PYGidseven{l+s}{\PYGidsevenZdq{}name\PYGidsevenZdq{}}\PYGidseven{o}{)}\PYGidseven{o}{;}
     \PYGidseven{o}{\PYGidsevenZcb{}}
@@ -244,7 +244,7 @@ substance to the warnings \citep{kesselheim2011clinical}.
 If reliable and properly implemented, static analysis tooling has been shown to be able to prevent whole classes of
 bugs from making it into production \citep{sadowski2018lessons}.
 
-\section{A Better Approach}
+\section{Objectives}
 
 Existing static analysis are often unable to evaluate the effectiveness of input validation code that may already be in
 place--leading to false positives.
@@ -252,13 +252,17 @@ This is because the tools consider code in isolation and cannot reason about the
 Taint tracking is similarly ``binary'', where data originates from user input and is assumed dangerous or originates
 elsewhere and assumed benign.
 
-We describe a system which uses \emph{refinement types} in order to determine whether existing regular expression based
+We describe a programming language and type checker which enables the developer to use \emph{refinement types} in order to determine whether regular expression based
 input validation is effective.
 This happens at compile time, using an SMT solver to find situations where input could fail to be matched by a regular
 expression.
 This allows for potential security issues to be surfaced during type-checking.
 
-Our work meets the follow formal objectives (first described in appendix \ref{project:spec}):
+The listing below shows a program written in our language:
+
+\todobox{Add listing here}
+
+Our work meets the follow formal objectives first described in appendix \ref{project:spec}:
 
 \begin{enumerate}
     \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).

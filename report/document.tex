@@ -117,41 +117,11 @@ Scale=MatchLowercase
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1em}
 \definecolor{todocolor}{rgb}{0.688,0.8176,0.93137}
-\newcommand{\todobox}[1] {\colorbox{todocolor}{\parbox{\dimexpr \linewidth-\columnsep}{\vspace{.75\baselineskip}\centering\parbox{0.95\linewidth}{\faIcon{lightbulb} \textbf{TODO:} #1\vspace{.75\baselineskip}}}}}
-\newcommand{\readbox}[1] {\colorbox{infogreen}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\textcolor{white}{\faicon{book} \textbf{#1}\vspace{.75\baselineskip}}}}}}
 \def\labelitemi{\textcolor{id7-aubergine}{\textbullet}}
 \def\labelitemii{\textcolor{id7-aubergine}{\circ}}
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
-
-\newcommand{\infobox}[1] {\colorbox{id7-bright-emerald-green}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faIcon{info-circle} #1\vspace{.75\baselineskip}}}}}
-
-\newcommand{\boxedfigure}[2]{\begin{MyMdframed}\begin{figure}[H]
-            \begin{center}\vspace{2em}\includegraphics[width=0.5\textwidth]{#1}\end{center}
-            \caption{#2}
-\end{figure}\end{MyMdframed}}
-
-\newcommand{\widthboxedfigure}[3]{\begin{MyMdframed}\begin{figure}[H]
-            \begin{center}\vspace{2em}\includegraphics[width=#3\textwidth]{#1}\end{center}
-            \caption{#2}
-\end{figure}\end{MyMdframed}}
-
-\newcommand{\infoinlineicon}[1] {\colorbox{infogreenlight}{\faicon{info-circle} #1}}
-
-\newcommand{\infoinline}[1] {\colorbox{infogreenlight}{#1}}
-
-\definecolor{orange}{rgb}{0.9529,0.85176,0.5070588}
-
-\newcommand{\warnbox}[1] {\colorbox{orange}{\parbox{\textwidth}{\vspace{.75\baselineskip}\centering\parbox{0.95\textwidth}{\faicon{exclamation-triangle} #1\vspace{.75\baselineskip}}}}}
-
-\newcommand{\warninlineicon}[1] {\colorbox{orange}{\faicon{exclamation-triangle} #1}}
-
-\makeatletter
-\let\old@rule\@rule
-\def\@rule[#1]#2#3{\textcolor{lightgrey}{\old@rule[#1]{#2}{#3}}}
-\makeatother
-
-\newcommand{\warninline}[1] {\colorbox{orange}{#1}}
+\input{boxes}
 
 \titleformat{\section}
 {\normalfont\sffamily\huge\color{id7-aubergine}}
@@ -300,7 +270,7 @@ Lastly, sincere thanks are due to my friends and family for their support during
 \titlespacing*{\chapter}
 {0pt}{0pt}{2.0ex}
 
-\chapter{Motivation}
+\chapter{Introduction}
 \input{motivation} % Move to separate file, breaks TeXiFy-IDEA somehow..
 
 \chapter{Background}
@@ -1164,6 +1134,19 @@ integer members.
 
 \subsection{Static Analysis and Security Tooling}
 
+\subsubsection{FindBugs}
+
+FindBugs is an open-source static analysis tool for reporting potential bugs in Java applications.
+Although currently unmaintained, a fork \emph{SpotBugs} continues to provide more than 400 rule definitions
+to help detect potential issues at an early stage in the software development lifecycle.
+
+FindBugs is not exclusively a security tool, but includes a number of rules aimed at detecting potential security
+vulnerabilities.
+These core definitions can be complemented with third-party rules, such as those provided by the
+\emph{Find Security Bugs} project.
+
+Rule definitions are written in Java and operate at the bytecode level.
+
 \subsubsection{Security Code Scan}
 
 \emph{Security Code Scan} is a tool built to analyse C\# programs using the \emph{Roslyn} inspections system.
@@ -1433,53 +1416,7 @@ A sample parse tree for the regular expression \texttt{[A-Z]+a} is given in figu
 \vspace{0.5em}
 \captionsetup{style=default}
  \begin{center}
-    \begin{forest}
-[re
-  [simple\_re
-    [basic\_re
-      [plus
-        [elementary\_re
-          [range
-            [positive\_range
-              [{[}]
-[range\_items
-                [range\_item
-                  [lax\_character
-                    [A]
-                    ]
-[-]
-[lax\_character
-                    [Z]
-                    ]
-                  ]
-                ]
-[{]}]
-              ]
-            ]
-          ]
-[+]
-        ]
-      ]
-[concat\_prime
-      [simple\_re
-        [basic\_re
-          [elementary\_re
-            [character
-              [a]
-              ]
-            ]
-          ]
-[concat\_prime]
-        ]
-      ]
-    ]
-[union\_prime]
-  ]
-[/]
-]
-[{]}]
-]]
-    \end{forest}
+    \input{regex_parse_tree_forest}
     \end{center}
 \end{MyMdframed}
 \end{figure}
@@ -1845,12 +1782,12 @@ APIs.
 \begin{figure}[H]
     \begin{MyMdframed}
         \vspace{0.5em}
-        
-        
+
+
         \caption{\label{figure:r4f}Example of a type violation, displayed in the Rise4fun environment}
         \vspace{0.5em}
         \captionsetup{style=default}
-        
+
         \centering \includegraphics[width=0.9\linewidth]{rise4fun.png}
     \end{MyMdframed}
 \end{figure}
@@ -1928,13 +1865,13 @@ These tests were particularly useful when the grammar underwent changes because 
 \begin{figure}
 	\begin{MyMdframed}
 		\vspace{0.5em}
-		
-		
+
+
 		\caption{\label{fig:unittests} Passing unit tests shown in the IntelliJ IDEA integrated development environment}
 		\vspace{0.5em}
 		\captionsetup{style=default}
 		\centering \includegraphics[width=\linewidth]{results.png}
-		
+
 	\end{MyMdframed}
 \end{figure}
 
@@ -2077,6 +2014,8 @@ false-positives where regular-expression based validation is already in place an
 
 \subsection{SQL Injection}
 
+
+
 \subsection{LDAP Injection}
 
 \subsection{Path Traversal}
@@ -2106,7 +2045,7 @@ We discuss a few possible directions for future research below.
 \section{Non-regular expressions}
 
 As highlighted in section \ref{sec:pls}, the standard library within many programming languages supports an extension to traditional, theoretical regular expressions.
-A theory solver which supported these regular expressions would be interesting to see, and enable use of advanced features such as backreferences, lookaheads/lookbehinds  
+A theory solver which supported these regular expressions would be interesting to see, and enable use of advanced features such as backreferences, lookaheads/lookbehinds
 
 \todobox{Flesh this out:\begin{itemize}
         \item Non-regular ``regular expressions'' like we see in PHP, Perl etc
@@ -2179,15 +2118,15 @@ function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ {
 
 \begin{itemize}
     \item Formalise a type system that supports types predicated with a regular expression pattern that elements of the refined type will satisfy (be matched by).
-    
+
     \begin{itemize}
         \item Explore the consequences of typical string operations (e.g. concatenation) and define the type of their return value when applied to elements of the regular expression type.
-        
+
         \item At minimum, this should allow for simple functions to be declared that can safely accept/return a particular regular expression input\footnote{As a simplified example, an \texttt{unsafe\_shell\_exec} function might safely be able to accept any input that matches \texttt{\textasciicircum{}[\textasciicircum{}\textasciigrave{}]\textdollar{}}}.
-        
-        \item Evaluate the rate of false positives when compared to existing static analysis 
+
+        \item Evaluate the rate of false positives when compared to existing static analysis
     \end{itemize}
-    
+
     \item Implement such a type system that can guarantee type safety, built against a simplified proof-of-concept language.
     \begin{itemize}
         \item Test the implementation against a variety of test cases. The testing strategy should make use of automated unit tests, and manual system testing considering both general expected input as well as any relevant ``edge-cases'' that need to be handled.
@@ -2207,7 +2146,7 @@ function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ {
 \arrayrulecolor{white}
 \def\arraystretch{1.5}
 \begin{table}[H]
-    
+
     \centering
     \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
     \begin{tabular}[t]{|p{5.5cm}|p{10cm}|}
@@ -2256,7 +2195,7 @@ The project is reliant on a number of resources. Use of these resources is subje
 \arrayrulecolor{white}
 \def\arraystretch{1.5}
 \begin{table}[H]
-    
+
     \centering
     \rowcolors{1}{id7-sky-blue-tint}{lightgrey}
     \begin{tabular}[t]{|p{5.5cm}|p{4cm}|p{7cm}|}
