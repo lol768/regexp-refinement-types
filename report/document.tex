@@ -1231,12 +1231,9 @@ actually called.
 This functionality increases the value of the vulnerability reports, but only supports a limited number of platforms and
 requires running an agent alongside the application to collect and send runtime data.
 
-\chapter{Design and Implementation}
+\chapter{Design}
 
 This chapter discusses the design decisions made throughout the project and the reasoning behind them.
-It additionally covers how the implementation was approached, and the tools and libraries used to produce the prototype.
-
-\section{Design}
 
 The need for our language to be predictable and familiar to developers is clear.
 We therefore present an imperative proof-of-concept language, with a C-like syntax.
@@ -1275,11 +1272,28 @@ text centered, text=white
 }
 \end{tikzpicture}}
 
+We use this multi-stage process for a number of reasons:
+
+\begin{itemize}
+    \item Type checking requires more than one pass over the syntax tree.
+          In particular, we allow \emph{forward references} to functions that appear later in the program source code.
+          Whilst this flexibility is likely to be welcomed by e.g. Java developers who also enjoy this freedom,
+          it requires that we process the parse tree in two phases in order to detect issues such as references to
+          undefined functions.
+    \item Code can be separated into smaller self-contained components for each of the distinct stages
+          which can then be more effectively unit tested.
+    \item Later stages can use a higher-level AST representation and need not be concerned with exact syntax or
+          underlying code which the parser has already processed.
+\end{itemize}
+
 
 \subsection{Syntax}\label{subsec:syntax}
 
-The C-like syntax, with some inspiration from other languages such as Go, is augmented with the use of square brackets
+The C-like syntax, with some influence from other languages such as Go, is augmented with the use of square brackets
 to specify refinement types.
+This is inspired by languages such as Scala which use square brackets after types for parametric polymorphism,
+e.g. \mintinline{scala}{val numbers: List[Int] = List(1, 2, 3)}.
+
 Below, we show a high-level BNF grammar for our language.
 This was constructed, made unambiguous and then used as a basis during the implementation phase.
 
@@ -1329,6 +1343,8 @@ Selection in the language is implemented with an \textbf{if}-\textbf{else if}-\t
 as one might see in other imperative languages such as C.
 Such a statement has no limit on the number of \textbf{else if} components.
 
+Again, this is motivated by a desire for parity with other programming languages.
+
 \begin{grammar}
     <if-stmt> ::= `if` ` ' `(' <expr> `)' ` ' `\{ \textbackslash n' <body> `\}' <optional-else>
 
@@ -1356,6 +1372,9 @@ The language supports the following type keywords:
     \end{tabular}
 \end{table}
 
+As a proof of concept, this small set of types allows for small programs to be expressed whilst limiting the complexity
+of the language to ensure it is tractable to implement.
+
 We define the \texttt{<type>} class to represent a type reference.
 This class is then used throughout the grammar for function parameter types, local variables types and return
 types.
@@ -1369,10 +1388,11 @@ types.
 \end{grammar}
 
 Integer refinements are a relatively straightforward affair, as shown above.
+The developer can restrict the domain of values to be greater-than or less-than a constant numeric literal.
+
 We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
 prime-suffixed classes with $\epsilon$-productions.
-
 
 \begin{grammar}
 

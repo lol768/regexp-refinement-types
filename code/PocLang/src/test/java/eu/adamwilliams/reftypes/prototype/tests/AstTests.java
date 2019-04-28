@@ -1,6 +1,7 @@
 package eu.adamwilliams.reftypes.prototype.tests;
 
 import eu.adamwilliams.reftypes.prototype.Application;
+import eu.adamwilliams.reftypes.prototype.FunctionTable;
 import eu.adamwilliams.reftypes.prototype.ast.*;
 import eu.adamwilliams.reftypes.prototype.domain.Type;
 import eu.adamwilliams.reftypes.prototype.domain.TypeCheckResults;
@@ -112,8 +113,8 @@ public class AstTests {
 
         ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
         Application app = new Application();
-        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
-        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Test");
+        TypeCheckResults results = app.doTypeChecks(tree);
+        FunctionDeclaration function = results.getFunctionTable().getFunctionByIdentifier("Test");
 
         ReturnStatement returnStmt = (ReturnStatement) function.getBody().getStatements().get(0);
         Assert.assertTrue(returnStmt.getValue().isPresent());
@@ -160,22 +161,37 @@ public class AstTests {
         Assert.assertEquals(5L, result.get().evaluate());
     }
 
-    @Test
-    public void testJavaCall() {
-        String moreAdvancedProgram = "function Main(): uint {\n" +
-                "    var a: uint\n" +
-                "    a=!java.lang.Long.divideUnsigned(10,2)\n" +
-                "    return a\n" +
-                "}";
+@Test
+public void testJavaCall() {
+    // Arrange program
+    String moreAdvancedProgram = "function Main(): uint {\n" +
+            "    var a: uint\n" +
+            "    a=!java.lang.Long.divideUnsigned(10,2)\n" +
+            "    return a\n" +
+            "}";
 
-        ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
-        Application app = new Application();
-        TypeCheckResults typeCheckResults = app.doTypeChecks(tree);
-        FunctionDeclaration function = typeCheckResults.getFunctionTable().getFunctionByIdentifier("Main");
-        Optional<Expression> result = BodyEvaluator.evaluateBody(function.getBody());
+    // Act - parse the program
+    ParseTree tree = ParsingTests.getParseTree(moreAdvancedProgram);
 
-        Assert.assertEquals(5L, result.get().evaluate());
-    }
+    // Set up and invoke the type checker
+    Application app = new Application();
+    TypeCheckResults results = app.doTypeChecks(tree);
+
+    // Assert - the type checker should not raise any errors
+    Assert.assertEquals(
+            "No error reports should have been raised",
+            0,
+            results.getReports().size()
+    );
+
+    // Point the interpreter at the Main function and execute
+    FunctionTable table = results.getFunctionTable();
+    FunctionDeclaration main = table.getFunctionByIdentifier("Main");
+    Optional<Expression> result = BodyEvaluator.evaluateBody(main.getBody());
+
+    // Assert - ensure that the result of the execution is 5
+    Assert.assertEquals(5L, result.get().evaluate());
+}
 
 
     @Test
