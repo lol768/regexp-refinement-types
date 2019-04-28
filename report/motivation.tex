@@ -287,3 +287,49 @@ We know of no existing program verification tools capable of verifying regular e
 within a programming language using pre/post-conditions or type annotations--our system is novel in this respect.
 Section \ref{sec:prior-art} discusses some of the existing static analysis tooling and languages that have been
 developed in more depth.
+
+\section{Legal, social, ethical and professional issues}
+
+Much of the typical legal, social, ethical and professional are not applicable to this project;
+no surveys were undertaken and no research was conducted which necessitated volunteers providing data.
+
+However, the core motivations underpinning the project objectives lie in the realm of information security.
+Therein lies the biggest potential for ethical questions to be raised \citep{dark2008ethics}.
+Although our work on refinement types is designed primarily to assist the developer by providing assurance about the
+structure of flowing data, the nature of many security tools is that they can be used offensively.
+
+For example, fuzzing tools which generate test data and are designed to help highlight memory corruption bugs, can be
+used by third-parties other than the original developers to audit software.
+Similarly, it is possible that the tooling discussed in this report could be used to discover potential exploitation
+opportunities in existing software, perhaps by porting logic into our language and adding refinement types in order to
+detect e.g.\ injection vulnerabilities by running the type-checker.
+SMT solvers such as Z3 combined with systems like Rex could be used to find bugs in sanitiser libraries designed to
+prevent e.g.\ XSS vulnerabilities.
+
+\citeauthor{harper2018gray} discuss the ethics of security research in \citet{harper2018gray}.
+There is general consensus that ``offline'' security research into software\footnote{By offline, we mean to capture research which does not involve testing against a third-party production environment.
+For example, local fuzzing of the OpenSSL cryptography library would fall into this category.} is ethically preferable
+to testing against real-world systems without authorisation, even if intentions are good and would fall into activity
+typical of a ``grey hat'' researcher.
+However, opinions differ on how discovered vulnerabilities should be disclosed. \citeauthor{schneier2007fd} argues for
+\textit{full disclosure}--where vulnerabilities are publicly disclosed--describing it as a ``damned good
+idea'' and citing the principle that ``secrecy prevents people from accurately assessing their own risk'' \citep{schneier2007fd}.
+The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose arguing
+that other approaches are simply ``security through obscurity'':
+
+\begin{mdframed}
+    \begin{leftbar}{id7-aubergine}
+        \vspace{0.25em}
+
+        \textit{We don't believe in security by obscurity, and as far as we know, full disclosure is the only way to ensure that everyone, not just the insiders, have access to the information we need.} \\
+        \vspace{0.25em}
+    \end{leftbar}
+    \vspace{-0.2em}
+    \hfill \textcolor{id7-aubergine}{\small \sffamily -- \textbf{Leonard Rose (creator of original \textit{Full Disclosure} mailing list)}}
+    \rmfamily
+\end{mdframed}
+
+Our view, in line with that of \citeauthor{schneier2007fd}, is that full disclosure is a useful tool for ensuring users
+are informed and can take steps to secure their software and devices.
+We believe that vulnerabilities should go through a coordinated (or ``responsible'') disclosure process with a vendor
+prior to full disclosure.

@@ -53,6 +53,10 @@
 \usepackage{pagecolor}
 \usepackage{wrapfig}
 \usepackage{nameref}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{pdfpages}
+\usepackage{transparent}
 \setsansfont{Proxima Nova}
 \setmonofont{Ubuntu Mono}
 \newfontfamily\warwickfont[
@@ -560,7 +564,6 @@ By exhaustive evaluation, we can prove a problem cannot be satisfied:
 The table below shows exhaustively that no valuation of the variables result in the formula evaluating to true:
 
 \arrayrulecolor{lightgrey} % <---
-\def\arraystretch{1.5}%  1 is the default, change whatever you need
 \begin{table}[H]
     \centering
     \rowcolors{1}{}{lightgrey}
@@ -1235,14 +1238,16 @@ requires running an agent alongside the application to collect and send runtime 
 
 This chapter discusses the design decisions made throughout the project and the reasoning behind them.
 
+\section{Programming Language}
+This section covers the design of the language's syntax, its type system, the foreign function interface (FFI) and
+interpreter.
+
 The need for our language to be predictable and familiar to developers is clear.
 We therefore present an imperative proof-of-concept language, with a C-like syntax.
 The aim is that developers, and particularly those that work with JVM technologies, will be able to write critical
 sections of code within our language, where regex refinements are available.
 
-This section covers the design of the language's syntax, its type system, the foreign function interface (FFI) and
-interpreter.
-At build time, the language tooling will progress through a series of stages:
+At build time, the language tooling should progress through a series of stages:
 
 \tikzstyle{line} = [draw, -latex']
 \tikzset{arrow/.style={
@@ -1356,7 +1361,6 @@ We now turn our attention to the type system, and support for refinements (encom
 The language supports the following type keywords:
 
 \arrayrulecolor{white}
-\def\arraystretch{1.5}
 \begin{table}[H]
 
     \centering
@@ -1391,6 +1395,14 @@ Integer refinements are a relatively straightforward affair, as shown above.
 The developer can restrict the domain of values to be greater-than or less-than a constant numeric literal.
 
 We now parse regular expression refinements using the parsing hierarchy proposed in \citet{cameron1999}.
+This hierarchy allows regular expressions to be processed in an intuitive manner with the Kleene star/plus operations
+binding more strongly than concatenation and alternation:
+
+\begin{description}
+    \item[\texttt{aab*c}] Should be interpreted as \texttt{aa(b)*c}.
+    \item[\texttt{ab|cd|ef}] Should be interpreted as \texttt{(ab)|(bc)|(cd)}.
+\end{description}
+
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
 prime-suffixed classes with $\epsilon$-productions.
 
@@ -1436,8 +1448,9 @@ A sample parse tree for the regular expression \texttt{[A-Z]+a} is given in figu
 \vspace{0.5em}
 \captionsetup{style=default}
  \begin{center}
-    \input{regex_parse_tree_forest}
-    \end{center}
+     \def\svgwidth{\linewidth}
+     \input{forest_regex.pdf_tex}
+\end{center}
 \end{MyMdframed}
 \end{figure}
 
@@ -1499,7 +1512,6 @@ Whilst the CST is useful, most type checking will require a richer representatio
 For example, the current grammar would parse refinements such as \textcolor{id7-ruby-red}{\texttt{uint}}\texttt{[/.*/]},
 To check for these issues and interpret code, we use an \emph{Abstract Syntax Tree} (AST) representation of the program.
 
-We designed the structure of the AST prior to implementing the system.
 Unlike some (generally more functional languages), we make a distinction between \textit{statements} and
 \textit{expressions}.
 The former do not necessarily yield a value in the same way as expressions.
@@ -1575,7 +1587,30 @@ An \textit{IfStatement} object contains an expression that is evaluated to produ
 bodies of code to execute if the expression is true (or false) and a reference to a further \textit{IfStatement} if an
 \mintinline{rrtlex.py:RrtLexer -x}{else if} is present.
 
-\subsection{Type Checking}
+\subsection{Type System}
+
+In some languages, such as JavaScript, the type system can be described as `weak'.
+Types can be used in different contexts and will be \emph{coerced} as necessary.
+For example, it is possible to ``add'' unrelated objects, resulting in a conversion to two strings which are then
+concatenated:
+
+\termbox{
+\texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{\textasciitilde} node}}\\
+\texttt{> String([])}\\
+\textcolor{term-green}{\texttt{''}}\\
+\texttt{> String({})}\\
+\textcolor{term-green}{\texttt{'[object Object]'}}\\
+\texttt{> []+{}}\\
+\textcolor{term-green}{\texttt{'[object Object]'}}\\
+}
+
+In the above REPL (read-eval-print loop) session, use of the \texttt{+} operator automatically coerces the operands
+into their string representation and then concatenates them together.
+This behaviour is characteristic of a weakly-typed language, and is not particularly intuitive.
+Furthermore, it can lead to problems which are only observed once a system has been deployed into production.
+
+Our language type system is \emph{strongly} and \emph{statically} typed.
+
 
 Types need to be checked in a number of situations:
 
@@ -1620,7 +1655,19 @@ The language type checker implements exactly this process.
 Constraints are built based on the types identified during AST construction and then solved using an SMT solver.
 We assume a theory solver is available for integer arithmetic and strings.
 
-\section{Implementation}
+
+\section{Development Methodology}
+
+It is important, for any project with significant elements of software engineering, that development is approached in a
+way which enables any changes to system requirements to be handled quickly.
+
+For this project, we used a number of features of agile software development methodologies such as Scrum to plan development work.
+The Scrum methodology involves ``sprints'' which are a fixed duration and planned in advance based on tasks in the backlog \citep{sutherland2014scrum}.
+
+We scheduled a series of one-week sprints to implement the functionality discussed throughout this chapter.
+Each sprint
+
+\chapter{Implementation}
 
 \subsection{Parsing}
 
@@ -1773,7 +1820,6 @@ If the type checking is successful, the user is given the opportunity to execute
 The interpreter will then execute the program and print the return value of the \texttt{Main} function.
 
 
-
 \begin{landscape}
 
     \newgeometry{margin=0in}
@@ -1843,7 +1889,9 @@ When the task is executed, type checker errors are reported as in the sample bel
 \texttt{> The type check failed!}\\
 ~\\
 \texttt{* Try:\\
-Run with \textbf{--stacktrace} option to get the stack trace. Run with \textbf{--info} or \textbf{--debug} option to get more log output. Run with --scan to get full insights.}\\
+Run with \textbf{--stacktrace} option to get the stack trace.
+Run with \textbf{--info} or \textbf{--debug} option to get more log output.
+Run with --scan to get full insights.}\\
 ~\\
 \textcolor{id7-ruby-red}{\texttt{BUILD FAILED in 9s}}
 }
@@ -1927,23 +1975,9 @@ Design and layout issues are usually immediately apparent.
 
 \chapter{Project Management}
 
-\todobox{I can't think of a nice way to \emph{not} write this is past tense. Is it okay to use here?}
-
 For this project to be successful, it was essential that its delivery was managed appropriately.
 In this chapter, we discuss some of the contributing factors which ensured that progress was made, potential problems
 were foreseen and planned for and objectives were met.
-
-\section{Development Methodology}
-
-It is important, for any project with significant elements of software engineering, that development be approached in a
-way which enables any changes to system requirements to be quickly handled.
-
-For this project, we incorporated a number of features of agile software development methodologies such as Scrum.
-The Scrum methodology involves ``sprints'' which are a fixed duration and planned in advance based on tasks in the backlog \citep{sutherland2014scrum}.
-Work was undertaken in a series of one week sprints, with a supervisor meeting organised immediately after the end
-of each sprint.
-Progress was reviewed, more interesting parts of the work were discussed and the next sprint was planned.
-
 \section{Challenges}
 
 Throughout the project, a number of challenges were faced:
@@ -1969,53 +2003,6 @@ As discussed in section 1, all core objectives set for the project were met.
 One additional `stretch' objective, which involved adding support for a language such as Scala, was not met.
 This remains as possible future work and is discussed in more depth in chapter \ref{ch:future-work}.
 
-\chapter[Legal, social, ethical and professional issues]{Legal, social, ethical and\\professional issues}
-
-Initially covered in appendix \ref{project:spec}, we ensured that potential legal and ethical issues were minimised
-during the lifetime of the project.
-Much of the typical issues are not applicable to this project; no surveys were undertaken and no research was
-conducted which necessitated volunteers providing data.
-
-However, the core motivations underpinning the project objectives lie in the realm of information security.
-Therein lies the biggest potential for ethical questions to be raised \citep{dark2008ethics}.
-Although our work on refinement types is designed primarily to assist the developer by providing assurance about the
-structure of flowing data, the nature of many security tools is that they can be used offensively.
-
-For example, fuzzing tools which generate test data and are designed to help highlight memory corruption bugs, can be
-used by third-parties other than the original developers to audit software.
-Similarly, it is possible that the tooling discussed in this report could be used to discover potential exploitation
-opportunities in existing software, perhaps by porting logic into our language and adding refinement types in order to
-detect e.g.\ injection vulnerabilities by running the type-checker.
-SMT solvers such as Z3 combined with systems like Rex could be used to find bugs in sanitiser libraries designed to
-prevent e.g.\ XSS vulnerabilities.
-
-\citeauthor{harper2018gray} discuss the ethics of security research in \citet{harper2018gray}.
-There is general consensus that ``offline'' security research into software\footnote{By offline, we mean to capture research which does not involve testing against a third-party production environment.
-For example, local fuzzing of the OpenSSL cryptography library would fall into this category.} is ethically preferable
-to testing against real-world systems without authorisation, even if intentions are good and would fall into activity
-typical of a ``grey hat'' researcher.
-However, opinions differ on how discovered vulnerabilities should be disclosed. \citeauthor{schneier2007fd} argues for
-\textit{full disclosure}--where vulnerabilities are publicly disclosed--describing it as a ``damned good
-idea'' and citing the principle that ``secrecy prevents people from accurately assessing their own risk'' \citep{schneier2007fd}.
-The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose arguing
-that other approaches are simply ``security through obscurity'':
-
-\begin{mdframed}
-    \begin{leftbar}{id7-aubergine}
-        \vspace{0.25em}
-
-        \textit{We don't believe in security by obscurity, and as far as we know, full disclosure is the only way to ensure that everyone, not just the insiders, have access to the information we need.} \\
-        \vspace{0.25em}
-    \end{leftbar}
-    \vspace{-0.2em}
-    \hfill \textcolor{id7-aubergine}{\small \sffamily -- \textbf{Leonard Rose (creator of original \textit{Full Disclosure} mailing list)}}
-    \rmfamily
-\end{mdframed}
-
-Our view, in line with that of \citeauthor{schneier2007fd}, is that full disclosure is a useful tool for ensuring users
-are informed and can take steps to secure their software and devices.
-We believe that vulnerabilities should go through a coordinated (or ``responsible'') disclosure process with a vendor
-prior to full disclosure.
 
 \chapter{Evaluation and Conclusions}
 
@@ -2164,7 +2151,6 @@ function GetNameByUserId(query: /[^`"']+/): /[A-Za-z ]+/ {
 \section*{Schedule}
 
 \arrayrulecolor{white}
-\def\arraystretch{1.5}
 \begin{table}[H]
 
     \centering
@@ -2213,7 +2199,6 @@ Logically equivalent test cases should be built for each tool under evaluation i
 The project is reliant on a number of resources. Use of these resources is subject to the risks outlined in table \ref{rr}. These risks should be evaluated and managed to minimise any potential impact on the project.
 
 \arrayrulecolor{white}
-\def\arraystretch{1.5}
 \begin{table}[H]
 
     \centering
