@@ -1,7 +1,7 @@
 \documentclass[a4paper,openany,12pt]{book}
-\usepackage[a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt]{geometry}
+%\usepackage[a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt]{geometry}
 % Bleed marks, if Warwick Print want them..
-%\usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt,showcrop=true,layout=a4paper]{geometry}
+\usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt,showcrop=true,layout=a4paper]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
 \usepackage{graphicx}
@@ -145,7 +145,7 @@ Scale=MatchLowercase
 \lfoot{\textcolor{grey}{Adam Williams}}
 \rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
 
-\renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{divider}}}
+\renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=210mm]{divider}}}
 
 % Redefine the plain page style
 \fancypagestyle{plain}{%
@@ -188,6 +188,8 @@ Scale=MatchLowercase
 
 % Don't stretch pages vertically, it looks shit
 \raggedbottom
+
+\renewcommand\arraystretch{1.5}
 
 % ======================
 
@@ -505,6 +507,8 @@ are introduced below \citep[p.~102]{sipser2012introduction}:
     \item[$R$] Rules/productions in the grammar.
     \item[$S$] The start variable, $S \in V$.
 \end{description}
+\DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
+\DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
 
 As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ comprises the following rule:
 
@@ -658,7 +662,7 @@ encoding \citep{Cook:1971:CTP:800157.805047} -- this is the statement of the Coo
 
 This has an impact on the practical application of SAT solvers and the reliability of such applications.
 Whilst heuristics can be used to efficiently solve some SAT problems, there is no guarantee that a particular problem
-will be able to be solved in a reasonable timeframe.
+will be able to be solved in a reasonable time-frame.
 Generally though, if a solver returns SAT/UNSAT instead of timing out, it can be assumed that the result is correct with
 a good degree of confidence.
 
@@ -1466,7 +1470,7 @@ We define expressions to permit basic arithmetic operations, nesting and functio
 <value-ref> ::= <number> | <string-literal> | `true' | `false' | <identifier>
 \end{grammar}
 
-Finally, we set-up the most basic rules for setting what is permitted as an identfier name, string literal or
+Finally, we set-up the most basic rules for setting what is permitted as an identifier name, string literal or
 number:
 
 \begin{grammar}
@@ -1664,7 +1668,7 @@ For this project, we used a number of features of agile software development met
 The Scrum methodology involves ``sprints'' which are a fixed duration and planned in advance based on tasks in the backlog \citep{sutherland2014scrum}.
 
 We scheduled a series of one-week sprints to implement the functionality discussed throughout this chapter.
-Each sprint
+This approach allows for progress to be reflected upon at the end of each sprint.
 
 \chapter{Implementation}
 
@@ -1676,7 +1680,7 @@ In order to lex and parse user input into the AST structure discussed earlier, w
 ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go \citep{parr2011ll}.
 These parsers are not restricted to a fixed number of lookahead tokens.
 ANTLR instead generates a series of \emph{lookahead DFAs} which help the parser to make decisions based on whether
-suuccessive tokens belong to a regular language or not (in which case, backtracking begins) \citep[p.~3]{parr2011ll}.
+successive tokens belong to a regular language or not (in which case, backtracking begins) \citep[p.~3]{parr2011ll}.
 
 The grammar is split into two distinct files.
 One file defines the rules for the lexer, which is responsible for tokenising the source code.
@@ -1995,13 +1999,6 @@ Throughout the project, a number of challenges were faced:
 Due to the slack time allocated in the project timetable, these challenges did not impact the project's overall
 schedule and objectives were met as expected.
 
-\section{Objectives}
-
-As discussed in section 1, all core objectives set for the project were met.
-
-One additional `stretch' objective, which involved adding support for a language such as Scala, was not met.
-This remains as possible future work and is discussed in more depth in chapter \ref{ch:future-work}.
-
 
 \chapter{Evaluation and Conclusions}
 
@@ -2020,15 +2017,60 @@ false-positives where regular-expression based validation is already in place an
 
 \subsection{SQL Injection}
 
+With our motivating example discussed in section \ref{subsec:examples}, we can observe that FindBugs is able
+to correctly detect code vulnerable to SQL injection:
 
+\includegraphics[width=\linewidth]{findbugs-eval.png}
+
+If we modify this code to introduce a regular expression check at the start of the method body, it will no longer
+be possible to exploit the vulnerability:
+
+\input{java-token-match}
+
+However, the FindBugs rule does not take this validation into account--and the rule continues to flag up the method
+as harbouring a potential security vulnerability.
+
+We can wrap this method with one written in the RRT prototype language and take advantage of the Java foreign-function
+interface by simply calling the existing Java function.
+This is a simple approach which minimises the amount of work required to start benefiting from refinement types.
+
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{Wrapping an existing Java function to use refinement types}{RRT}{sqli-wrap.rrt}
+    \vspace{0.5em}
+
+    Here, the RRT program calls a static Java method on class \texttt{Application} in package \texttt{package.java}.
+    In a real application, such a static method would use a connection pool or some other means to acquire a
+    database connection, and then issue the query as normal.
+\end{mycodefile}
+
+By exclusively calling the wrapper function we gain assurance that it will not be possible for input that exploits
+the SQL injection vulnerability to pass to the function.
+
+We can check this by calling the wrapper function with a known-bad input (here, as a simple string literal):
+
+\mintinline{rrtlex.py:RrtLexer -x}{LookupUsernameByToken("' or 1=1 --")}
+
+The type checker correctly detects this violation:
+
+\termbox{
+\texttt{\textcolor{term-green}{\fallbackmono{➜}} \ttfamily \textbf{\textcolor{term-dir}{examples-1} \textcolor{term-git}{(git:}\textcolor{term-branch}{master}\textcolor{term-git}{)}} ./gradlew build}\\
+\textcolor{id7-ruby-red}{\texttt{\textbf{> Task :rrt} FAILED}}\\
+\texttt{sqli-wrap.txt: L6:23 string didn't satisfy string [/[a-z0-9]+/], example violating value: "' or 1=1 --"}\\
+}
+
+When all function calls pass permissible values to the \texttt{LookupUsernameByToken}, the build will pass because
+there is no exploitable security issue presented by the code.
+In this way, we avoid false positives.
 
 \subsection{LDAP Injection}
+
+
 
 \subsection{Path Traversal}
 
 
 \section{Conclusions}
 
+This project is a success.
 We have designed and implemented a proof-of-concept language to support regular expression refinement types,
 demonstrating that it is feasible to implement type checking for such a language by formulating type compatibility
 as an SMT problem and using a modern SMT solver.
@@ -2043,24 +2085,40 @@ We have developed a variety of interfaces to enable experimentation with our lan
 Finally, we have developed tooling to integrate our language into existing projects using an industry-standard build
 system and added support for bi-directional interoperability with existing Java Virtual Machine (JVM) code.
 
-\chapter{Future Work}\label{ch:future-work}
+Of the objectives discussed in section 1, all core objectives set for the project were met.
+One additional `stretch' objective, which involved adding support for a language such as Scala, was not met.
+This remains as possible future work as discussed below.
 
+\subsection{Future work}
 Our language is relatively basic, and there exist many opportunities for future work in this area.
 We discuss a few possible directions for future research below.
 
-\section{Non-regular expressions}
+\subsubsection{Non-regular expressions}
 
-As highlighted in section \ref{sec:pls}, the standard library within many programming languages supports an extension to traditional, theoretical regular expressions.
-A theory solver which supported these regular expressions would be interesting to see, and enable use of advanced features such as backreferences, lookaheads/lookbehinds
+As highlighted in section \ref{sec:pls}, the standard library within many programming languages supports an extension to traditional, formal regular expressions.
+A theory solver which supported these expressions would be interesting to see, and enable use of advanced features such as back-references and
+.NET's balancing group definitions.
 
-\todobox{Flesh this out:\begin{itemize}
-        \item Non-regular ``regular expressions'' like we see in PHP, Perl etc
-        \item Integration with languages such as C\#--take advantage of Roslyn? Scala/Java could also work by using annotations.
-        \item Extend Dafny/Haskell to take advantage of Z3str3?
-        \item Or, continue working on the proof of concept language to make it more palatable for serious use
-              (more types, generics, .. objects)
-\end{itemize}}
+This would need to be implemented as part of an extension to an existing SMT solver framework.
 
+\subsubsection{Language expansion}
+
+Our proof of concept language is primitive by design, and only implements a small number of types.
+Future development could add additional types, support for e.g. generics/parametric polymorphism, object-oriented
+programming constructs etc.
+
+\subsection{Imperative language integration}
+
+In this project, we have shown a restricted proof-of-concept programming language.
+It is likely that the concepts we have designed and implemented could be used to extend an existing, popular programming
+language such as Java, C\# or Scala.
+
+Many of these languages have a general mechanism to ``tag'' fields, local variables and methods with additional metadata
+which can then be accessed either at runtime or compile-time.
+For example, Java supports @-annotations which can be made visible at runtime, using \emph{reflection}.
+This metadata mechanism could be used to specify regular expression refinements which could then be checked by an
+external static analysis tool using the techniques we have described.
+This would likely aid with developer adoption.
 
 \titleformat{\chapter}[display]
 {\normalfont \sffamily \Huge  \color{id7-aubergine}}
@@ -2209,7 +2267,7 @@ The project is reliant on a number of resources. Use of these resources is subje
         {\color[HTML]{FFFFFF} \sffamily \textbf{Impact}} \\ \hline
         \parbox[t]{5cm}{\textbf{VCS hosting: GitHub}\\Storing and tracking code and report changes\\} & Loss of availability due to outage & Minimal, \emph{git} is decentralised so copy of files always available locally and at off-site backup \\ \hline
         \parbox[t]{5cm}{\textbf{Report authoring: \LaTeX}\\Writing and compiling the report, tracking bibliography} & Obsolescence & Unlikely, TeX tooling has been used for decades. Even if particular packages ceased working, the bulk of the content would still be accessible as plain text. \\ \hline
-        \parbox[t]{5cm}{\textbf{C\# analysis: Roslyn libary}\\Fulfilling the additional objective by analysing C\# code} & Loss of availability due to license change & Minimal. Even if Roslyn's OSS status changes, there is no requirement to integrate with C\#, other languages would illustrate the potential just as well. This would also not impact a primary project objective. \\ \hline
+        \parbox[t]{5cm}{\textbf{C\# analysis: Roslyn library}\\Fulfilling the additional objective by analysing C\# code} & Loss of availability due to license change & Minimal. Even if Roslyn's OSS status changes, there is no requirement to integrate with C\#, other languages would illustrate the potential just as well. This would also not impact a primary project objective. \\ \hline
         \parbox[t]{5cm}{\textbf{Self}\\Project work} & Illness, coursework deadlines & Minimised by scheduled slack time and identification of applicable coursework deadlines. \\ \hline
     \end{tabular}
     \caption{Resources and associated risks. \label{rr}}

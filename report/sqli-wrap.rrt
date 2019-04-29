@@ -1,0 +1,3 @@
+function LookupUsernameByToken(token: string[/[a-z0-9]+/]): string {
+    return !package.java.Application.lookupUserNameByToken(token)
+}
