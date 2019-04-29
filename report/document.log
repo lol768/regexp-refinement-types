@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.07.0 (TeX Live 2018/Debian)  (format=lualatex 2018.11.16)  29 APR 2019 01:21
+This is LuaTeX, Version 1.07.0 (TeX Live 2018/Debian)  (format=lualatex 2018.11.16)  29 APR 2019 04:57
  system commands enabled.
  file:line:error style messages enabled.
 **document.tex
@@ -35,7 +35,7 @@ Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
 '.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
 .
-luaotfload | main : initialization completed in 0.250 seconds
+luaotfload | main : initialization completed in 0.447 seconds
 Babel <3.20> and hyphenation patterns for 1 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
 Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
@@ -2447,12 +2447,12 @@ Package epstopdf Info: Source file: <bg.eps>
 ps>
 (epstopdf)             \includegraphics on input line 201.
 Package epstopdf Info: Output file is already uptodate.
-<bg-eps-converted-to.pdf, id=203, 813.0375pt x 1226.5825pt>
+<bg-eps-converted-to.pdf, id=228, 813.0375pt x 1226.5825pt>
 File: bg-eps-converted-to.pdf Graphic file (type pdf)
 <use bg-eps-converted-to.pdf>
 Package luatex.def Info: bg-eps-converted-to.pdf  used on input line 201.
 (luatex.def)             Requested size: 654.438pt x 901.94844pt.
-<logotype.pdf, id=204, 2133.95412pt x 339.58696pt>
+<logotype.pdf, id=229, 2133.95412pt x 339.58696pt>
 File: logotype.pdf Graphic file (type pdf)
 <use logotype.pdf>
 Package luatex.def Info: logotype.pdf  used on input line 216.
@@ -2501,7 +2501,37 @@ tex-cache/generic/fonts/otl/lmroman6-regular.luc) [2
 \tf@toc=\write10
 
 \openout10 = document.toc
- [3] [4] [5]
+
+./document.tex:236: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.236 \pagebreak[5]
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[3]
+./document.tex:260: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.260 \pagebreak[5]
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[4]
+./document.tex:279: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.279 \chapter
+            {Introduction}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[5]
 Chapter 1.
 LaTeX Font Info:    Font shape `TU/AvenirNext(0)/m/n' will be
 (Font)              scaled to size 55.25665pt on input line 279.
@@ -2533,8 +2563,17 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 109--110
 [][][][][][][] 
  []
 
+./motivation.tex:111: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.111 T
+     his query would return all users in the database.
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [7]
-<wso.png, id=352, 602.25pt x 695.59875pt>
+<wso.png, id=378, 602.25pt x 695.59875pt>
 File: wso.png Graphic file (type png)
 <use wso.png>
 Package luatex.def Info: wso.png  used on input line 129.
@@ -2553,6 +2592,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 129.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 129.
+./motivation.tex:142: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.142 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [8<./wso.png>]
 \myva=\box108
 Package mdframed Info: mdframed works in twoside mode on input line 145.
@@ -2572,7 +2620,7 @@ LaTeX Warning: Reference `mdf@pagelabel-3' on page 9 undefined on input line 145
 (./ldapcs.tex
 Package mdframed Info: mdframed works in twoside mode on input line 1.
 )
-<dobcrack.png, id=363, 1159.33125pt x 739.76375pt>
+<dobcrack.png, id=387, 1159.33125pt x 739.76375pt>
 File: dobcrack.png Graphic file (type png)
 <use dobcrack.png>
 Package luatex.def Info: dobcrack.png  used on input line 169.
@@ -2591,6 +2639,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 169.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 169.
+./motivation.tex:181: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.181 C
+     onsider a Java function which is designed to persist user preference in...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [9<./dobcrack.png>]
 \myvb=\box109
 Package mdframed Info: mdframed works in twoside mode on input line 185.
@@ -2621,7 +2678,7 @@ Package epstopdf Info: Source file: <divider.eps>
  divider.eps>
 (epstopdf)             \includegraphics on input line 236.
 Package epstopdf Info: Output file is already uptodate.
-<divider-eps-converted-to.pdf, id=377, 907.39pt x 32.12pt>
+<divider-eps-converted-to.pdf, id=399, 907.39pt x 32.12pt>
 File: divider-eps-converted-to.pdf Graphic file (type pdf)
 <use divider-eps-converted-to.pdf>
 Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 236.
@@ -2630,15 +2687,49 @@ Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 236.
 Overfull \vbox (18.48329pt too high) has occurred while \output is active []
 
 
-[10<./divider-eps-converted-to.pdf>] [11]
-Underfull \hbox (badness 1642) in paragraph at lines 290--290
+./motivation.tex:236: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.236 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[10<./divider-eps-converted-to.pdf>]
+Package mdframed Info: mdframed works in twoside mode on input line 262.
+
+pygmentize -l rrtlex.py:RrtLexer -x -f latex -P commandprefix=PYG -F tokenmerge 
+-o document.out.pyg motivation.rrt
+
+(./_minted-document/E6E8E17C2665F2A321D1D91EAEA8611E00358D3552EEBCC88D7CA06EBD0
+7B7C7.pygtex)
+./motivation.tex:272: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.272 \end{mycodefile}
+                    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[11]
+Underfull \hbox (badness 1642) in paragraph at lines 302--302
 |[]\TU/ProximaNova(0)/m/n/24.88 Legal, social, ethical and profes-sional
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 320.
-Package mdframed Info: You first box width is to small
- mdframed fixed it
-(mdframed)              on input line 329.
+./motivation.tex:319: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.319 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[12]
+Package mdframed Info: mdframed works in twoside mode on input line 331.
+)
 Package epstopdf Info: Source file: <divider.eps>
 (epstopdf)                    date: 2019-04-01 15:40:14
 (epstopdf)                    size: 2409 bytes
@@ -2647,13 +2738,23 @@ Package epstopdf Info: Source file: <divider.eps>
 (epstopdf)                    size: 2514 bytes
 (epstopdf)             Command: <epstopdf --outfile=divider-eps-converted-to.pdf
  divider.eps>
-(epstopdf)             \includegraphics on input line 329.
+(epstopdf)             \includegraphics on input line 282.
 Package epstopdf Info: Output file is already uptodate.
 File: divider-eps-converted-to.pdf Graphic file (type pdf)
 <use divider-eps-converted-to.pdf>
-Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 329.
+Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 282.
 (luatex.def)             Requested size: 597.50787pt x 21.15073pt.
-[12]) [13]
+
+./document.tex:282: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.282 \chapter
+            {Background}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[13]
 Chapter 2.
 
 Underfull \hbox (badness 10000) in paragraph at lines 310--312
@@ -2688,6 +2789,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 363.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 363.
+./document.tex:365: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.365 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [15]
 
 Package varwidth Warning: Failed to reprocess entire contents on input line 443.
@@ -2720,6 +2830,15 @@ Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 449.
 Overfull \vbox (20.74304pt too high) has occurred while \output is active []
 
 
+./document.tex:449: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.449 \subsection{Programming Language Support}
+                                             
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [16]
 
 Package varwidth Warning: Failed to reprocess entire contents on input line 496.
@@ -2734,6 +2853,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 496.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 496.
+./document.tex:497: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.497 \end{figure}
+                
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [17]
 
 ./document.tex:510: LaTeX Error: Can be used only in preamble.
@@ -2826,6 +2954,15 @@ With luck, this will get me unwedged. But if you
 really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
+./document.tex:539: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.539 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [18]
 Underfull \hbox (badness 10000) in paragraph at lines 557--560
 
@@ -2833,11 +2970,40 @@ Underfull \hbox (badness 10000) in paragraph at lines 557--560
 
 (load luc: /home/adam/.texlive2018/texmf-var/luatex-cache/generic/fonts/otl/lmro
 man8-bold.luc)(load luc: /home/adam/.texlive2018/texmf-var/luatex-cache/generic/
-fonts/otl/lmroman6-bold.luc) [19] [20]
+fonts/otl/lmroman6-bold.luc)
+./document.tex:598: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.598 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[19]
+./document.tex:641: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.641 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[20]
 Underfull \hbox (badness 2173) in paragraph at lines 691--697
 \TU/lmr/m/n/12 A more advanced approach than Knuth’s SAT0 (discussed in secti
 on []2.3.3[]) is the
  []
+
+./document.tex:697: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.697 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
 
 [21]
 
@@ -2878,6 +3044,15 @@ Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 763.
 Overfull \vbox (1.65407pt too high) has occurred while \output is active []
 
 
+./document.tex:763: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.763 \end{algbox}
+                
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [22]
 Package mdframed Info: mdframed works in twoside mode on input line 775.
 (load luc: /home/adam/.texlive2018/texmf-var/luatex-cache/generic/fonts/otl/font
@@ -2885,7 +3060,17 @@ Package mdframed Info: mdframed works in twoside mode on input line 775.
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
 (mdframed)              on input line 795.
- [23]
+
+./document.tex:795: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.795 \end{example}
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[23]
 Package mdframed Info: mdframed works in twoside mode on input line 798.
 Package mdframed Info: mdframed works in twoside mode on input line 821.
 
@@ -2893,14 +3078,34 @@ pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg dpll.java
 
 (./_minted-document/68B23B31589CA2EA90CC5A91BC5B6BB1793646E7367F076AF6956393A64
-41B1B.pygtex) [24]
+41B1B.pygtex)
+./document.tex:822: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.822 \end{mycodefile}
+                    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[24]
 Package mdframed Info: mdframed works in twoside mode on input line 833.
 
 pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o document.out
 .pyg multivariate.py
 
 (./_minted-document/E6428AE8F2E956F0FBDDBFA45BEFD710D51BD714FF58D4CB1112B1B74D3
-B7076.pygtex) [25]
+B7076.pygtex)
+./document.tex:844: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.844 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[25]
 Package mdframed Info: mdframed works in twoside mode on input line 885.
 Package epstopdf Info: Source file: <divider.eps>
 (epstopdf)                    date: 2019-04-01 15:40:14
@@ -2916,18 +3121,68 @@ File: divider-eps-converted-to.pdf Graphic file (type pdf)
 <use divider-eps-converted-to.pdf>
 Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 954.
 (luatex.def)             Requested size: 597.50787pt x 21.15073pt.
- [26]
+
+./document.tex:954: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.954 \end{example}
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[26]
 Package mdframed Info: Box was splittet wrong
  starting loop to iterate the splitting point
 (mdframed)              on input line 954.
- [27] [28]
+
+./document.tex:954: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.954 \end{example}
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[27]
+./document.tex:972: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.972 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[28]
 Package mdframed Info: mdframed works in twoside mode on input line 1003.
 
 pygmentize -l rust -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg age.rs
 
 (./_minted-document/0177944964E9809E8C739312A62828F0176F43CC8C195B380528A08C391
-FC3E9.pygtex) [29] [30]
+FC3E9.pygtex)
+./document.tex:1004: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1004 \end{mycodefile}
+                     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[29]
+./document.tex:1028: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1028 \subsection{Formal Languages}
+                                  
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[30]
 
 Package varwidth Warning: Failed to reprocess entire contents on input line 1057
 .
@@ -2948,7 +3203,17 @@ rge -o document.out.pyg factorial.dfy
 (./_minted-document/7AA8430A66688C9AB49A8D939A088A108C364D46E5AB071AF5F1897EE46
 67AA6.pygtex)
 Package mdframed Info: Not enough space on this page on input line 1091.
- [31
+
+./document.tex:1091: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1091 \end{mycodefile}
+                     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[31
 Missing character: There is no ̂ (U+0302) in font UbuntuMono:mode=node;script=l
 atn;language=DFLT;!
 ]
@@ -2959,21 +3224,51 @@ pygmentize -l dafnylex.py:DafnyLexer -x -f latex -P commandprefix=PYG -F tokenme
 rge -o document.out.pyg strings.dfy
 
 (./_minted-document/1D5B80998A77D725333F271918C83B5E3D3BA4AD8A2E090242B989BDE2C
-68D1B.pygtex) [32]
+68D1B.pygtex)
+./document.tex:1107: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1107 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[32]
 Package mdframed Info: mdframed works in twoside mode on input line 1108.
 
 pygmentize -l dafnylex.py:DafnyLexer -x -f latex -P commandprefix=PYG -F tokenme
 rge -o document.out.pyg regex.dfy
 
 (./_minted-document/43A4C30032C6D5C94A8E3DED643715715CCE5A9B72BB8E880FAEDF04897
-2B661.pygtex) [33]
+2B661.pygtex)
+./document.tex:1134: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1134 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[33]
 Package mdframed Info: mdframed works in twoside mode on input line 1135.
 
 pygmentize -l haskell -f latex -P commandprefix=PYG -F tokenmerge -o document.ou
 t.pyg odds.hs
 
 (./_minted-document/6D0945C04B97E2CD68468A22AECB5C037EBA8A6C3C165EAB4B887B168F0
-6C70D.pygtex) [34]
+6C70D.pygtex)
+./document.tex:1170: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1170 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[34]
 Package mdframed Info: mdframed works in twoside mode on input line 1172.
 
 pygmentize -l yaml -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
@@ -2987,7 +3282,17 @@ pygmentize -l yaml -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg behavior.yaml
 
 (./_minted-document/E7CE89DA8F754A2354094F4F736F942EC4A9D749257A504939DDC8808DD
-3CE5A.pygtex) [35]
+3CE5A.pygtex)
+./document.tex:1189: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1189 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[35]
 Package mdframed Info: mdframed works in twoside mode on input line 1190.
 
 pygmentize -l csharp -f latex -P commandprefix=PYG -F tokenmerge -o document.out
@@ -3002,7 +3307,7 @@ pygmentize -l groovy -f latex -P commandprefix=PYG -F tokenmerge -o document.out
 
 (./_minted-document/3F845DFCEAF33EBF0A20359BE244740E20FB31D8CEE71C32ACB59027C24
 4B108.pygtex)
-<snyk.png, id=700, 1675.25874pt x 1104.125pt>
+<snyk.png, id=690, 1675.25874pt x 1104.125pt>
 File: snyk.png Graphic file (type png)
 <use snyk.png>
 Package luatex.def Info: snyk.png  used on input line 1225.
@@ -3021,7 +3326,26 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 1225.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1225.
-[36] [37<./snyk.png>]
+./document.tex:1226: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1226 \end{figure}
+                 
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[36]
+./document.tex:1241: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1241 \chapter
+             {Design}\label{ch:design}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[37<./snyk.png>]
 Chapter 3.
 
 \openout8 = document.pyg
@@ -3031,7 +3355,27 @@ pyg document.pyg
 (./_minted-document/75638A89337295D303F00BF8FFFAF52DBCB54A0602DB608DE8D1D890C84
 65FBC.pygtex) [38
 
-] [39] [40] (./regex-parse-tree-forest.tex)
+]
+./document.tex:1360: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1360     <optional-else> ::= 
+                             ` ' `else' ` ' `\{ \textbackslash n' <body> `\}...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[39]
+./document.tex:1412: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1412 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[40] (./regex-parse-tree-forest.tex)
 
 Package varwidth Warning: Failed to reprocess entire contents on input line 1457
 .
@@ -3045,7 +3389,26 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 1457.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1457.
-[41] [42
+./document.tex:1470: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1470 <value-ref> ::= 
+                     <number> | <string-literal> | `true' | `false' | <ident...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[41]
+./document.tex:1470: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1470 <value-ref> ::= 
+                     <number> | <string-literal> | `true' | `false' | <ident...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[42
 Missing character: There is no [ (U+005B) in font nullfont!
 Missing character: There is no / (U+002F) in font nullfont!
 Missing character: There is no ] (U+005D) in font nullfont!
@@ -3071,7 +3434,17 @@ pygmentize -l rrtlex.py:RrtLexer -x -f latex -P commandprefix=PYG -F tokenmerge
 (./_minted-document/A5641D24C0396A74329C3EDF5E1BB4B7D41806C755FE9ABB7F849F7481F
 909E1.pygtex)
 Package mdframed Info: Not enough space on this page on input line 1505.
- [43]
+
+./document.tex:1505: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1505 \end{mycodefile}
+                     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[43]
 Package mdframed Info: Not enough space on this page on input line 1505.
 Package epstopdf Info: Source file: <expressions.eps>
 (epstopdf)                    date: 2019-04-13 17:01:38
@@ -3083,7 +3456,7 @@ Package epstopdf Info: Source file: <expressions.eps>
 .pdf expressions.eps>
 (epstopdf)             \includegraphics on input line 1545.
 Package epstopdf Info: Output file is already uptodate.
-<expressions-eps-converted-to.pdf, id=762, 902.37125pt x 352.31625pt>
+<expressions-eps-converted-to.pdf, id=743, 902.37125pt x 352.31625pt>
 File: expressions-eps-converted-to.pdf Graphic file (type pdf)
 <use expressions-eps-converted-to.pdf>
 Package luatex.def Info: expressions-eps-converted-to.pdf  used on input line 15
@@ -3103,6 +3476,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 1545.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1545.
+./document.tex:1547: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1547 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [44]
 \openout8 = document.pyg
 
@@ -3142,7 +3524,7 @@ Package epstopdf Info: Source file: <statements.eps>
 pdf statements.eps>
 (epstopdf)             \includegraphics on input line 1573.
 Package epstopdf Info: Output file is already uptodate.
-<statements-eps-converted-to.pdf, id=769, 824.07875pt x 201.75375pt>
+<statements-eps-converted-to.pdf, id=749, 824.07875pt x 201.75375pt>
 File: statements-eps-converted-to.pdf Graphic file (type pdf)
 <use statements-eps-converted-to.pdf>
 Package luatex.def Info: statements-eps-converted-to.pdf  used on input line 157
@@ -3162,6 +3544,15 @@ Package mdframed Info: mdframed inside float
  mdframed uses option nobreak mdframed on input line 1573.
 Package mdframed Info: mdframed inside a box 
  mdframed uses option nobreak mdframed on input line 1573.
+./document.tex:1575: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1575 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [45<./expressions-eps-converted-to.pdf>]
 \openout8 = document.pyg
 
@@ -3206,6 +3597,15 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 1608--1609
 [][][][][][][] 
  []
 
+./document.tex:1610: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1610 I
+      n the above REPL (read-eval-print loop) session, use of the \texttt{+}...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
 [46<./statements-eps-converted-to.pdf>]
 Package mdframed Info: mdframed works in twoside mode on input line 1639.
 
@@ -3213,12 +3613,28 @@ pygmentize -l rrtlex.py:RrtLexer -x -f latex -P commandprefix=PYG -F tokenmerge
 -o document.out.pyg irt.rrt
 
 (./_minted-document/32BCC890F2610D1458810FEC85D02475814CB3938BE6364E50A52E8AF39
-D773A.pygtex) [47] [48]
+D773A.pygtex)
+./document.tex:1645: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1645     \item W
+                hen $x$ is returned from the function \texttt{Demonstration}...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[47]
+./document.tex:1677: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1677 \chapter
+             {Implementation}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[48]
 Chapter 4.
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 1675.
-
 
 \openout6 = document.pyg
 pygmentize -l antlr -f latex -P commandprefix=PYG -F tokenmerge -o document.out.
@@ -3227,7 +3643,7 @@ pyg document.pyg
 (./_minted-document/606E4220E014D9C14CC4722B5EF03B25DE88D2745994DDD1F46CB783B1E
 B19ED.pygtex)
 \myvlex=\box110
-Package mdframed Info: mdframed works in twoside mode on input line 1709.
+Package mdframed Info: mdframed works in twoside mode on input line 1713.
 
 pygmentize -l antlr -f latex -P commandprefix=PYG -F tokenmerge -o document.out.
 pyg antlrlex.g4
@@ -3235,22 +3651,22 @@ pyg antlrlex.g4
 (./_minted-document/C4DDF0421FF2B302658A08EB795AF2A3E878ECAEB82A18A80CE5FB41204
 BE557.pygtex)
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1710.
+ mdframed uses option nobreak mdframed on input line 1714.
 
 
-LaTeX Warning: Reference `mdf@pagelabel-44' on page 49 undefined on input line 1
-710.
+LaTeX Warning: Reference `mdf@pagelabel-45' on page 49 undefined on input line 1
+714.
 
 (./antlrlex.tex [49
 
 ])
-Underfull \hbox (badness 1838) in paragraph at lines 1730--1734
+Underfull \hbox (badness 1838) in paragraph at lines 1734--1738
 []\TU/lmr/m/n/12 Using the \TU/lmr/m/it/12 Gradle \TU/lmr/m/n/12 build system, 
 there is an offi-cial \remove@tlig antlr \TU/lmr/m/n/12 plugin which provides a
 
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 1737.
+Package mdframed Info: mdframed works in twoside mode on input line 1741.
 pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg antlruse.java
 
@@ -3262,25 +3678,121 @@ pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg document.pyg
 
 (./_minted-document/A1D6E59E94FD4CB73CF7DA0C9ACB1D75C4DE393D1390C33B7A5F3D93084
-3CA19.pygtex) [50]
-Package mdframed Info: mdframed works in twoside mode on input line 1770.
+3CA19.pygtex)
+Package mdframed Info: Box was splittet wrong
+ starting loop to iterate the splitting point
+(mdframed)              on input line 1759.
+
+./document.tex:1759: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1759 \end{mycodefile}
+                     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[50]
+Package mdframed Info: mdframed works in twoside mode on input line 1775.
 
 pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg javasmt.java
 
 (./_minted-document/18E105578A02C641AC5AF8A85C0D03512ECB78E1887C3060D730C0BA62A
-91F5E.pygtex) [51]
-Underfull \hbox (badness 10000) in paragraph at lines 1795--1795
+91F5E.pygtex)
+./document.tex:1775: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1775 ...T API}{Java}{javasmt.java}\end{mycodefile}
+                                                  
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[51]
+Underfull \hbox (badness 1117) in paragraph at lines 1780--1782
+[]\TU/lmr/m/n/12 Unfor-tu-nately, string (and regular expres-sion support) is n
+ot universal amongst SMT
+ []
+
+
+\openout6 = document.pyg
+pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
+yg document.pyg
+
+(./_minted-document/267AA5E3FD5F6E66D254A8A52D172598C4DE393D1390C33B7A5F3D93084
+3CA19.pygtex)
+./document.tex:1814: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1814 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[52]
+\openout6 = document.pyg
+
+pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
+yg document.pyg
+
+(./_minted-document/7B750E670B152190EFE950AC8FE7DBCBC4DE393D1390C33B7A5F3D93084
+3CA19.pygtex)
+\openout6 = document.pyg
+
+pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
+yg document.pyg
+
+(./_minted-document/D682C64D995A14C23E2BC9BE482CED80C4DE393D1390C33B7A5F3D93084
+3CA19.pygtex)
+Underfull \hbox (badness 10000) in paragraph at lines 1858--1858
 []\remove@tlig L5:4 Return type string [/g+|f+/] of function SecondaryFunction 
 didn't
  []
 
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 1795--1796
+Overfull \hbox (6.0pt too wide) in paragraph at lines 1858--1859
 [][][][][][][] 
  []
 
-[52] [53]
+./document.tex:1862: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1862 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[53]
+Package epstopdf Info: Source file: <seqdiagram.eps>
+(epstopdf)                    date: 2019-04-29 04:44:01
+(epstopdf)                    size: 1552828 bytes
+(epstopdf)             Output file: <seqdiagram-eps-converted-to.pdf>
+(epstopdf)                    date: 2019-04-29 04:45:26
+(epstopdf)                    size: 485654 bytes
+(epstopdf)             Command: <epstopdf --outfile=seqdiagram-eps-converted-to.
+pdf seqdiagram.eps>
+(epstopdf)             \includegraphics on input line 1888.
+Package epstopdf Info: Output file is already uptodate.
+<seqdiagram-eps-converted-to.pdf, id=826, 493.845pt x 460.72125pt>
+File: seqdiagram-eps-converted-to.pdf Graphic file (type pdf)
+<use seqdiagram-eps-converted-to.pdf>
+Package luatex.def Info: seqdiagram-eps-converted-to.pdf  used on input line 188
+8.
+(luatex.def)             Requested size: 241.84843pt x 225.62181pt.
+
+./document.tex:1896: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1896 \newpage
+             
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[54<./seqdiagram-eps-converted-to.pdf>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: luatex
 * paper: custom
@@ -3313,134 +3825,177 @@ Overfull \hbox (6.0pt too wide) in paragraph at lines 1795--1796
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<webiface.png, id=860, 4257.9075pt x 3011.25pt>
+<webiface.png, id=834, 2495.3225pt x 3438.8475pt>
 File: webiface.png Graphic file (type png)
 <use webiface.png>
-Package luatex.def Info: webiface.png  used on input line 1832.
-(luatex.def)             Requested size: 901.91846pt x 654.39023pt.
- [54
-
+Package luatex.def Info: webiface.png  used on input line 1902.
+(luatex.def)             Requested size: 654.40373pt x 901.95016pt.
+ [55
 
 <./webiface.png>]
-<rise4fun.png, id=866, 2188.175pt x 1447.4075pt>
+<rise4fun.png, id=840, 2188.175pt x 1447.4075pt>
 File: rise4fun.png Graphic file (type png)
 <use rise4fun.png>
-Package luatex.def Info: rise4fun.png  used on input line 1861.
+Package luatex.def Info: rise4fun.png  used on input line 1929.
 (luatex.def)             Requested size: 417.32434pt x 276.04831pt.
 
 
-Package varwidth Warning: Failed to reprocess entire contents on input line 1861
+Package varwidth Warning: Failed to reprocess entire contents on input line 1929
 .
 
 
-Package varwidth Warning: Failed to reprocess entire contents on input line 1861
+Package varwidth Warning: Failed to reprocess entire contents on input line 1929
 .
 
-Package mdframed Info: mdframed works in twoside mode on input line 1861.
+Package mdframed Info: mdframed works in twoside mode on input line 1929.
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1861.
+ mdframed uses option nobreak mdframed on input line 1929.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1861.
+ mdframed uses option nobreak mdframed on input line 1929.
 
-Overfull \vbox (8.47333pt too high) has occurred while \output is active []
+Overfull \vbox (20.24146pt too high) has occurred while \output is active []
 
 
-[55
+./document.tex:1945: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1945 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[56
 
 <./rise4fun.png>]
-Package mdframed Info: mdframed works in twoside mode on input line 1878.
+Package mdframed Info: mdframed works in twoside mode on input line 1946.
 
 pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg gradle.java
 
 (./_minted-document/4CB7611C755B1D244CE99AF4F73445EFB7EDE97659F279ACEBB23B168C8
 3CEC6.pygtex)
-Underfull \hbox (badness 10000) in paragraph at lines 1900--1900
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 \remove@tlig type.txt: L6:6 string didn't satisfy string [/A-Za-z+/], example v
 iolating
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1900--1900
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1900--1900
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1900--1900
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 \remove@tlig Run with \TU/UbuntuMono(0)/bx/n/12 --stacktrace \remove@tlig optio
 n to get the stack trace. Run with \TU/UbuntuMono(0)/bx/n/12 --info \remove@tli
 g or
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1900--1900
+Underfull \hbox (badness 10000) in paragraph at lines 1968--1968
 
  []
 
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 1900--1901
+Overfull \hbox (6.0pt too wide) in paragraph at lines 1968--1969
 [][][][][][][] 
  []
 
-[56]
+./document.tex:1975: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1975     \item I
+                nitial type-checking work had used the JavaSMT API layer for...
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[57]
+./document.tex:1992: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1992 \chapter
+             {Testing}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[58]
 Chapter 5.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1929--1929
+Underfull \hbox (badness 10000) in paragraph at lines 2019--2019
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1929--1929
+Underfull \hbox (badness 10000) in paragraph at lines 2019--2019
 
  []
 
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 1929--1930
+Overfull \hbox (6.0pt too wide) in paragraph at lines 2019--2020
 [][][][][][][] 
  []
 
-<results.png, id=884, 3011.25pt x 580.1675pt>
+<results.png, id=856, 3011.25pt x 580.1675pt>
 File: results.png Graphic file (type png)
 <use results.png>
-Package luatex.def Info: results.png  used on input line 1946.
+Package luatex.def Info: results.png  used on input line 2036.
 (luatex.def)             Requested size: 463.69687pt x 89.3319pt.
 
-Package varwidth Warning: Failed to reprocess entire contents on input line 1946
+Package varwidth Warning: Failed to reprocess entire contents on input line 2036
 .
 
 
-Package varwidth Warning: Failed to reprocess entire contents on input line 1946
+Package varwidth Warning: Failed to reprocess entire contents on input line 2036
 .
 
-Package mdframed Info: mdframed works in twoside mode on input line 1946.
+Package mdframed Info: mdframed works in twoside mode on input line 2036.
 Package mdframed Info: mdframed inside float 
- mdframed uses option nobreak mdframed on input line 1946.
+ mdframed uses option nobreak mdframed on input line 2036.
 Package mdframed Info: mdframed inside a box 
- mdframed uses option nobreak mdframed on input line 1946.
-[57
+ mdframed uses option nobreak mdframed on input line 2036.
+[59
 
 ]
-Package mdframed Info: mdframed works in twoside mode on input line 1960.
+Package mdframed Info: mdframed works in twoside mode on input line 2050.
 
 pygmentize -l java -f latex -P commandprefix=PYG -F tokenmerge -o document.out.p
 yg integration.java
 
 (./_minted-document/98DEF4AA7AE07EEB5B948D6E072678014215488B0B35287F603914E76C1
-F8185.pygtex) [58<./results.png>] [59]
-Chapter 6.
-[60
+F8185.pygtex)
+./document.tex:2054: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2054 \end{mycodefile}
+                     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
 
-]
-Chapter 7.
-<findbugs-eval.png, id=913, 3766.07pt x 940.51375pt>
+[60<./results.png>]
+./document.tex:2070: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2070 \chapter
+             {Evaluation and Conclusions}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[61]
+Chapter 6.
+<findbugs-eval.png, id=876, 3766.07pt x 940.51375pt>
 File: findbugs-eval.png Graphic file (type png)
 <use findbugs-eval.png>
-Package luatex.def Info: findbugs-eval.png  used on input line 2023.
+Package luatex.def Info: findbugs-eval.png  used on input line 2090.
 (luatex.def)             Requested size: 483.69687pt x 120.79291pt.
 (./java-token-match.tex
 \openout8 = document.pyg
@@ -3450,34 +4005,94 @@ yg document.pyg
 
 (./_minted-document/9816D2C19863483C4C91922CEEA35C8EC4DE393D1390C33B7A5F3D93084
 3CA19.pygtex))
-Package mdframed Info: mdframed works in twoside mode on input line 2037.
+Package mdframed Info: mdframed works in twoside mode on input line 2104.
 
 pygmentize -l rrtlex.py:RrtLexer -x -f latex -P commandprefix=PYG -F tokenmerge 
 -o document.out.pyg sqli-wrap.rrt
 
 (./_minted-document/040814BCE66B0513121D645167E3A1A9B534BD709AEEEEF923CDCE5A761
-C70D8.pygtex) [61
+C70D8.pygtex) [62
 
 <./findbugs-eval.png>]
-Package mdframed Info: Not enough space on this page on input line 2043.
+Package mdframed Info: Not enough space on this page on input line 2110.
 
 \openout8 = document.pyg
 
 pygmentize -l rrtlex.py:RrtLexer -x -f latex -P commandprefix=PYG -F tokenmerge 
 -o document.out.pyg document.pyg
 
-(./_minted-document/03DEC4B27F65B9AC7CA12AC9B3DD3322444372F45B99C006E913F3AA8EA
-A7BF5.pygtex) [62] (./document.bbl [63] [64
+(./_minted-document/6FA46C2624CFAAD4BACB960A5C762E78444372F45B99C006E913F3AA8EA
+A7BF5.pygtex)
+Underfull \hbox (badness 10000) in paragraph at lines 2125--2125
+\remove@tlig sqli-wrap.txt: L6:23 string didn't satisfy string [/[a-z0-9]+/], e
+xample
+ []
 
-] [65]
+
+Overfull \hbox (6.0pt too wide) in paragraph at lines 2125--2126
+[][][][][][][] 
+ []
+
+./document.tex:2150: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2150 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[63]
+./document.tex:2189: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2189 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[64] (./document.bbl
+./document.bbl:1: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.1 \begin{thebibliography}{xx}
+                             
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[65] [66
+
+]
+./document.bbl:192: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.192 
+    
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[67]
 Underfull \hbox (badness 10000) in paragraph at lines 217--221
 \TU/lmr/bx/sc/12 URL: \TU/lmr/m/it/12 https://www.microsoft.com/en-us/research/
 publication/applications-of-symbolic-
  []
 
-) [66]
+)
+./document.tex:2199: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2199 \chapter
+             {Project Specification}
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[68]
 Appendix A.
-[67
+[69
 
 ]
 \openout6 = document.pyg
@@ -3488,9 +4103,9 @@ pygmentize -l javascript -f latex -P commandprefix=PYG -F tokenmerge -o document
 (./_minted-document/ACCC06A58BDA3ACC47BB18BD17ECC4B2E64DD7A3F7F870CDE8C833FAB09
 246DC.pygtex)
 Package hyperref Info: bookmark level for unknown listing defaults to 0 on input
- line 2163.
+ line 2242.
 
-Overfull \hbox (6.0pt too wide) in paragraph at lines 2194--2195
+Overfull \hbox (6.0pt too wide) in paragraph at lines 2273--2274
 [][][][][][][] 
  []
 
@@ -3502,94 +4117,137 @@ Package epstopdf Info: Source file: <divider.eps>
 (epstopdf)                    size: 2514 bytes
 (epstopdf)             Command: <epstopdf --outfile=divider-eps-converted-to.pdf
  divider.eps>
-(epstopdf)             \includegraphics on input line 2196.
+(epstopdf)             \includegraphics on input line 2275.
 Package epstopdf Info: Output file is already uptodate.
 File: divider-eps-converted-to.pdf Graphic file (type pdf)
 <use divider-eps-converted-to.pdf>
-Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 2196.
+Package luatex.def Info: divider-eps-converted-to.pdf  used on input line 2275.
 (luatex.def)             Requested size: 597.50787pt x 21.15073pt.
 
 Overfull \vbox (15.38457pt too high) has occurred while \output is active []
 
 
-[68]
-Underfull \hbox (badness 1817) in paragraph at lines 2210--2210
+./document.tex:2275: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2275 \section*{Schedule}
+                        
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[70]
+Underfull \hbox (badness 1817) in paragraph at lines 2289--2289
 []|\TU/lmr/m/n/12 November 12$[][]$ -- November
  []
 
-[69]
-Underfull \hbox (badness 1622) in paragraph at lines 2229--2230
+./document.tex:2306: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2306 \subsection*{Software Engineering}
+                                       
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[71]
+Underfull \hbox (badness 1622) in paragraph at lines 2308--2309
 \TU/lmr/m/n/12 This project includes an element of soft-ware engi-neering. Name
 ly, the design and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2256--2256
+Underfull \hbox (badness 10000) in paragraph at lines 2335--2335
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2256--2256
+Underfull \hbox (badness 10000) in paragraph at lines 2335--2335
 []|\TU/lmr/m/n/12 Loss of avail-ability
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2257--2257
+Underfull \hbox (badness 10000) in paragraph at lines 2336--2336
 []\TU/lmr/bx/sc/12 Report authoring:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2257--2257
+Underfull \hbox (badness 10000) in paragraph at lines 2336--2336
 \TU/lmr/m/n/12 report, tracking bibli-og-
  []
 
 
-Underfull \hbox (badness 2809) in paragraph at lines 2258--2258
+Underfull \hbox (badness 2809) in paragraph at lines 2337--2337
 []\TU/lmr/bx/sc/12 C# anal-ysis: Roslyn
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2258--2258
+Underfull \hbox (badness 10000) in paragraph at lines 2337--2337
 \TU/lmr/m/n/12 Fulfilling the addi-tional
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2258--2258
+Underfull \hbox (badness 10000) in paragraph at lines 2337--2337
 []|\TU/lmr/m/n/12 Loss of avail-ability
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2259--2259
+Underfull \hbox (badness 10000) in paragraph at lines 2338--2338
 []|\TU/lmr/m/n/12 Illness, course-work
  []
 
 
-Overfull \hbox (23.37355pt too wide) in paragraph at lines 2251--2261
+Overfull \hbox (23.37355pt too wide) in paragraph at lines 2330--2340
  [][] 
  []
 
-[70] 
+./document.tex:2342: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2342 
+     
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[72] 
 AED: lastpage setting LastPage
-[71]
+./document.tex:2350: Missing number, treated as zero.
+<to be read again> 
+\c@LastPage 
+l.2350 \end{document}
+                   
+A number should have been here; I inserted `0'.
+(If you can't figure out why I needed to see a number,
+look up `weird error' in the index to The TeXbook.)
+
+[73]
 
 Package catoptions Warning: Undefined options 
 (catoptions)                [Family, Option, Value]: 
 (catoptions)                fontenc.sty,TU,. 
 (catoptions)                Default action already taken in each case .
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2271.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 2271.
-(./document.xwm) (./document.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2271.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2271.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2350.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 2350.
+(./document.xwm)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+(./document.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2350.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2350.
 Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: 7B599DDE2C0B246856D41D81CBD78153;3282.
+(rerunfilecheck)             Checksum: 066AE92AFAC4EA0CE04201FE2D067112;3721.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 )
 (\end occurred inside a group at level 1)
@@ -3598,17 +4256,19 @@ LaTeX Warning: There were undefined references.
 ### bottom level
 
 Here is how much of LuaTeX's memory you used:
- 64916 strings out of 494413
- 125009,1648299 words of node,token memory allocated
- 24626 words of node memory still in use:
+ 65007 strings out of 494413
+ 125007,1648299 words of node,token memory allocated
+ 24646 words of node memory still in use:
    200 hlist, 9 vlist, 49 rule, 8 disc, 6 local_par, 8 math, 654 glue, 98 kern, 
-99 penalty, 1419 glyph, 1055 attribute, 159 glue_spec, 1055 attribute_list, 7 wr
-ite, 21 pdf_literal, 5 pdf_action, 420 pdf_colorstack nodes
-   avail lists: 1:5,2:1669,3:818,4:236,5:819,6:135,7:8817,8:188,9:535,10:22,11:1
+99 penalty, 1419 glyph, 1056 attribute, 161 glue_spec, 1056 attribute_list, 7 wr
+ite, 21 pdf_literal, 6 pdf_action, 420 pdf_colorstack nodes
+   avail lists: 1:1,2:1663,3:818,4:275,5:817,6:134,7:8817,8:186,9:535,10:22,11:1
 77
- 65808 multiletter control sequences out of 65536+600000
- 148 fonts using 22308783 bytes
+ 65825 multiletter control sequences out of 65536+600000
+ 148 fonts using 22309119 bytes
  213i,17n,213p,1601b,4559s stack positions out of 5000i,500n,10000p,200000b,100000s
+
+warning  (pdf backend): unreferenced destination with name 'page.74'
 </home/adam/texmf/fonts/opentype/public/lm/lmroman8-bold.otf></usr/share/texlive
 /texmf-dist/fonts/truetype/public/dejavu/DejaVuSans.ttf></home/adam/.fonts/Font 
 Awesome 5 Pro-Light-300.otf></home/adam/.fonts/ProximaNova-BoldIt.ttf></home/ada
@@ -3632,10 +4292,10 @@ pe1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
 nts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symb
 ols/msbm10.pfb>
-Output written on document.pdf (71 pages, 4031014 bytes).
+Output written on document.pdf (73 pages, 4536967 bytes).
 
-PDF statistics: 1170 PDF objects out of 1200 (max. 8388607)
- 999 compressed objects within 10 object streams
- 214 named destinations out of 1000 (max. 131072)
- 408 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 1126 PDF objects out of 1200 (max. 8388607)
+ 952 compressed objects within 10 object streams
+ 217 named destinations out of 1000 (max. 131072)
+ 456 words of extra memory for PDF output out of 10000 (max. 100000000)
 

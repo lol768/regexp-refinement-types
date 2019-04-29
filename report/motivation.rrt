@@ -1,0 +1,11 @@
+function GetCodeByKey(key: uint): string[/[0-9]+/] {
+    // Seamless Java FFI
+    return !java.package.CodeDao.lookup(key)
+}
+
+function Main(): string {
+    var name: string[/[A-Za-z0-9]+/]
+    // Type checker ensures [0-9]+ is compatible
+    name=GetNameByKey(1)
+    return name
+}

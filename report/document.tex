@@ -143,7 +143,7 @@ Scale=MatchLowercase
 
 \renewcommand{\headrulewidth}{0pt}
 \lfoot{\textcolor{grey}{Adam Williams}}
-\rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
+\rfoot{\textcolor{grey}{Page \thepage{} of $\the\numexpr\value{LastPage}-1$}}
 
 \renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=210mm]{divider}}}
 
@@ -220,13 +220,13 @@ Scale=MatchLowercase
     {\par}
     \vspace{1.25cm}
     \vspace{3.5cm}
-    {\hspace{0.75cm}\Huge \warwickfont Project Report}
+    {\hspace{1.60cm}\Huge \warwickfont Project Report}
     \vspace{0.16cm}
     {\par}
-    {\hspace{0.75cm}\large \warwickfont Adam Williams (3\textsuperscript{rd} year Computer Science)}
+    {\hspace{1.60cm}\large \warwickfont Adam Williams (3\textsuperscript{rd} year Computer Science)}
 
 
-    {\hspace{0.75cm}\large \warwickfont Michael Gale (supervisor)}
+    {\hspace{1.60cm}\large \warwickfont Michael Gale (supervisor)}
     \vfill
 \end{titlepage}
 \restoregeometry
@@ -1238,7 +1238,7 @@ actually called.
 This functionality increases the value of the vulnerability reports, but only supports a limited number of platforms and
 requires running an agent alongside the application to collect and send runtime data.
 
-\chapter{Design}
+\chapter{Design}\label{ch:design}
 
 This chapter discusses the design decisions made throughout the project and the reasoning behind them.
 
@@ -1656,8 +1656,8 @@ Hence, we have found a violation and the types are incompatible.
 
 The language type checker implements exactly this process.
 Constraints are built based on the types identified during AST construction and then solved using an SMT solver.
-We assume a theory solver is available for integer arithmetic and strings.
-
+With a theory solver available for both integers and strings, this approach works for both kinds of refinements
+supported by the language.
 
 \section{Development Methodology}
 
@@ -1670,11 +1670,15 @@ The Scrum methodology involves ``sprints'' which are a fixed duration and planne
 We scheduled a series of one-week sprints to implement the functionality discussed throughout this chapter.
 This approach allows for progress to be reflected upon at the end of each sprint.
 
+\section{Foreign Function Interface}
+
+
+
 \chapter{Implementation}
 
-\subsection{Parsing}
+\section{Parsing}
 
-\subsubsection{Introduction}
+\subsection{Introduction}
 
 In order to lex and parse user input into the AST structure discussed earlier, we use the \emph{ANTLR4} parser generator.
 ANTLR4 generates $LL(*)$ parsers in a variety of languages, including Java, C\# and Go \citep{parr2011ll}.
@@ -1722,7 +1726,7 @@ If this delimiter is not observed, integer constraints can be tokenised instead.
 
 Once the lexer reaches the end of an expression, it pops back into the previous lexical state and continues parsing.
 
-\subsubsection{Working with ANTLR}
+\subsection{Working with ANTLR}
 
 Once the grammar files are complete, ANTLR can be configured to generate parsers for a variety of languages.
 We decided to implement the type checker and interpreter in Java, so we target Java for the generated parser.
@@ -1758,9 +1762,10 @@ ANTLR can also be configured to target other languages, such as Go.
 This is significant, because Go supports compiling to \emph{WebAssembly} which most modern browsers can run natively,
 client-side.
 
-\subsection{SMT Solvers}
+\section{SMT Solvers}
 
-Initially, our type checker made use of the JavaSMT abstraction layer.
+Initially, our type checker made use of the JavaSMT abstraction layer to implement a subset of the language
+supporting natural number refinements only.
 This library provides a common API which is agnostic as to the underlying SMT solver.
 This approach allows type incompatibilities to be discovered for refined unsigned integers.
 
@@ -1772,14 +1777,72 @@ the satisfying valuation/model for the variables in the problem:
 Once the initial prototype for a language with refinement types for natural numbers was completed and a set of passing
 test cases had been written, the focus shifted to adding \texttt{string} support.
 
+Unfortunately, string (and regular expression support) is not universal amongst SMT solvers--and JavaSMT did not
+provide an abstraction layer over such functionality.
 
+Thus, we needed to build Z3 from source and use its Java bindings instead of the JavaSMT library.
+Z3, a C++ SMT solver, includes the Z3str3 component which is able to efficiently support solving string equations
+and predicates involving regular language membership \citep{berzish2017z3str3}.
+The original code which used the JavaSMT APIs to solve constraint problems with integers was then modified to use Z3.
+An adapter was written to construct a Z3 regular expression object from the parse tree.
 
-\subsection{Integrations and Frontends}
+Z3's API is reasonably straight-forward to use from Java.
+The example below shows what is involved in formulating and solving string constraint problems:
+
+We first must build the regular expressions which we want to use as constraints.
+In the same way that regular expressions can be defined inductively, Z3 offers an API that allows us to build up complex
+\texttt{ReExpr} objects by repeatedly applying operations to them:
+
+\begin{minted}{java}
+// /[a-z!]+/
+ReExpr matchAnyChar = ctx.mkPlus(
+    ctx.mkUnion(
+        ctx.mkRange(ctx.mkString("a"), ctx.mkString("z")), // [a-z]
+        ctx.mkToRe(ctx.mkString("!")) // !
+    )
+);
+
+// /foo[a-z!]+/, uses result above
+ReExpr exprOne = ctx.mkConcat(ctx.mkToRe(ctx.mkString("foo")), matchAnyChar);
+// /[a-z!]+bar/
+ReExpr exprTwo = ctx.mkConcat(matchAnyChar, ctx.mkToRe(ctx.mkString("bar")));
+\end{minted}
+
+With our regular expression objects built, we can now create the string equation.
+This requires an unknown variable $x$ of string type (or ``sort'' in Z3 parlance) and a \texttt{Solver} instance,
+which we can inform of our constraints.
+
+\begin{minted}{java}
+// our unknown string, denoted by x
+SeqExpr x = (SeqExpr) ctx.mkConst(ctx.mkSymbol("x"), ctx.getStringSort());
+
+// make a new solver
+Solver s = ctx.mkSolver();
+
+// must satisfy both expressions - x must belong to the intersection
+s.add(ctx.mkInRe(x, ctx.mkIntersect(exprOne, exprTwo)));
+\end{minted}
+
+With the constraints in place, we can begin searching for a satisfying model.
+Z3 will try to find a string for $x$ which matches both expressions:
+
+\begin{minted}{java}
+// try and find model satisfying requirements
+Status res = s.check();
+
+// prints SATISFIABLE in this case
+// but could print UNKNOWN, or UNSATISFIABLE
+System.out.println(res);
+// print out value from the model, e.g. "fooc!bar"
+System.out.println(s.getModel().getConstInterp(x));
+\end{minted}
+
+\section{Integrations and Frontends}
 
 In this section, we present the various tools and integrations we have provide on top of the core parser, type checker
 and interpreter.
 
-\subsubsection{Command Line Interface}
+\subsection{Command Line Interface}
 
 We built a basic command line interface which would read programs from the standard input (stdin) stream.
 Program text would be passed to the lexer, parser and then type checked.
@@ -1802,9 +1865,9 @@ This made the interface impractical for experimenting in order to learn and expl
 No syntax highlighting could be provided, and line references had to be manually matched up to determine where
 issues arose in the input.
 
-\subsubsection{Web Application Interface}
+\subsection{Web Application Interface}
 
-Due to the limitations discussed with the command line interface, we built a graphical web interface.
+Due to the limitations discussed with the command line interface, we also built a graphical web interface.
 A screenshot is included overleaf.
 
 As illustrated, users can enter code into the application.
@@ -1818,23 +1881,28 @@ This server uses the same API as the original command line interface, but return
 The browser then uses this type checking data to display annotations directly on the relevant line(s) indicating to the
 user where type violations have occurred.
 
+The following sequence diagram sketch illustrates the steps involved in the process, and each component's
+responsibility:
+
+\begin{center}
+\includegraphics[width=0.5\linewidth]{seqdiagram.eps}
+\end{center}
+
 The page includes a number of different samples to demonstrate a variety of the language's features.
 If the type checking is successful, the user is given the opportunity to execute their code.
 The interpreter will then execute the program and print the return value of the \texttt{Main} function.
 
 
-\begin{landscape}
-
+\newpage
     \newgeometry{margin=0in}
     \thispagestyle{empty}
 
     \topskip0pt
-    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (61.5mm, -105mm){\includegraphics[width=\paperheight,height=\paperwidth]{webiface.png}};
 
-\end{landscape}
+    \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{webiface.png}};
+\restoregeometry
 
-
-\subsubsection{Rise4fun Integration}
+\subsection{Rise4fun Integration}
 
 Within Microsoft Research, the \emph{Research in Software Engineering} (RiSE) group has built a tool known as
 \emph{rise4fun}.
@@ -1861,7 +1929,7 @@ APIs.
     \end{MyMdframed}
 \end{figure}
 
-\subsubsection{Gradle Plugin}
+\subsection{Gradle Plugin}
 
 We have built a Gradle plugin which enables projects to include code in the RRT language.
 A build task is then provided to type-check all RRT code and report the results, failing the build if problems are
@@ -1898,6 +1966,28 @@ Run with --scan to get full insights.}\\
 ~\\
 \textcolor{id7-ruby-red}{\texttt{BUILD FAILED in 9s}}
 }
+
+\section{Implementation Challenges}
+
+As briefly discussed above, a number of challenges were encountered during the implementation process:
+
+\begin{itemize}
+    \item Initial type-checking work had used the JavaSMT API layer for abstracting over direct Z3 usage,
+          allowing the underlying SMT solver to be swapped out with no code changes. Unfortunately,
+    this library did not offer any abstractions for working with string theory solvers and so whilst it was
+    possible to implement a prototype for integer refinements, it was necessary to swap out the library and use
+    Z3 directly in order to implement string regular expression refinements.
+    \item Bindings for Java that allowed Z3 to be used were not generally available and needed to be compiled from source.
+    Some functions available in the C API were not exposed via the Java bindings, and it was necessary to work with
+    the Z3 development team at Microsoft to add these additional functions to the Java API.
+\end{itemize}
+
+To varying extents, these issues were foreseeable, and time was scheduled to ensure that library functionality could
+be thoroughly evaluated during the development process.
+
+By using Z3 directly (despite the unavailability of bindings in binary form), we were able to make use of Z3str3 and
+implement the type-checking of strings successfully.
+
 
 \chapter{Testing}
 
@@ -1976,33 +2066,8 @@ Whilst there are some tools which are able to render pages and compare screensho
 We find it more time-effective to manually test the web application in a variety of browsers on different devices.
 Design and layout issues are usually immediately apparent.
 
-\chapter{Project Management}
 
-For this project to be successful, it was essential that its delivery was managed appropriately.
-In this chapter, we discuss some of the contributing factors which ensured that progress was made, potential problems
-were foreseen and planned for and objectives were met.
-\section{Challenges}
-
-Throughout the project, a number of challenges were faced:
-
-\begin{itemize}
-    \item Initial type-checking work had used the JavaSMT API layer for abstracting over direct Z3 usage and
-    theoretically allowing the underlying SMT solver to be swapped out with no code changes. Unfortunately,
-    this library did not offer any abstractions for working with string theory solvers and so whilst it was
-    possible to implement a prototype for integer refinements, it was necessary to swap out the library and use
-    Z3 directly in order to implement string regular expression refinements.
-    \item Bindings for Java that allowed Z3 to be used were not generally available and needed to be compiled from source.
-    Some functions available in the C API were not exposed via the Java bindings, and it was necessary to work with
-    the Z3 development team at Microsoft to add these additional functions to the Java API.
-\end{itemize}
-
-Due to the slack time allocated in the project timetable, these challenges did not impact the project's overall
-schedule and objectives were met as expected.
-
-
-\chapter{Evaluation and Conclusions}
-
-\section{Evaluation Against Existing Works}
+\chapter{Evaluation}
 
 Using the motivating examples described earlier in section \ref{subsec:examples} and a series of modifications,
 we have explored the effectiveness of existing security tooling and its ability to:
@@ -2015,7 +2080,7 @@ we have explored the effectiveness of existing security tooling and its ability 
 We have found that tooling is generally able to flag potential security vulnerabilities, but is prone to reporting
 false-positives where regular-expression based validation is already in place and prevents exploitation.
 
-\subsection{SQL Injection}
+\section{SQL Injection}
 
 With our motivating example discussed in section \ref{subsec:examples}, we can observe that FindBugs is able
 to correctly detect code vulnerable to SQL injection:
@@ -2059,16 +2124,16 @@ The type checker correctly detects this violation:
 
 When all function calls pass permissible values to the \texttt{LookupUsernameByToken}, the build will pass because
 there is no exploitable security issue presented by the code.
-In this way, we avoid false positives.
+In this way, we avoid the false positive that would have been generated with the FindBugs tool.
 
-\subsection{LDAP Injection}
-
-
-
-\subsection{Path Traversal}
+\section{LDAP Injection}
 
 
-\section{Conclusions}
+
+\section{Path Traversal}
+
+
+\chapter{Conclusions}
 
 This project is a success.
 We have designed and implemented a proof-of-concept language to support regular expression refinement types,
@@ -2089,11 +2154,11 @@ Of the objectives discussed in section 1, all core objectives set for the projec
 One additional `stretch' objective, which involved adding support for a language such as Scala, was not met.
 This remains as possible future work as discussed below.
 
-\subsection{Future work}
+\section{Future work}
 Our language is relatively basic, and there exist many opportunities for future work in this area.
 We discuss a few possible directions for future research below.
 
-\subsubsection{Non-regular expressions}
+\subsection{Non-regular expressions}
 
 As highlighted in section \ref{sec:pls}, the standard library within many programming languages supports an extension to traditional, formal regular expressions.
 A theory solver which supported these expressions would be interesting to see, and enable use of advanced features such as back-references and
@@ -2101,7 +2166,7 @@ A theory solver which supported these expressions would be interesting to see, a
 
 This would need to be implemented as part of an extension to an existing SMT solver framework.
 
-\subsubsection{Language expansion}
+\subsection{Language expansion}
 
 Our proof of concept language is primitive by design, and only implements a small number of types.
 Future development could add additional types, support for e.g. generics/parametric polymorphism, object-oriented

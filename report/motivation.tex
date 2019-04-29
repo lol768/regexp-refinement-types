@@ -259,7 +259,19 @@ This allows for potential security issues to be surfaced during type-checking.
 
 The listing below shows a program written in our language:
 
-\todobox{Add listing here}
+\begin{mycodefile}{rrtlex.py:RrtLexer -x}{Demonstration of language features}{RRT}{motivation.rrt}
+    \vspace{0.5em}
+
+    String types in our language can be refined with a regular expression constraint.
+    At compile-time, the type-checker will ensure that refined types are compatible when used together (e.g. in assignment,
+    as illustrated, or as a function return value).
+    In this example, the type checker will not discover any problems.
+
+    Our language supports a foreign function interface for calling existing JVM code discussed in section \ref{ch:design}.
+
+\end{mycodefile}
+
+
 
 Our work meets the follow formal objectives first described in appendix \ref{project:spec}:
 
@@ -315,7 +327,6 @@ However, opinions differ on how discovered vulnerabilities should be disclosed. 
 idea'' and citing the principle that ``secrecy prevents people from accurately assessing their own risk'' \citep{schneier2007fd}.
 The Full Disclosure mailing list is a common avenue for disclosing vulnerabilities in this manner, with Rose arguing
 that other approaches are simply ``security through obscurity'':
-
 \begin{mdframed}
     \begin{leftbar}{id7-aubergine}
         \vspace{0.25em}
