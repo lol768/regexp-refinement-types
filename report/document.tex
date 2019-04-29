@@ -143,7 +143,7 @@ Scale=MatchLowercase
 
 \renewcommand{\headrulewidth}{0pt}
 \lfoot{\textcolor{grey}{Adam Williams}}
-\rfoot{\textcolor{grey}{Page \thepage{} of $\the\numexpr\value{LastPage}-1$}}
+\rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
 
 \renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=210mm]{divider}}}
 
@@ -190,6 +190,8 @@ Scale=MatchLowercase
 \raggedbottom
 
 \renewcommand\arraystretch{1.5}
+\DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
+\DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
 
 % ======================
 
@@ -267,7 +269,7 @@ Lastly, sincere thanks are due to my friends and family for their support during
 
 \begin{abstract}
     Entire classes of modern web application vulnerabilities arise due to problematic user input handling.
-    This includes cross-site scripting (XSS), \emph{injection} issues (SQL, LDAP, etc), insecure deserialisation and
+    This includes cross-site scripting (XSS), \emph{injection} issues (SQL, LDAP, etc.), insecure deserialisation and
     file inclusion vulnerabilities – all of which are encountered by information security firms on a regular basis in application assessments.
     This project explores the use of regular expressions as refinement types for constrained data in order to model user input validation.
     We formalise the type system of such a language and implement it.
@@ -507,8 +509,6 @@ are introduced below \citep[p.~102]{sipser2012introduction}:
     \item[$R$] Rules/productions in the grammar.
     \item[$S$] The start variable, $S \in V$.
 \end{description}
-\DeclareMathSymbol{\mlq}{\mathord}{operators}{``}
-\DeclareMathSymbol{\mrq}{\mathord}{operators}{`'}
 
 As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ comprises the following rule:
 
@@ -1221,7 +1221,7 @@ The nature of deserialisation vulnerabilities is that an application must:
         \vspace{0.5em}
         \captionsetup{style=default}
 
-        \centering \includegraphics[width=0.9\linewidth]{snyk.png}
+        \begin{adjustbox}{center}\includegraphics[width=0.9\linewidth]{snyk.png}\end{adjustbox}
     \end{MyMdframed}
 \end{figure}
 
@@ -1409,6 +1409,8 @@ binding more strongly than concatenation and alternation:
 
 We amend the production rules used by \citeauthor{cameron1999} to ensure they are unambiguous, by creating
 prime-suffixed classes with $\epsilon$-productions.
+
+\label{regex:parse}
 
 \begin{grammar}
 
@@ -1659,6 +1661,25 @@ Constraints are built based on the types identified during AST construction and 
 With a theory solver available for both integers and strings, this approach works for both kinds of refinements
 supported by the language.
 
+\section{Foreign Function Interface}
+
+For interoperability with existing JVM code, we devised a mechanism whereby developers could call arbitrary JVM
+code in the presence of some satisfied pre-conditions.
+This foreign function interface is designed to allow:
+
+\begin{itemize}
+    \item Calling of arbitrary static Java methods
+    \item Passing of first-class types from within the language to the Java method, provided they can be converted
+    \item Use of the return value from the Java method, provided it can be converted into an appropriate type
+\end{itemize}
+
+We only consider static methods because the proof-of-concept language does not support any object-oriented
+programming features and so instantiating an object to call an instance method would not be feasible.
+
+Foreign calls should be treated like all other expressions in the language, allowing the return value of these
+methods to be assigned to local variables, returned or otherwise manipulated.
+
+
 \section{Development Methodology}
 
 It is important, for any project with significant elements of software engineering, that development is approached in a
@@ -1669,10 +1690,6 @@ The Scrum methodology involves ``sprints'' which are a fixed duration and planne
 
 We scheduled a series of one-week sprints to implement the functionality discussed throughout this chapter.
 This approach allows for progress to be reflected upon at the end of each sprint.
-
-\section{Foreign Function Interface}
-
-
 
 \chapter{Implementation}
 
@@ -1837,6 +1854,11 @@ System.out.println(res);
 System.out.println(s.getModel().getConstInterp(x));
 \end{minted}
 
+When regular expression refinement types are encountered, the aforementioned adapter is used to build a Z3 compatible
+\texttt{ReExpr} object from the parse tree discussed in the design section \ref{regex:parse}.
+For string literals in the program code, these are represented by the regular expression that matches only the string
+within the literal.
+
 \section{Integrations and Frontends}
 
 In this section, we present the various tools and integrations we have provide on top of the core parser, type checker
@@ -1892,6 +1914,10 @@ The page includes a number of different samples to demonstrate a variety of the 
 If the type checking is successful, the user is given the opportunity to execute their code.
 The interpreter will then execute the program and print the return value of the \texttt{Main} function.
 
+The figure below shows the web application executing a factorial program and printing the result:
+
+\centering \includegraphics[width=0.75\linewidth]{interpet.png}
+
 
 \newpage
     \newgeometry{margin=0in}
@@ -1938,7 +1964,7 @@ In this way, developers can integrate the language into real-world projects.
 
 Our Gradle plugin operates using the same standard directory conventions for Java software.
 The root project directory includes a top-level \texttt{src/} directory which in turn contains sets for the
-\texttt{main} code and for any \texttt{test} files (unit tests, integration tests etc).
+\texttt{main} code and for any \texttt{test} files (such as unit and integration tests).
 \pagebreak[5]
 Within each of these directories, a language directory exists for e.g. \texttt{java} or \texttt{antlr}.
 We add support for a new \texttt{rrt} directory in our plugin and define an \texttt{rrt} build task:
@@ -1966,6 +1992,28 @@ Run with --scan to get full insights.}\\
 ~\\
 \textcolor{id7-ruby-red}{\texttt{BUILD FAILED in 9s}}
 }
+
+\section{Foreign Function Interface}
+
+The FFI discussed earlier is implemented within the interpreter using Java's reflection.
+We also use reflection to perform type checking at compile-time by ensuring that all Java code is compiled and present
+on the classpath \emph{prior} to the Gradle plugin invoking the type-checking process.
+
+We attempt to map types to their Java counterparts in an intuitive manner:
+
+\begin{description}
+    \item[uint] Can map to the primitive types (long, int, short or byte) or their boxed equivalents (Long, Integer etc.) as required.
+    \item[bool] Maps to boolean or the boxed equivalent, Boolean.
+    \item[string] Maps to the String type.
+\end{description}
+
+Note that types lose their refinement information as soon as they cross the FFI boundary.
+This is an unfortunate necessity for compatibility with existing code, though alternative ``container objects'' were
+considered.
+
+Java function call expressions are preceded with an exclamation-mark \texttt{!} and require a fully qualified
+package, class and method name.
+Methods must be static and accessible (i.e. not marked with a restrictive access control modifier).
 
 \section{Implementation Challenges}
 
@@ -2059,12 +2107,19 @@ Automated tests go some of the way to ruling out major bugs in an application, b
 Test cases should be chosen with knowledge of the implementation in order to try and expose mishandling of edge cases, or problems with adversarial input.
 
 As an example, applications often exhibit buggy behaviour around \emph{boundary conditions} which can be caused by off-by-one errors or use of incorrect operators.
-We construct test cases for integer refinements to ensure the type checker works as expected for values that fall just inside/outside of the domain of values accepted by each type.
+We use test cases for integer refinements to ensure the type checker works as expected for values that fall just inside/outside of the domain of values accepted by each type.
 
 The web interface is also more convenient to test manually.
 Whilst there are some tools which are able to render pages and compare screenshots to detect e.g. layout regressions, it can be difficult to implement such tests and keep them up to date.
 We find it more time-effective to manually test the web application in a variety of browsers on different devices.
 Design and layout issues are usually immediately apparent.
+The built-in samples are used to provide some representative programs for testing purposes, covering:
+
+\begin{itemize}
+    \item Tests for the interpreter, involving computation of the factorial.
+    \item Tests for the type checker, involving integer refinements.
+    \item Tests for the type checker, involving incompatible regular expression refinements.
+\end{itemize}
 
 
 \chapter{Evaluation}
@@ -2128,10 +2183,48 @@ In this way, we avoid the false positive that would have been generated with the
 
 \section{LDAP Injection}
 
+An attempt was made to evaluate the C\# \emph{Security Code Scan} security tool and determine if it would exhibit
+similar behaviour to FindBugs--that is, reporting the existence of a potential vulnerability but not using regular
+expression (or other) validation to determine if the vulnerability is actually exploitable or not.
 
+A fresh .NET Framework project was created using the code discussed in section \ref{ex:ldapi}, and the tool was
+installed.
+The project provides a set of \emph{Roslyn Analysers} which are supported in a variety of different development
+environments.
 
-\section{Path Traversal}
+\begin{figure}[H]
+    \begin{MyMdframed}
+        \vspace{0.5em}
 
+        \caption{\label{figure:ra}Roslyn Analysers provided by the Security Code Scan project}
+        \vspace{0.5em}
+        \captionsetup{style=default}
+        \begin{adjustbox}{center}\includegraphics[width=0.6\linewidth]{analysers.png}\end{adjustbox}
+    \end{MyMdframed}
+
+\end{figure}
+
+These analysers can in-theory be run on-demand:
+
+\includegraphics[width=0.6\linewidth]{scs-ldap.png}
+
+Unfortunately, the inspection did not detect any problematic code with the unmodified example from section
+\ref{ex:ldapi}.
+This is disappointing, because the code showcases a textbook LDAP injection vulnerability.
+It is unclear if the IDE is at fault or the inspection is too narrowly-scoped to detect this problem.
+
+\includegraphics[width=0.5\linewidth]{no-issues-found.png}
+
+Nevertheless, a Java implementation of the LDAP code could be wrapped in a similar way to the previous example,
+accepting only user codes in the form of \texttt{/u[0-9]+/} (based on the naming scheme used in the directory).
+
+\begin{minted}{rrtlex.py:RrtLexer -x}
+function QueryUserSurname(universityId: string[/u[0-9]+/]): string {
+    return !java.Ldap.queryReturnAttr("(&(objectclass=user)(cn="+universityId+")", "sn")
+}
+\end{minted}
+
+The type-checker would ensure that only valid user codes would ever be passed to the \texttt{QueryUserSurname} function.
 
 \chapter{Conclusions}
 
@@ -2170,7 +2263,7 @@ This would need to be implemented as part of an extension to an existing SMT sol
 
 Our proof of concept language is primitive by design, and only implements a small number of types.
 Future development could add additional types, support for e.g. generics/parametric polymorphism, object-oriented
-programming constructs etc.
+programming constructs and other modern programming language features.
 
 \subsection{Imperative language integration}
 
@@ -2199,7 +2292,7 @@ This would likely aid with developer adoption.
 \section*{Introduction}
 
 Within information security, entire classes of application vulnerabilities arise due to problematic user input handling \citep{christey2007vulnerability}.
-This covers cross-site scripting (XSS), injection (SQL, LDAP, etc), insecure
+This covers cross-site scripting (XSS), injection (SQL, LDAP, etc.), insecure
 deserialisation and file inclusion vulnerabilities -- all of which are regularly discovered in major software products.
 
 There are many existing products that aim to detect problems within an application. \citet{sadowski2018lessons} describe the benefits of static analysis tooling deployed within Google which allow checks for common issues to be performed as part of the compilation process. The authors explain one of the main challenges with developer adoption as \emph{trustworthiness} ``users do not trust to results due to, say, false positives`` and highlight the importance of reporting issues early: ``survey participants deemed 74\% of the issues flagged at compile time as real problems, compared to 21\% of those found in checked-in code''.
