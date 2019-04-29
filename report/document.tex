@@ -1,7 +1,7 @@
-\documentclass[a4paper,openany,12pt]{book}
+\documentclass[a4paper,12pt]{book}
 %\usepackage[a4paper,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt]{geometry}
 % Bleed marks, if Warwick Print want them..
-\usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=32pt,showcrop=true,layout=a4paper]{geometry}
+\usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=36pt,showcrop=true,layout=a4paper]{geometry}
 \usepackage{amsmath}
 \usepackage{graphics}
 \usepackage{graphicx}
@@ -126,7 +126,7 @@ Scale=MatchLowercase
 \def\labelitemiii{\textcolor{id7-aubergine}{--}}
 \definecolor{infogreenlight}{rgb}{0.75,1,0.75}
 \input{boxes}
-
+\usepackage{emptypage}
 \titleformat{\section}
 {\normalfont\sffamily\huge\color{id7-aubergine}}
 {\thesection. }{0em}{}
@@ -145,18 +145,18 @@ Scale=MatchLowercase
 \lfoot{\textcolor{grey}{Adam Williams}}
 \rfoot{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}
 
-\renewcommand*\footnoterule{\noindent\makebox[\textwidth]{\includegraphics[width=210mm]{divider}}}
+\renewcommand*\footnoterule{\hspace{-3.1cm}\noindent\makebox[\paperwidth]{\includegraphics[width=230mm]{divider}}}
 
 % Redefine the plain page style
-\fancypagestyle{plain}{%
-    \fancyhf{}%
-    \fancyhead[L]{\textcolor{grey}{\thedate}}%
-    \fancyhead[R]{\textcolor{grey}{\currentname}}%
-    \fancyfoot[L]{\textcolor{grey}{Adam Williams}}%
-    \fancyfoot[R]{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}%
-    \renewcommand{\headrulewidth}{0pt}% Line at the header invisible
-    \renewcommand{\footrulewidth}{0pt}% Line at the footer visible
-}
+%\fancypagestyle{plain}{%
+%    \fancyhf{}%
+%    \fancyhead[L]{\textcolor{grey}{\thedate}}%
+%    \fancyhead[R]{\textcolor{grey}{\currentname}}%
+%    \fancyfoot[L]{\textcolor{grey}{Adam Williams}}%
+%    \fancyfoot[R]{\textcolor{grey}{Page \thepage{} of \pageref{LastPage}}}%
+%    \renewcommand{\headrulewidth}{0pt}% Line at the header invisible
+%    \renewcommand{\footrulewidth}{0pt}% Line at the footer visible
+%}
 \definecolor{grey}{rgb}{0.5,0.5,0.5}
 \definecolor{dgrey}{rgb}{0.25,0.25,0.25}
 \definecolor{lightgrey}{rgb}{0.96,0.96,0.96}
@@ -201,7 +201,7 @@ Scale=MatchLowercase
 \begin{titlepage}
     
     \tikz[remember picture,overlay] \node[opacity=1,inner sep=0pt] at (current page.center){\includegraphics[width=\paperwidth,height=\paperheight]{bg.eps}};
-    \vspace{0.666\textheight} % height of the devil
+    \vspace{0.6\textheight} % height of the devil
     
     {\hspace{0pt}\vspace{0pt}\begin{tikzpicture}[scale=\paperwidth/1cm, overlay]
         \filldraw[draw=none,fill=white]
@@ -212,8 +212,8 @@ Scale=MatchLowercase
         -- (0.8001, -0.1)
         -- (0.8571,0)
         -- (1, 0)
-        -- (1, -0.45)
-        -- (0, -0.45);
+        -- (1, -0.5)
+        -- (0, -0.5);
         
         \node[opacity=1,inner sep=0pt] at (0.7577, -0.15){\includegraphics[width=6cm]{logotype}};
         \node[text width=15cm] at (0.39,-0.15) {\warwickfont\fontsize{40}{10}\selectfont\textcolor{id7-aubergine}{Regular Expression\\\vspace{0.2cm}Refinement Types}};
@@ -222,7 +222,7 @@ Scale=MatchLowercase
     {\par}
     \vspace{1.25cm}
     \vspace{3.5cm}
-    {\hspace{1.60cm}\Huge \warwickfont Project Report}
+    {\hspace{1.56cm}\Huge \warwickfont Project Report}
     \vspace{0.16cm}
     {\par}
     {\hspace{1.60cm}\large \warwickfont Adam Williams (3\textsuperscript{rd} year Computer Science)}
@@ -1961,11 +1961,10 @@ We have built a Gradle plugin which enables projects to include code in the RRT 
 A build task is then provided to type-check all RRT code and report the results, failing the build if problems are
 encountered.
 In this way, developers can integrate the language into real-world projects.
-
+\pagebreak[5]
 Our Gradle plugin operates using the same standard directory conventions for Java software.
 The root project directory includes a top-level \texttt{src/} directory which in turn contains sets for the
 \texttt{main} code and for any \texttt{test} files (such as unit and integration tests).
-\pagebreak[5]
 Within each of these directories, a language directory exists for e.g. \texttt{java} or \texttt{antlr}.
 We add support for a new \texttt{rrt} directory in our plugin and define an \texttt{rrt} build task:
 

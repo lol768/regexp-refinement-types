@@ -1,10 +1,11 @@
-IntegerFormulaManager imgr = ctx.getFormulaManager().getIntegerFormulaManager();
-IntegerFormula x = imgr.makeVariable("x");
+IntegerFormulaManager fm = ctx.getFormulaManager().getIntegerFormulaManager();
+// set up integer variable
+IntegerFormula x = fm.makeVariable("x");
 
 // x <= 4
-BooleanFormula expectedNegated = imgr.lessOrEquals(x, x.makeNumber(4));
+BooleanFormula expectedNegated = fm.lessOrEquals(x, x.makeNumber(4));
 // x < 10
-BooleanFormula actual = imgr.lessThan(x, x.makeNumber(10));
+BooleanFormula actual = fm.lessThan(x, x.makeNumber(10));
 
 // try-with-resources, will dispose of the ProverEnvironment for us
 try (ProverEnvironment prover = 
