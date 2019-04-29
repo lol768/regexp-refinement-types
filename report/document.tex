@@ -3,6 +3,7 @@
 % Bleed marks, if Warwick Print want them..
 \usepackage[paperwidth=230mm,paperheight=317mm,layoutvoffset=10mm,layouthoffset= 10mm,left=2cm,right=2cm,top=1cm,bottom=1cm,includehead,includefoot,headheight=15pt,heightrounded,footskip=36pt,showcrop=true,layout=a4paper]{geometry}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{graphics}
 \usepackage{graphicx}
 \usepackage[table,xcdraw]{xcolor}
@@ -510,7 +511,7 @@ are introduced below \citep[p.~102]{sipser2012introduction}:
     \item[$S$] The start variable, $S \in V$.
 \end{description}
 
-As an example, we define the grammar $G_1 = (\{S\}, \{``('', ``)''\}, R, S)$ where $R$ comprises the following rule:
+As an example, we define the grammar $G_1 = (\{S\}, \{(, )\}, R, S)$ where $R$ comprises the following rule:
 
 \(
     S \to SS ~ \mid ~ (S) ~ \mid ~ \epsilon
